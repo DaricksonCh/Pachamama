@@ -43,3 +43,4 @@ El orden de las fases 4–11 puede cambiar si el usuario lo prioriza.
 |---|---|
 | 2026-11-10 | Fase 0: plan de arquitectura y auditoría de herramientas aprobados. Repo GitHub creado. |
 | 2026-11-18 | Proyecto movido fuera de OneDrive a `C:\claude-code`. Fase 1 completada. |
+| 2026-11-18 | Flujo de ramas `main` + `development` + `feat/*`. find-skills instalado; herramientas de IA documentadas en `docs/tooling.md`. |
