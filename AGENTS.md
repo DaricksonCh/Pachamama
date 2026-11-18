@@ -43,6 +43,24 @@ main           ← producción (estable)
 
 Listado, alcance (global o de proyecto) y estado: [`docs/tooling.md`](docs/tooling.md).
 
+## Subagentes
+
+Para trabajo extenso, el agente principal delega en subagentes (cada uno trabaja con contexto propio y devuelve un resumen):
+
+| Cuándo | Cómo |
+|---|---|
+| Ejecutar un plan con tareas independientes | Skill `subagent-driven-development` (un subagente por tarea + revisión entre tareas) |
+| 2+ tareas sin dependencias entre sí | Skill `dispatching-parallel-agents` (en paralelo) |
+| Revisar una rama antes de fusionar en `development` | Subagente del proyecto `code-reviewer` (`.claude/agents/`) |
+| Verificar una fase (typecheck, lint, tests, build, navegador) | Subagente del proyecto `qa-tester` |
+| Buscar en mucho código | Subagente integrado `Explore` |
+
+Reglas: un subagente que **escribe** código nunca comparte archivos con otro en paralelo; los de revisión/QA solo leen y reportan; el agente principal comprueba siempre el resultado antes de darlo por hecho.
+
+## Diseño
+
+Todavía no hay diseño definitivo en Figma (plan gratuito, MCP muy limitado). El diseño puede crearse con la skill `frontend-design`, tomando como referencia webs que indique el usuario; si más adelante llega un Figma, este manda. Los tokens de diseño (colores, tipografías, espaciados) se centralizan en la configuración de Tailwind.
+
 ## Stack (decidido — no cambiar sin ADR nuevo)
 
 | Capa | Tecnología |

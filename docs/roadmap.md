@@ -35,7 +35,7 @@ El orden de las fases 4–11 puede cambiar si el usuario lo prioriza.
 - Confirmar `disableSignUp` en Better Auth (solo el admin crea usuarios).
 
 **Más adelante**
-- Hosting UE y Docker · herramienta de prerender SEO · almacenamiento de imágenes/vídeos · país y moneda · SMTP · anti-bot (p. ej. Turnstile) · franjas y límites de pedidos · reservas con confirmación manual vs. aforo automático · lista de alérgenos · roles definitivos · plazo de retención de datos · identidad visual y contenidos.
+- Diseño visual: crear con `frontend-design` a partir de webs de referencia (Figma gratuito, MCP limitado) · hosting UE y Docker · herramienta de prerender SEO · almacenamiento de imágenes/vídeos · país y moneda · SMTP · anti-bot (p. ej. Turnstile) · franjas y límites de pedidos · reservas con confirmación manual vs. aforo automático · lista de alérgenos · roles definitivos · plazo de retención de datos · identidad visual y contenidos.
 
 ## Historial
 
@@ -44,3 +44,4 @@ El orden de las fases 4–11 puede cambiar si el usuario lo prioriza.
 | 2026-11-10 | Fase 0: plan de arquitectura y auditoría de herramientas aprobados. Repo GitHub creado. |
 | 2026-11-18 | Proyecto movido fuera de OneDrive a `C:\claude-code`. Fase 1 completada. |
 | 2026-11-18 | Flujo de ramas `main` + `development` + `feat/*`. find-skills instalado; herramientas de IA documentadas en `docs/tooling.md`. |
+| 2026-11-18 | Skills globales y de proyecto instaladas (frontend, backend, BD, Superpowers); subagentes `code-reviewer` y `qa-tester`. Diseño: se creará con `frontend-design` + referencias (Figma opcional). |
