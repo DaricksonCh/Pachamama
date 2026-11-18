@@ -25,6 +25,24 @@ Todo se paga **en el local** (sin pasarela de pagos). El personal gestiona todo 
 - Cada fase termina con: verificación (typecheck, lint, tests, build cuando existan) → commit → push → actualizar `docs/roadmap.md`.
 - Comunicación con el usuario en **español**. Código, nombres de variables y commits en **inglés**.
 
+## Git: ramas y flujo
+
+```
+main           ← producción (estable)
+ └ development ← integración y pruebas
+    └ feat/<tema>, fix/<tema>, docs/<tema>   ← ramas cortas, una por fase o tarea
+```
+
+- Nunca trabajar directamente en `main` ni en `development`.
+- Cada fase o tarea: crear `feat/...` desde `development` → commits → fusionar en `development` (Pull Request cuando `gh` esté disponible) → borrar la rama.
+- `development` → `main` solo cuando el usuario lo apruebe (hito estable).
+- El agente puede hacer commits y push por sí mismo (autorizado por el usuario).
+- Ejemplos de nombre: `feat/fase-2-andamiaje`, `feat/menu`, `fix/reserva-fecha`.
+
+## Herramientas de IA
+
+Listado, alcance (global o de proyecto) y estado: [`docs/tooling.md`](docs/tooling.md).
+
 ## Stack (decidido — no cambiar sin ADR nuevo)
 
 | Capa | Tecnología |
