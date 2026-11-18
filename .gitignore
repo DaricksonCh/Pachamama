@@ -36,3 +36,6 @@ desktop.ini
 # Configuración local de agentes de IA
 .claude/settings.local.json
 .cursor/mcp.json
+
+# Archivos locales con secretos (scripts de setup, etc.)
+.local/
