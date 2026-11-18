@@ -1,0 +1,12 @@
+@import 'tailwindcss';
+
+/*
+ * Tokens de diseño PROVISIONALES. El diseño definitivo aún no existe:
+ * cuando se defina (frontend-design + referencias, o Figma), se reemplazan aquí.
+ */
+@theme {
+  --color-brand-50: #fff7ed;
+  --color-brand-600: #b45309;
+  --color-brand-700: #92400e;
+  --font-display: Georgia, 'Times New Roman', serif;
+}

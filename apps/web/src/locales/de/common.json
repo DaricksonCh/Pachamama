@@ -1,0 +1,21 @@
+{
+  "app": {
+    "name": "Pachamama",
+    "tagline": "Peruanische Küche"
+  },
+  "home": {
+    "title": "Willkommen bei Pachamama",
+    "placeholder": "Die Website befindet sich im Aufbau."
+  },
+  "status": {
+    "label": "API-Status",
+    "loading": "Wird geprüft …",
+    "ok": "Verbunden",
+    "error": "Nicht erreichbar"
+  },
+  "language": {
+    "label": "Sprache",
+    "de": "Deutsch",
+    "es": "Español"
+  }
+}
