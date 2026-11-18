@@ -15,7 +15,8 @@ Todo se paga **en el local** (sin pasarela de pagos). El personal gestiona todo 
 ## Estado actual
 
 - Fase en curso y siguientes: ver [`docs/roadmap.md`](docs/roadmap.md). **Actualízalo al terminar cada fase.**
-- Fase 2 hecha: monorepo funcionando (web + API + shared) con `GET /api/v1/health`. **Sin base de datos ni funcionalidades todavía**; el diseño de la web es provisional.
+- Fase 2 hecha: monorepo funcionando (web + API + shared) con `GET /api/v1/health`. Diseño de la web provisional.
+- **⚠ Fecha límite 01.12.2026** (el restaurante se queda sin web): en curso la **entrega MVP** sin base de datos (diseño → páginas públicas → reservas por email → despliegue). BD y panel admin van después. Detalle en `docs/roadmap.md`.
 
 ## Forma de trabajar (obligatorio)
 
@@ -126,4 +127,4 @@ Versiones fijadas: Node 24, npm 11, **TypeScript 6.0** (TS 7 aún no es compatib
 
 ## Entorno del desarrollador
 
-Windows 11, Node.js 24 LTS, npm 11, Git, VS Code. MySQL instalado como servicio de Windows (hay dos servicios, `mysql` y `MySQL80`; cuál se usa se decide en fase 3). El proyecto vive en `C:\claude-code` (fuera de OneDrive a propósito: OneDrive bloquea `node_modules`).
+Windows 11, Node.js 24 LTS, npm 11, Git, VS Code. Base de datos del proyecto: **MySQL 8.4 Community**, servicio `MySQL84`, puerto **3307**, base `pachamama` con usuario propio (credenciales solo en `.env`). Ojo: el servicio `mysql` del puerto 3306 es MariaDB de XAMPP con otros proyectos del usuario: **no tocarlo**. `MySQL80` es un servicio huérfano deshabilitado. El proyecto vive en `C:\claude-code` (fuera de OneDrive a propósito: OneDrive bloquea `node_modules`).
