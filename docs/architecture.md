@@ -17,10 +17,10 @@ Navegador ──► apps/web (React + Vite, SPA)
 
 ## Monorepo (npm workspaces)
 
-| Paquete | Ruta | Rol |
-|---|---|---|
-| `@pachamama/web` | `apps/web` | Sitio público + panel `/admin` |
-| `@pachamama/api` | `apps/api` | API REST + autenticación |
+| Paquete             | Ruta              | Rol                                             |
+| ------------------- | ----------------- | ----------------------------------------------- |
+| `@pachamama/web`    | `apps/web`        | Sitio público + panel `/admin`                  |
+| `@pachamama/api`    | `apps/api`        | API REST + autenticación                        |
 | `@pachamama/shared` | `packages/shared` | Schemas Zod, tipos, constantes (estados, roles) |
 
 ## Frontend (`apps/web`)
@@ -46,17 +46,17 @@ Navegador ──► apps/web (React + Vite, SPA)
 
 ### Módulos
 
-| Módulo | Público | Admin |
-|---|---|---|
-| `opening-hours` | Ver horario y cierres | Editar |
-| `menu` | Ver carta | CRUD categorías y platos |
-| `news` | Ver noticias/avisos | CRUD |
-| `reservations` | Crear reserva | Listar, confirmar, rechazar, cerrar |
-| `food-orders` | Crear pedido | Listar y cambiar estado |
-| `shop` | Ver productos, comprar | CRUD productos, stock, pedidos |
-| `media` | Ver galería | Subir/borrar |
-| `auth` | — (login) | Better Auth |
-| `staff` | — | Alta/baja de usuarios y roles (solo `admin`) |
+| Módulo          | Público                | Admin                                        |
+| --------------- | ---------------------- | -------------------------------------------- |
+| `opening-hours` | Ver horario y cierres  | Editar                                       |
+| `menu`          | Ver carta              | CRUD categorías y platos                     |
+| `news`          | Ver noticias/avisos    | CRUD                                         |
+| `reservations`  | Crear reserva          | Listar, confirmar, rechazar, cerrar          |
+| `food-orders`   | Crear pedido           | Listar y cambiar estado                      |
+| `shop`          | Ver productos, comprar | CRUD productos, stock, pedidos               |
+| `media`         | Ver galería            | Subir/borrar                                 |
+| `auth`          | — (login)              | Better Auth                                  |
+| `staff`         | —                      | Alta/baja de usuarios y roles (solo `admin`) |
 
 ## Autenticación (Better Auth)
 
@@ -80,7 +80,7 @@ Estados y reglas de cada proceso: [domain-flows.md](domain-flows.md).
 
 ## Entornos
 
-| Entorno | Cómo |
-|---|---|
+| Entorno    | Cómo                                                                           |
+| ---------- | ------------------------------------------------------------------------------ |
 | Desarrollo | `npm run dev` (web en :5173 con proxy a API en :3000), MySQL local, sin Docker |
-| Producción | Hosting en la UE (a decidir en fase 12); Docker se evalúa entonces |
+| Producción | Hosting en la UE (a decidir en fase 12); Docker se evalúa entonces             |

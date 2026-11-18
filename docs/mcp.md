@@ -4,11 +4,11 @@ MCP permite que un agente de IA use herramientas externas (navegador, base de da
 
 ## Dónde se configura cada herramienta
 
-| Herramienta | Archivo | En el repo |
-|---|---|---|
-| Claude Code | `.mcp.json` (raíz del proyecto) | Sí (sin secretos) |
-| Cursor | `.cursor/mcp.json` | No (ignorado en `.gitignore`); copiar desde `.mcp.json` |
-| Codex CLI | `~/.codex/config.toml` (sección `[mcp_servers.<nombre>]`) | No (configuración de usuario) |
+| Herramienta | Archivo                                                   | En el repo                                              |
+| ----------- | --------------------------------------------------------- | ------------------------------------------------------- |
+| Claude Code | `.mcp.json` (raíz del proyecto)                           | Sí (sin secretos)                                       |
+| Cursor      | `.cursor/mcp.json`                                        | No (ignorado en `.gitignore`); copiar desde `.mcp.json` |
+| Codex CLI   | `~/.codex/config.toml` (sección `[mcp_servers.<nombre>]`) | No (configuración de usuario)                           |
 
 Formato de `.mcp.json` (Cursor usa el mismo):
 
@@ -41,11 +41,11 @@ args = ["-y", "paquete-del-servidor"]
 
 ## Candidatos
 
-| Servidor | Para qué | Cuándo |
-|---|---|---|
-| Playwright MCP | Probar la UI, responsive y accesibilidad en un navegador real | Fase 4+ |
-| MySQL (solo lectura) | Inspeccionar la BD local | Fase 3+ |
-| GitHub MCP | Issues y PRs desde el agente (innecesario si se instala `gh`) | Opcional |
+| Servidor             | Para qué                                                      | Cuándo   |
+| -------------------- | ------------------------------------------------------------- | -------- |
+| Playwright MCP       | Probar la UI, responsive y accesibilidad en un navegador real | Fase 4+  |
+| MySQL (solo lectura) | Inspeccionar la BD local                                      | Fase 3+  |
+| GitHub MCP           | Issues y PRs desde el agente (innecesario si se instala `gh`) | Opcional |
 
 ## Servidores activos
 
