@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "ms-playwright.playwright",
+    "lokalise.i18n-ally",
+    "editorconfig.editorconfig",
+    "anthropic.claude-code"
+  ]
+}
