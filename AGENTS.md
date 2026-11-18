@@ -15,7 +15,7 @@ Todo se paga **en el local** (sin pasarela de pagos). El personal gestiona todo 
 ## Estado actual
 
 - Fase en curso y siguientes: ver [`docs/roadmap.md`](docs/roadmap.md). **Actualízalo al terminar cada fase.**
-- Todavía **no hay código de aplicación**: solo documentación y configuración (fase 1).
+- Fase 2 hecha: monorepo funcionando (web + API + shared) con `GET /api/v1/health`. **Sin base de datos ni funcionalidades todavía**; el diseño de la web es provisional.
 
 ## Forma de trabajar (obligatorio)
 
@@ -47,13 +47,13 @@ Listado, alcance (global o de proyecto) y estado: [`docs/tooling.md`](docs/tooli
 
 Para trabajo extenso, el agente principal delega en subagentes (cada uno trabaja con contexto propio y devuelve un resumen):
 
-| Cuándo | Cómo |
-|---|---|
-| Ejecutar un plan con tareas independientes | Skill `subagent-driven-development` (un subagente por tarea + revisión entre tareas) |
-| 2+ tareas sin dependencias entre sí | Skill `dispatching-parallel-agents` (en paralelo) |
-| Revisar una rama antes de fusionar en `development` | Subagente del proyecto `code-reviewer` (`.claude/agents/`) |
-| Verificar una fase (typecheck, lint, tests, build, navegador) | Subagente del proyecto `qa-tester` |
-| Buscar en mucho código | Subagente integrado `Explore` |
+| Cuándo                                                        | Cómo                                                                                 |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Ejecutar un plan con tareas independientes                    | Skill `subagent-driven-development` (un subagente por tarea + revisión entre tareas) |
+| 2+ tareas sin dependencias entre sí                           | Skill `dispatching-parallel-agents` (en paralelo)                                    |
+| Revisar una rama antes de fusionar en `development`           | Subagente del proyecto `code-reviewer` (`.claude/agents/`)                           |
+| Verificar una fase (typecheck, lint, tests, build, navegador) | Subagente del proyecto `qa-tester`                                                   |
+| Buscar en mucho código                                        | Subagente integrado `Explore`                                                        |
 
 Reglas: un subagente que **escribe** código nunca comparte archivos con otro en paralelo; los de revisión/QA solo leen y reportan; el agente principal comprueba siempre el resultado antes de darlo por hecho.
 
@@ -63,14 +63,14 @@ Todavía no hay diseño definitivo en Figma (plan gratuito, MCP muy limitado). E
 
 ## Stack (decidido — no cambiar sin ADR nuevo)
 
-| Capa | Tecnología |
-|---|---|
-| Frontend | React + Vite, TypeScript, React Router, TanStack Query, react-hook-form, Tailwind CSS + shadcn/ui, react-i18next |
-| Backend | Node.js + Express 5 (ESM), TypeScript, Zod, helmet, cors, express-rate-limit, pino |
-| Base de datos | MySQL 8 (capa de datos: Kysely o Prisma, se decide en fase 3) |
-| Autenticación | Better Auth + plugin `admin` (roles `admin`, `staff`) |
-| Monorepo | npm workspaces (sin pnpm) |
-| Tests | Vitest, Supertest, Playwright |
+| Capa          | Tecnología                                                                                                       |
+| ------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Frontend      | React + Vite, TypeScript, React Router, TanStack Query, react-hook-form, Tailwind CSS + shadcn/ui, react-i18next |
+| Backend       | Node.js + Express 5 (ESM), TypeScript, Zod, helmet, cors, express-rate-limit, pino                               |
+| Base de datos | MySQL 8 (capa de datos: Kysely o Prisma, se decide en fase 3)                                                    |
+| Autenticación | Better Auth + plugin `admin` (roles `admin`, `staff`)                                                            |
+| Monorepo      | npm workspaces (sin pnpm)                                                                                        |
+| Tests         | Vitest, Supertest, Playwright                                                                                    |
 
 **Descartado:** Next.js, Drizzle, Docker en desarrollo (se evaluará al desplegar), pasarelas de pago, CMS externo.
 
@@ -97,18 +97,32 @@ docs/              # arquitectura, flujos, seguridad, MCP, decisiones, roadmap
 
 ## Comandos
 
-Se añadirán en la fase 2 (`npm install`, `npm run dev`, `npm test`, `npm run lint`, `npm run typecheck`, `npm run build`).
+Desde la raíz del repo:
+
+| Comando                         | Qué hace                                                            |
+| ------------------------------- | ------------------------------------------------------------------- |
+| `npm install`                   | Instala dependencias de todos los paquetes                          |
+| `npm run dev`                   | API en http://localhost:3000 + web en http://localhost:5173 (proxy) |
+| `npm run typecheck`             | TypeScript en todos los paquetes                                    |
+| `npm run lint`                  | ESLint                                                              |
+| `npm run format`                | Prettier (escribe) · `npm run format:check` solo comprueba          |
+| `npm test`                      | Vitest en todos los paquetes                                        |
+| `npm run build`                 | Build de producción (API con tsup, web con Vite)                    |
+| `npm run check`                 | typecheck + lint + formato + tests (lo mismo que comprueba la CI)   |
+| `npm run dev -w @pachamama/api` | Solo un paquete (`-w` = workspace)                                  |
+
+Versiones fijadas: Node 24, npm 11, **TypeScript 6.0** (TS 7 aún no es compatible con typescript-eslint; ver ADR 0006).
 
 ## Documentación
 
-| Archivo | Contenido |
-|---|---|
-| [`docs/roadmap.md`](docs/roadmap.md) | Fases, estado y decisiones pendientes |
-| [`docs/architecture.md`](docs/architecture.md) | Arquitectura técnica |
-| [`docs/domain-flows.md`](docs/domain-flows.md) | Reservas, pedidos y tienda: estados y reglas |
-| [`docs/security-privacy.md`](docs/security-privacy.md) | Seguridad y DSGVO |
-| [`docs/mcp.md`](docs/mcp.md) | Cómo añadir servidores MCP en cada herramienta |
-| [`docs/decisions/`](docs/decisions/) | Registro de decisiones (ADR) |
+| Archivo                                                | Contenido                                      |
+| ------------------------------------------------------ | ---------------------------------------------- |
+| [`docs/roadmap.md`](docs/roadmap.md)                   | Fases, estado y decisiones pendientes          |
+| [`docs/architecture.md`](docs/architecture.md)         | Arquitectura técnica                           |
+| [`docs/domain-flows.md`](docs/domain-flows.md)         | Reservas, pedidos y tienda: estados y reglas   |
+| [`docs/security-privacy.md`](docs/security-privacy.md) | Seguridad y DSGVO                              |
+| [`docs/mcp.md`](docs/mcp.md)                           | Cómo añadir servidores MCP en cada herramienta |
+| [`docs/decisions/`](docs/decisions/)                   | Registro de decisiones (ADR)                   |
 
 ## Entorno del desarrollador
 

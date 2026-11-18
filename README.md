@@ -14,10 +14,29 @@ En desarrollo, por fases. Ver [`docs/roadmap.md`](docs/roadmap.md).
 
 ## Empezar
 
-Las instrucciones de instalación y arranque se añadirán en la fase 2.
-Requisitos: Node.js 24 LTS, npm 11, MySQL 8.
+Requisitos: Node.js 24, npm 11 (MySQL 8 a partir de la fase 3).
+
+```bash
+npm install
+cp .env.example .env   # opcional por ahora: hay valores por defecto
+npm run dev
+```
+
+- Web: http://localhost:5173
+- API: http://localhost:3000/api/v1/health
+
+Antes de subir cambios: `npm run check` (typecheck, lint, formato y tests).
+
+## Estructura
+
+```
+apps/web/          React + Vite (sitio público y /admin)
+apps/api/          Express (API REST)
+packages/shared/   Schemas Zod y tipos compartidos
+docs/              Arquitectura, flujos, seguridad, decisiones, roadmap
+```
 
 ## Documentación
 
-- [`AGENTS.md`](AGENTS.md) — contexto y reglas del proyecto (para personas y agentes de IA)
+- [`AGENTS.md`](AGENTS.md) — contexto, reglas y comandos (para personas y agentes de IA)
 - [`docs/`](docs/) — arquitectura, flujos de negocio, seguridad, decisiones

@@ -4,10 +4,10 @@ Qué plugins, skills, subagentes y servidores MCP usa el proyecto, de dónde vie
 
 ## Global vs. proyecto
 
-| Alcance | Dónde vive | Qué va ahí |
-|---|---|---|
-| **Global (usuario)** | `~/.claude/` (plugins, `~/.claude/skills/`, MCP con `--scope user`) | Herramientas generales útiles en cualquier proyecto |
-| **Proyecto** | Este repo: `.claude/skills/`, `.claude/agents/`, `.mcp.json`, `skills-lock.json` | Lo específico de Pachamama (stack concreto, reglas propias) |
+| Alcance              | Dónde vive                                                                       | Qué va ahí                                                  |
+| -------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **Global (usuario)** | `~/.claude/` (plugins, `~/.claude/skills/`, MCP con `--scope user`)              | Herramientas generales útiles en cualquier proyecto         |
+| **Proyecto**         | Este repo: `.claude/skills/`, `.claude/agents/`, `.mcp.json`, `skills-lock.json` | Lo específico de Pachamama (stack concreto, reglas propias) |
 
 Regla: **no instalar lo mismo en los dos sitios**. Lo global se documenta aquí para poder reinstalarlo en otra máquina.
 
@@ -15,64 +15,64 @@ Criterio de selección: fuente oficial (Anthropic, el fabricante de la herramien
 
 ## Skills globales (`~/.claude/skills/`)
 
-| Skill | Fuente | Área | Para qué |
-|---|---|---|---|
-| find-skills | [vercel-labs/skills](https://github.com/vercel-labs/skills) | Meta | Buscar e instalar skills (skills.sh) |
-| frontend-design | [anthropics/skills](https://github.com/anthropics/skills) | Diseño | Dirección visual cuidada, no genérica |
-| webapp-testing | anthropics/skills | Frontend / QA | Probar la web local con Playwright |
-| vercel-react-best-practices | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | Frontend | Rendimiento en React (ignorar reglas de Next.js) |
-| web-design-guidelines | vercel-labs/agent-skills | Diseño / UX | Revisar UI contra guías de interfaz |
-| accessibility | [addyosmani/web-quality-skills](https://github.com/addyosmani/web-quality-skills) | Frontend | Auditoría WCAG 2.2 |
-| seo | addyosmani/web-quality-skills | Frontend | Meta tags, datos estructurados, sitemap |
-| vite | [antfu/skills](https://github.com/antfu/skills) | Frontend | Configuración de Vite |
-| vitest | antfu/skills | Tests | Tests unitarios |
-| mysql | [planetscale/database-skills](https://github.com/planetscale/database-skills) | BD | Esquema, índices, consultas, migraciones en MySQL/InnoDB |
-| brainstorming, writing-plans, executing-plans | [obra/superpowers](https://github.com/obra/superpowers) | Método | Diseñar y planificar antes de programar |
-| test-driven-development | obra/superpowers | Método | TDD (test primero) |
-| systematic-debugging | obra/superpowers | Método | Depurar buscando la causa raíz |
-| verification-before-completion | obra/superpowers | Método | No dar nada por hecho sin evidencia |
-| requesting-code-review, receiving-code-review | obra/superpowers | Método | Revisión de código |
-| subagent-driven-development, dispatching-parallel-agents | obra/superpowers | Subagentes | Repartir trabajo extenso entre subagentes |
-| finishing-a-development-branch | obra/superpowers | Git | Cerrar una rama `feat/*` |
+| Skill                                                    | Fuente                                                                            | Área          | Para qué                                                 |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------- | -------------------------------------------------------- |
+| find-skills                                              | [vercel-labs/skills](https://github.com/vercel-labs/skills)                       | Meta          | Buscar e instalar skills (skills.sh)                     |
+| frontend-design                                          | [anthropics/skills](https://github.com/anthropics/skills)                         | Diseño        | Dirección visual cuidada, no genérica                    |
+| webapp-testing                                           | anthropics/skills                                                                 | Frontend / QA | Probar la web local con Playwright                       |
+| vercel-react-best-practices                              | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)           | Frontend      | Rendimiento en React (ignorar reglas de Next.js)         |
+| web-design-guidelines                                    | vercel-labs/agent-skills                                                          | Diseño / UX   | Revisar UI contra guías de interfaz                      |
+| accessibility                                            | [addyosmani/web-quality-skills](https://github.com/addyosmani/web-quality-skills) | Frontend      | Auditoría WCAG 2.2                                       |
+| seo                                                      | addyosmani/web-quality-skills                                                     | Frontend      | Meta tags, datos estructurados, sitemap                  |
+| vite                                                     | [antfu/skills](https://github.com/antfu/skills)                                   | Frontend      | Configuración de Vite                                    |
+| vitest                                                   | antfu/skills                                                                      | Tests         | Tests unitarios                                          |
+| mysql                                                    | [planetscale/database-skills](https://github.com/planetscale/database-skills)     | BD            | Esquema, índices, consultas, migraciones en MySQL/InnoDB |
+| brainstorming, writing-plans, executing-plans            | [obra/superpowers](https://github.com/obra/superpowers)                           | Método        | Diseñar y planificar antes de programar                  |
+| test-driven-development                                  | obra/superpowers                                                                  | Método        | TDD (test primero)                                       |
+| systematic-debugging                                     | obra/superpowers                                                                  | Método        | Depurar buscando la causa raíz                           |
+| verification-before-completion                           | obra/superpowers                                                                  | Método        | No dar nada por hecho sin evidencia                      |
+| requesting-code-review, receiving-code-review            | obra/superpowers                                                                  | Método        | Revisión de código                                       |
+| subagent-driven-development, dispatching-parallel-agents | obra/superpowers                                                                  | Subagentes    | Repartir trabajo extenso entre subagentes                |
+| finishing-a-development-branch                           | obra/superpowers                                                                  | Git           | Cerrar una rama `feat/*`                                 |
 
 ## Skills de proyecto (`.claude/skills/`)
 
-| Skill | Fuente | Para qué |
-|---|---|---|
-| api-module, db-change, web-feature | Este repo | Recetas propias |
-| better-auth-best-practices | [better-auth/skills](https://github.com/better-auth/skills) | Configurar Better Auth |
-| better-auth-security-best-practices | better-auth/skills | Endurecer la autenticación |
-| email-and-password-best-practices | better-auth/skills | Login con email/contraseña |
-| shadcn | [shadcn-ui/ui](https://github.com/shadcn-ui/ui) | Componentes shadcn/ui (si se confirma su uso) |
+| Skill                               | Fuente                                                      | Para qué                                      |
+| ----------------------------------- | ----------------------------------------------------------- | --------------------------------------------- |
+| api-module, db-change, web-feature  | Este repo                                                   | Recetas propias                               |
+| better-auth-best-practices          | [better-auth/skills](https://github.com/better-auth/skills) | Configurar Better Auth                        |
+| better-auth-security-best-practices | better-auth/skills                                          | Endurecer la autenticación                    |
+| email-and-password-best-practices   | better-auth/skills                                          | Login con email/contraseña                    |
+| shadcn                              | [shadcn-ui/ui](https://github.com/shadcn-ui/ui)             | Componentes shadcn/ui (si se confirma su uso) |
 
 ## Subagentes de proyecto (`.claude/agents/`)
 
-| Subagente | Para qué |
-|---|---|
-| code-reviewer | Revisar una rama contra `AGENTS.md`, arquitectura y seguridad (solo lectura) |
-| qa-tester | Ejecutar typecheck, lint, tests, build y pruebas en navegador (solo verifica) |
+| Subagente     | Para qué                                                                      |
+| ------------- | ----------------------------------------------------------------------------- |
+| code-reviewer | Revisar una rama contra `AGENTS.md`, arquitectura y seguridad (solo lectura)  |
+| qa-tester     | Ejecutar typecheck, lint, tests, build y pruebas en navegador (solo verifica) |
 
 ## Plugins (globales, se instalan desde la app de Claude)
 
-| Plugin | Fuente | Estado |
-|---|---|---|
-| Figma | Figma | Pendiente (plan gratuito: ~6 llamadas/mes) |
-| Playwright | Microsoft | Pendiente |
-| Context7 | Upstash | Pendiente |
-| typescript-lsp | Anthropic | Pendiente |
-| Security Guidance | Anthropic | Pendiente |
+| Plugin            | Fuente    | Estado                                     |
+| ----------------- | --------- | ------------------------------------------ |
+| Figma             | Figma     | Pendiente (plan gratuito: ~6 llamadas/mes) |
+| Playwright        | Microsoft | Pendiente                                  |
+| Context7          | Upstash   | Pendiente                                  |
+| typescript-lsp    | Anthropic | Pendiente                                  |
+| Security Guidance | Anthropic | Pendiente                                  |
 
 ## Otros programas
 
-| Programa | Estado |
-|---|---|
+| Programa          | Estado                           |
+| ----------------- | -------------------------------- |
 | GitHub CLI (`gh`) | Instalado; falta `gh auth login` |
 
 ## Opcionales
 
-| Herramienta | Condición |
-|---|---|
-| shadcn MCP (`npx shadcn@latest mcp`) | Si se usa shadcn/ui |
+| Herramienta                                          | Condición                                      |
+| ---------------------------------------------------- | ---------------------------------------------- |
+| shadcn MCP (`npx shadcn@latest mcp`)                 | Si se usa shadcn/ui                            |
 | MySQL MCP (comunitario, `benborla/mcp-server-mysql`) | Fase 3, solo con usuario MySQL de solo lectura |
 
 ## Reinstalar en otra máquina
