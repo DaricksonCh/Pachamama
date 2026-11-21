@@ -60,6 +60,30 @@ Para trabajo extenso, el agente principal delega en subagentes (cada uno trabaja
 
 Reglas: un subagente que **escribe** código nunca comparte archivos con otro en paralelo; los de revisión/QA solo leen y reportan; el agente principal comprueba siempre el resultado antes de darlo por hecho.
 
+## Skills obligatorias por tipo de tarea
+
+Antes de empezar una tarea, el agente **consulta (carga) las skills que le corresponden** según esta tabla, aunque el usuario no las nombre, y al terminar indica cuáles usó. Las skills globales (`~/.claude/skills/`) y las del proyecto (`.claude/skills/`) están disponibles en todas las sesiones. Si una tarea encaja en varias filas, se usan todas.
+
+| Tarea                                              | Skills a consultar                                                                                                                |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Planificar una fase o funcionalidad nueva          | `brainstorming`, `writing-plans`                                                                                                  |
+| Diseño visual, maquetación, tokens, componentes UI | `frontend-design`, `tailwind-design-system`, `web-design-guidelines`, `accessibility`, `shadcn`                                   |
+| Páginas o funcionalidades del frontend             | `web-feature`, `vercel-react-best-practices`, `tanstack-query-best-practices`, `loading-states`, `accessibility`                  |
+| Formularios (reservas, pedidos, contacto, login)   | `react-hook-form`, `owasp-security`, `gdpr-dsgvo-expert`, `accessibility`                                                         |
+| Endpoints o módulos de la API                      | `api-module`, `nodejs-backend-patterns`, `owasp-security`                                                                         |
+| Base de datos: esquema, migraciones, consultas     | `db-change`, `mysql`                                                                                                              |
+| Autenticación y panel admin                        | `better-auth-best-practices`, `better-auth-security-best-practices`, `email-and-password-best-practices`, `shadcn`, `web-feature` |
+| Datos personales, cookies, textos legales (DSGVO)  | `gdpr-dsgvo-expert`, `gdpr-data-handling`                                                                                         |
+| Escribir tests                                     | `testing-strategy`, `test-driven-development`, `vitest`, `playwright-best-practices`, `e2e-testing-patterns`                      |
+| Probar la web en el navegador                      | `webapp-testing`, `playwright-cli`                                                                                                |
+| SEO, rendimiento, auditoría antes de publicar      | `seo`, `performance`, `core-web-vitals`, `best-practices`, `web-quality-audit`                                                    |
+| Configurar Vite                                    | `vite`                                                                                                                            |
+| Un bug o un test que falla                         | `systematic-debugging`                                                                                                            |
+| Antes de decir "terminado" o hacer commit          | `verification-before-completion`                                                                                                  |
+| Revisión de código y cierre de rama                | `requesting-code-review`, `receiving-code-review`, `finishing-a-development-branch`                                               |
+| Trabajo extenso o tareas en paralelo               | `subagent-driven-development`, `dispatching-parallel-agents`                                                                      |
+| Buscar una skill que falte                         | `find-skills` (verificar la fuente antes de instalar; documentar en `docs/tooling.md` y añadirla a esta tabla)                    |
+
 ## Diseño
 
 Todavía no hay diseño definitivo en Figma (plan gratuito, MCP muy limitado). El diseño puede crearse con la skill `frontend-design`, tomando como referencia webs que indique el usuario; si más adelante llega un Figma, este manda. Los tokens de diseño (colores, tipografías, espaciados) se centralizan en la configuración de Tailwind.
