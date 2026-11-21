@@ -82,25 +82,25 @@ Módulo `apps/api/src/modules/menu/` (routes → controller → service → repo
 | GET    | `/api/v1/menu`                 | Categorías visibles con sus platos visibles, ordenados, ambos idiomas. Sin campos internos. |
 | GET    | `/api/v1/menu/pdf?lang=de\|es` | `application/pdf`, `Content-Disposition: inline; filename="pachamama-karte-de.pdf"`         |
 
-Estas dos rutas sobrescriben el `Cache-Control: no-store` general por `public, max-age=300` (no tienen datos personales). El PDF se cachea en memoria por idioma y se invalida en cualquier escritura de la carta.
+Estas dos rutas sobrescriben el `Cache-Control: no-store` general por `no-cache` + `ETag` con la versión de la carta (no tienen datos personales; respuesta 304 si no cambió). El PDF se cachea en memoria por idioma y se invalida en cualquier escritura de la carta.
 
 ### Panel (requieren sesión)
 
-| Método | Ruta                                                            | Rol                                                   |
-| ------ | --------------------------------------------------------------- | ----------------------------------------------------- |
-| GET    | `/api/v1/admin/menu/summary`                                    | admin, staff                                          |
-| GET    | `/api/v1/admin/menu/categories?status=`                         | admin, staff                                          |
-| POST   | `/api/v1/admin/menu/categories`                                 | admin                                                 |
-| GET    | `/api/v1/admin/menu/categories/:id`                             | admin, staff                                          |
-| PATCH  | `/api/v1/admin/menu/categories/:id`                             | admin                                                 |
-| PUT    | `/api/v1/admin/menu/categories/order`                           | admin                                                 |
-| GET    | `/api/v1/admin/menu/dishes?categoryId=&status=&q=&provisional=` | admin, staff                                          |
-| POST   | `/api/v1/admin/menu/dishes`                                     | admin                                                 |
-| GET    | `/api/v1/admin/menu/dishes/:id`                                 | admin, staff                                          |
-| PATCH  | `/api/v1/admin/menu/dishes/:id`                                 | admin (staff: solo `status` entre `visible`/`hidden`) |
-| PUT    | `/api/v1/admin/menu/dishes/order`                               | admin                                                 |
-| PUT    | `/api/v1/admin/menu/dishes/:id/image`                           | admin (multipart, campo `image`)                      |
-| DELETE | `/api/v1/admin/menu/dishes/:id/image`                           | admin                                                 |
+| Método | Ruta                                                            | Rol                                                                   |
+| ------ | --------------------------------------------------------------- | --------------------------------------------------------------------- |
+| GET    | `/api/v1/admin/menu/summary`                                    | admin, staff                                                          |
+| GET    | `/api/v1/admin/menu/categories?status=`                         | admin, staff                                                          |
+| POST   | `/api/v1/admin/menu/categories`                                 | admin                                                                 |
+| GET    | `/api/v1/admin/menu/categories/:id`                             | admin, staff                                                          |
+| PATCH  | `/api/v1/admin/menu/categories/:id`                             | admin                                                                 |
+| PUT    | `/api/v1/admin/menu/categories/order`                           | admin                                                                 |
+| GET    | `/api/v1/admin/menu/dishes?categoryId=&status=&q=&provisional=` | admin, staff                                                          |
+| POST   | `/api/v1/admin/menu/dishes`                                     | admin                                                                 |
+| GET    | `/api/v1/admin/menu/dishes/:id`                                 | admin, staff                                                          |
+| PATCH  | `/api/v1/admin/menu/dishes/:id`                                 | admin (staff: solo `status` entre `visible`/`hidden`)                 |
+| PUT    | `/api/v1/admin/menu/dishes/order`                               | admin                                                                 |
+| PUT    | `/api/v1/admin/menu/dishes/:id/image`                           | admin (multipart: `image` + `altDe` + `altEs`, los tres obligatorios) |
+| DELETE | `/api/v1/admin/menu/dishes/:id/image`                           | admin                                                                 |
 
 Archivar/restaurar = `PATCH { status }`. No hay `DELETE` de registros.
 
@@ -108,7 +108,7 @@ Archivar/restaurar = `PATCH { status }`. No hay `DELETE` de registros.
 
 **CSRF (pendiente de la revisión de la fase 3):** middleware en `/api/v1` para métodos que modifican: exige `Origin` (o `Sec-Fetch-Site: same-origin`) igual a `WEB_ORIGIN` y `Content-Type: application/json` o `multipart/form-data`. Si no, 403.
 
-**Fotos:** `multer` en memoria (10 MB, 1 archivo) → `sharp` (decodifica = valida, `rotate()`, sin metadatos) → WebP 400/800/1600 px en `UPLOADS_DIR/dishes/<uuid>-<ancho>.webp`. Al reemplazar o quitar, se borran los archivos anteriores después de guardar en BD. Servido en `/uploads` con `Cache-Control: public, max-age=31536000, immutable`. Variable nueva `UPLOADS_DIR` (por defecto `./uploads`, ignorada por git; carpeta aparte en tests).
+**Fotos:** `multer` en memoria (10 MB, 1 archivo) → `sharp` (decodifica = valida, `rotate()`, sin metadatos) → WebP 400/800/1600 px en `UPLOADS_DIR/dishes/<uuid>-<ancho>.webp`. Al reemplazar o quitar, se borran los archivos anteriores después de guardar en BD. **Foto y texto alternativo van juntos:** la foto y su alt de/es se guardan en la misma petición multipart, así nunca hay foto sin alt. `PATCH` del plato solo acepta cambiar `imageAltDe/Es` si el plato ya tiene foto (si no, 400). En un plato nuevo, el formulario crea primero el plato (`POST`) y, si se eligió foto, la sube a continuación; si la subida falla, el plato queda guardado sin foto y el formulario lo dice. Servido en `/uploads` con `Cache-Control: public, max-age=31536000, immutable`. Variable nueva `UPLOADS_DIR` (por defecto `./uploads`, ignorada por git; carpeta aparte en tests).
 
 ## 4. PDF de la carta
 
@@ -120,6 +120,8 @@ Archivar/restaurar = `PATCH { status }`. No hay `DELETE` de registros.
 - Última página: leyenda de alérgenos en el idioma del PDF, aviso LMIV, dirección y horario.
 - Colores del logo (verde oscuro y mostaza) sobre fondo crema; tipografías libres (OFL) incrustadas desde `apps/api/assets/fonts/`.
 - Objetivo de peso: < 3 MB con fotos (se usan las versiones de 800 px).
+- **Caché:** `Cache-Control: no-cache` + `ETag` (versión de la carta). El navegador siempre pregunta y recibe 304 si nada cambió: los cambios se ven al momento sin regenerar el PDF en cada descarga. En el servidor, el PDF se guarda en memoria por idioma y se invalida en cada escritura.
+- Dirección y horario del PDF: constantes en `packages/shared` (`restaurant-info.ts`) hasta que la fase 4 los haga editables; los valores provisionales salen de `docs/pendientes.md`.
 - El logo se convierte de `material/logo/logo.pdf` a PNG/SVG y se guarda en `apps/api/assets/`.
 
 ## 5. Panel `/admin` (web)
@@ -179,7 +181,9 @@ En móvil, el lateral es un menú desplegable (`Sheet`). Los módulos futuros no
 
 ## 6. Carga inicial
 
-Script idempotente `npm run db:seed:menu` (`apps/api/scripts/seed-menu.ts`): si no hay categorías, inserta la carta del PDF con traducción al español y las marcas `is_provisional` + nota según [`docs/pendientes.md`](../../pendientes.md). Si existe `material/fotos/`, procesa las fotos que se correspondan con platos (mapa nombre de archivo → plato en el script) por el mismo servicio de imágenes. Los datos de la carta viven en `apps/api/scripts/data/menu-seed.ts`. Se ejecuta en local y en producción una sola vez.
+Script idempotente `npm run db:seed:menu` (`apps/api/scripts/seed-menu.ts`): si no hay categorías, inserta la carta del PDF con traducción al español y las marcas `is_provisional` + nota según [`docs/pendientes.md`](../../pendientes.md). Si existe `material/fotos/`, procesa las fotos que se correspondan con platos (mapa nombre de archivo → plato en el script) por el mismo servicio de imágenes. Los datos de la carta viven en `apps/api/scripts/data/menu-seed.ts`. **Platos con precio dudoso (decidido por el usuario):** se cargan **visibles** con el precio más probable según la maquetación del PDF, con `is_provisional = true` y la duda en `provisional_note`. La web y el PDF los muestran normalmente (la marca "provisional" solo se ve en el panel). Excepción: **Tiradito** no tiene precio en el PDF → se carga **oculto** con precio 0,00 y provisional. El test de publicación de M4 avisa mientras quede alguno provisional.
+
+Se ejecuta en local y en producción una sola vez. Funciona sin la carpeta de fotos (avisa y sigue). Para producción (M4) se copian `material/fotos/` al servidor y se ejecuta allí; el alt de/es de cada foto va en el mapa del script.
 
 Categorías (en orden): Vorspeisen/Entrantes · Suppen & Salate/Sopas y ensaladas · Fingerfood · Hauptgerichte/Platos principales · Vom Grill – Anticuchos/A la parrilla – Anticuchos · Beilagen/Guarniciones (Extras) · Dips/Salsas.
 
