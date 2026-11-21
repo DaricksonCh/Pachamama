@@ -3,6 +3,15 @@ import { expect, type Page, test } from '@playwright/test';
 import { E2E_ADMIN } from './fixtures';
 
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
+// Reglas de landmarks (un único <main> de primer nivel, contenido dentro de landmarks).
+const LANDMARK_RULES = ['landmark-no-duplicate-main', 'landmark-main-is-top-level', 'region'];
+
+/** WCAG 2.2 AA + reglas de landmarks (dos pasadas: withRules sustituye a withTags). */
+async function axeViolations(page: Page) {
+  const wcag = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
+  const landmarks = await new AxeBuilder({ page }).withRules(LANDMARK_RULES).analyze();
+  return [...wcag.violations, ...landmarks.violations].map((v) => `${v.id}: ${v.help}`);
+}
 
 let ipSeq = 0;
 /** IP propia por test: el límite de intentos de login es por IP (ver admin-login.spec.ts). */
@@ -87,8 +96,8 @@ test.describe('panel /admin: navegación lateral e inicio', () => {
       'false',
     );
 
-    const de = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
-    expect(de.violations.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+    const de = await axeViolations(page);
+    expect(de).toEqual([]);
 
     await page.getByRole('button', { name: 'Español' }).click();
     await expect(page.getByRole('region', { name: 'Resumen de la carta' })).toHaveAttribute(
@@ -96,8 +105,20 @@ test.describe('panel /admin: navegación lateral e inicio', () => {
       'false',
     );
 
-    const es = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
-    expect(es.violations.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+    const es = await axeViolations(page);
+    expect(es).toEqual([]);
+  });
+
+  test('el login vuelve a la sección pedida', async ({ page }) => {
+    await page.goto('/admin/menu/dishes?status=visible');
+    await expect(page).toHaveURL(/[/]admin[/]login[?]next=/);
+    await page.getByLabel('E-Mail').fill(E2E_ADMIN.email);
+    await page.getByLabel('Passwort').fill(E2E_ADMIN.password);
+    await page.getByRole('button', { name: 'Anmelden' }).click();
+
+    await expect(page).toHaveURL(/[/]admin[/]menu[/]dishes[?]status=visible$/);
+    await expect(page.getByRole('heading', { name: 'Gerichte' })).toBeVisible();
+    await expect(page.locator('main')).toHaveCount(1);
   });
 
   test('con la sesión borrada, entrar en una sección lleva al login', async ({

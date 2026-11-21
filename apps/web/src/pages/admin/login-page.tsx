@@ -8,6 +8,7 @@ import type { z } from 'zod';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AdminLanguageSwitcher } from '@/features/admin/admin-language';
 import { useAdminLanguage } from '@/features/admin/use-admin-language';
+import { safeNext } from '@/features/auth/safe-next';
 import { currentUserQueryKey, useCurrentUser } from '@/features/auth/use-current-user';
 import { authClient } from '@/lib/auth-client';
 
@@ -20,13 +21,6 @@ function loginErrorKey(error: { status?: number; code?: string }) {
   if (error.code === 'BANNED_USER') return 'admin.login.errors.blocked';
   if (error.status === 401 || error.status === 400) return 'admin.login.errors.invalidCredentials';
   return 'admin.login.errors.unexpected';
-}
-
-/** Destino tras el login: solo rutas internas del panel (evita redirecciones abiertas). */
-function safeNext(value: string | null) {
-  if (!value || !value.startsWith('/admin') || value.startsWith('/admin/login')) return '/admin';
-  // Debe ser /admin o /admin/..., no p. ej. /admin.evil o rutas con barra invertida.
-  return /^\/admin(?:[/?#][^\\]*)?$/.test(value) ? value : '/admin';
 }
 
 const inputClass =

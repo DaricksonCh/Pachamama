@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
-import { ApiError, apiSend } from './api';
+import { apiSend } from './api';
 
 const schema = z.object({ data: z.object({ id: z.number() }) });
 
@@ -50,6 +50,5 @@ describe('apiSend', () => {
       status: 409,
       code: 'CATEGORY_HAS_DISHES',
     });
-    expect(ApiError).toBeDefined();
   });
 });

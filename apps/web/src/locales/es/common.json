@@ -72,7 +72,8 @@
       "opensInNewTab": "(se abre en una pestaña nueva)",
       "open": "Abrir menú",
       "toggle": "Mostrar u ocultar el menú lateral",
-      "mobileDescription": "Muestra el menú lateral en el móvil."
+      "mobileDescription": "Muestra el menú lateral en el móvil.",
+      "skipToContent": "Saltar al contenido"
     },
     "menu": {
       "comingSoon": "Esta vista llegará pronto.",
@@ -91,6 +92,12 @@
   },
   "validation": {
     "email": "Introduce un email válido.",
-    "required": "Este campo es obligatorio."
+    "required": "Este campo es obligatorio.",
+    "tooLong": "El texto es demasiado largo.",
+    "price": "Introduce un precio válido, p. ej. 12,90.",
+    "allergen": "Código de alérgeno no válido."
+  },
+  "common": {
+    "close": "Cerrar"
   }
 }

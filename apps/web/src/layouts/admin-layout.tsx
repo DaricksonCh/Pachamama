@@ -3,6 +3,7 @@ import { LogOut } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router';
+import { Toaster } from '@/components/ui/sonner';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
@@ -80,38 +81,51 @@ export function AdminLayout() {
   };
 
   return (
-    <SidebarProvider>
-      <AdminSidebar />
-      <SidebarInset>
-        <header className="border-b bg-card">
-          <div className="flex flex-wrap items-center gap-3 px-4 py-3">
-            <SidebarTrigger aria-label={t('admin.nav.open')} />
-            <Separator orientation="vertical" className="hidden h-6 sm:block" />
-            <span className="font-display text-lg font-semibold text-primary">
-              {t('admin.title')}
-            </span>
-            <div className="ml-auto flex flex-wrap items-center gap-3 text-sm">
-              <AdminLanguageSwitcher />
-              <span>
-                {user.name}
-                {user.role ? ` (${t(`admin.roles.${user.role}`)})` : ''}
+    <>
+      <a
+        href="#main-content"
+        className="sr-only z-50 rounded-md bg-background px-4 py-2 text-foreground focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:outline-2 focus:outline-ring"
+      >
+        {t('admin.nav.skipToContent')}
+      </a>
+      <SidebarProvider>
+        <AdminSidebar />
+        <SidebarInset>
+          <header className="border-b bg-card">
+            <div className="flex flex-wrap items-center gap-3 px-4 py-3">
+              <SidebarTrigger aria-label={t('admin.nav.open')} />
+              <Separator orientation="vertical" className="hidden h-6 sm:block" />
+              <span className="font-display text-lg font-semibold text-primary">
+                {t('admin.title')}
               </span>
-              <Button variant="outline" size="sm" onClick={() => void signOut()}>
-                <LogOut aria-hidden="true" />
-                {t('admin.signOut')}
-              </Button>
+              <div className="ml-auto flex flex-wrap items-center gap-3 text-sm">
+                <AdminLanguageSwitcher />
+                <span>
+                  {user.name}
+                  {user.role ? ` (${t(`admin.roles.${user.role}`)})` : ''}
+                </span>
+                <Button variant="outline" size="sm" onClick={() => void signOut()}>
+                  <LogOut aria-hidden="true" />
+                  {t('admin.signOut')}
+                </Button>
+              </div>
             </div>
-          </div>
-          {signOutFailed ? (
-            <p className="bg-red-50 px-4 py-2 text-center text-sm text-red-800" role="alert">
-              {t('admin.errors.signOutFailed')}
-            </p>
-          ) : null}
-        </header>
-        <main className="mx-auto w-full max-w-6xl px-4 py-8">
-          <Outlet />
-        </main>
-      </SidebarInset>
-    </SidebarProvider>
+            {signOutFailed ? (
+              <p className="bg-red-50 px-4 py-2 text-center text-sm text-red-800" role="alert">
+                {t('admin.errors.signOutFailed')}
+              </p>
+            ) : null}
+          </header>
+          <main
+            id="main-content"
+            tabIndex={-1}
+            className="mx-auto w-full max-w-6xl px-4 py-8 outline-none"
+          >
+            <Outlet />
+          </main>
+        </SidebarInset>
+      </SidebarProvider>
+      <Toaster />
+    </>
   );
 }

@@ -72,7 +72,8 @@
       "opensInNewTab": "(öffnet in neuem Tab)",
       "open": "Menü öffnen",
       "toggle": "Seitenmenü ein-/ausklappen",
-      "mobileDescription": "Zeigt das Seitenmenü auf dem Handy."
+      "mobileDescription": "Zeigt das Seitenmenü auf dem Handy.",
+      "skipToContent": "Zum Inhalt springen"
     },
     "menu": {
       "comingSoon": "Diese Ansicht folgt in Kürze.",
@@ -91,6 +92,12 @@
   },
   "validation": {
     "email": "Bitte eine gültige E-Mail-Adresse eingeben.",
-    "required": "Dieses Feld ist erforderlich."
+    "required": "Dieses Feld ist erforderlich.",
+    "tooLong": "Der Text ist zu lang.",
+    "price": "Bitte einen gültigen Preis eingeben, z. B. 12,90.",
+    "allergen": "Ungültiger Allergen-Code."
+  },
+  "common": {
+    "close": "Schließen"
   }
 }

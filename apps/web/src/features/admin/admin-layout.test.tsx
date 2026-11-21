@@ -203,3 +203,41 @@ describe('DashboardPage', () => {
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 });
+
+describe('AdminLayout landmarks and login redirect', () => {
+  it('has exactly one main landmark and a skip link to it as first focusable element', async () => {
+    mockApi({
+      '/api/v1/me': () => Response.json({ data: USER }),
+      '/api/v1/admin/menu/summary': () => Response.json({ data: SUMMARY }),
+    });
+    renderAt('/admin');
+    await screen.findByRole('navigation', { name: 'Navegación principal' });
+
+    const mains = screen.getAllByRole('main');
+    expect(mains).toHaveLength(1);
+    expect(mains[0]).toHaveAttribute('id', 'main-content');
+
+    await userEvent.tab();
+    const skip = screen.getByRole('link', { name: 'Saltar al contenido' });
+    expect(skip).toHaveFocus();
+    expect(skip).toHaveAttribute('href', '#main-content');
+  });
+
+  it('sends a signed-in user who lands on the login with a valid next to that section', async () => {
+    mockApi({ '/api/v1/me': () => Response.json({ data: USER }) });
+    const router = renderAt('/admin/login?next=%2Fadmin%2Fmenu%2Fdishes%3Fstatus%3Dvisible');
+
+    await vi.waitFor(() => expect(router.state.location.pathname).toBe('/admin/menu/dishes'));
+    expect(router.state.location.search).toBe('?status=visible');
+  });
+
+  it('ignores an external next', async () => {
+    mockApi({
+      '/api/v1/me': () => Response.json({ data: USER }),
+      '/api/v1/admin/menu/summary': () => Response.json({ data: SUMMARY }),
+    });
+    const router = renderAt('/admin/login?next=https%3A%2F%2Fevil.com');
+
+    await vi.waitFor(() => expect(router.state.location.pathname).toBe('/admin'));
+  });
+});
