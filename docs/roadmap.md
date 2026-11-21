@@ -16,51 +16,53 @@ El restaurante **se queda sin página web ese día**. Prioridad absoluta: tener 
 | 1   | Repositorio y contexto de IA | `AGENTS.md`, `CLAUDE.md`, `docs/`, ADRs, `.mcp.json`, skills y subagentes                 |
 | 2   | Andamiaje técnico            | Monorepo web + API + shared, `GET /api/v1/health`, i18n de/es, ESLint/Prettier/Vitest, CI |
 
-## Entrega MVP (antes del 01.12.2026)
+## Entrega antes del 01.12.2026 (plan revisado el 2026-11-21)
 
-Sin base de datos: los contenidos viven en archivos del repo (JSON/Markdown por idioma).
+**Cambio de plan:** el restaurante ya no tiene web ni dominio, así que la nueva sale **directamente con base de datos y panel admin** para que el personal gestione su carta (platos, precios, alérgenos, fotos y el PDF descargable) sin depender del desarrollador. El diseño avanza **en paralelo** porque no depende de la BD.
 
-| Bloque | Contenido                                                                                                          | Fechas orientativas | Estado      |
-| ------ | ------------------------------------------------------------------------------------------------------------------ | ------------------- | ----------- |
-| M1     | **Diseño**: dirección visual con `frontend-design` + webs de referencia; tokens en Tailwind; decidir shadcn        | 18–20.11            | ⏭ Siguiente |
-| M2     | **Páginas públicas (de/es)**: Inicio, Menú, Historia, Contacto (horarios, dirección, mapa), Impressum, Datenschutz | 21–25.11            | Pendiente   |
-| M3     | **Reservas por formulario**: email al restaurante + acuse al cliente; Zod, rate-limit, honeypot, consentimiento    | 26–27.11            | Pendiente   |
-| M4     | **Despliegue**: hosting UE, dominio y DNS, HTTPS, SEO básico (prerender, sitemap), prueba final                    | 28–29.11            | Pendiente   |
-| —      | Margen para imprevistos                                                                                            | 30.11               | —           |
+| Bloque | Contenido                                                                                                                             | Fechas   | Estado     |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------- | -------- | ---------- |
+| F3     | **BD y login**: Kysely + migraciones, Better Auth + plugin admin, login de `/admin`, primer admin, permisos (ADR 0007)                | 22–23.11 | ⏭ En curso |
+| F5     | **Carta editable**: categorías y platos (de/es, precio, alérgenos, foto, visible, orden), carga inicial desde el PDF, PDF descargable | 24–26.11 | Pendiente  |
+| M1     | **Diseño** (en paralelo): paleta y estilo del logo, tokens Tailwind, decidir shadcn, maquetas                                         | 22–26.11 | Pendiente  |
+| M2     | **Páginas públicas (de/es)**: Inicio, Carta (desde la BD), Historia (lorem), Contacto + mapa, Impressum, Datenschutz                  | 27–28.11 | Pendiente  |
+| M4     | **Publicación**: servidor en la UE (Node + MySQL), dominio nuevo, HTTPS, copias de seguridad, SEO básico                              | 29.11    | Pendiente  |
+| —      | Margen                                                                                                                                | 30.11    | —          |
 
-**En paralelo desde ya (camino crítico):** elegir hosting y gestionar el dominio actual (DNS/transferencia).
+**Después del 01.12:** reservas (formulario por email primero, luego en BD), horarios editables, noticias, pedidos, tienda, multimedia, textos legales editables.
 
-## Después de la entrega
+**Datos provisionales:** horario, teléfono, email, Impressum, historia (lorem) y alérgenos dudosos de la carta llevan datos genéricos marcados como provisionales. Un test bloquea la publicación mientras queden.
 
-| #   | Fase                          | Contenido                                                                                   | Estado    |
-| --- | ----------------------------- | ------------------------------------------------------------------------------------------- | --------- |
-| 3   | Base de datos y autenticación | MySQL 8.4, Kysely, migraciones, Better Auth + plugin admin, login de `/admin`, primer admin | Pendiente |
-| 4   | Horarios y cierres            | Horario semanal y cierres editables desde el panel                                          | Pendiente |
-| 5   | Menú en BD                    | Categorías, platos, precios, alérgenos, imágenes, traducciones; migrar el menú del MVP      | Pendiente |
-| 6   | Noticias y avisos             | Publicaciones y avisos destacados desde el panel                                            | Pendiente |
-| 7   | Reservas en BD                | Guardar reservas, gestión y confirmación desde el panel (sustituye al formulario por email) | Pendiente |
-| 8   | Pedidos gastronómicos         | Pedido para recoger, franjas horarias, estados, emails                                      | Pendiente |
-| 9   | Tienda                        | Productos, stock, compra para recoger                                                       | Pendiente |
-| 10  | Multimedia                    | Galería de fotos y vídeos                                                                   | Pendiente |
-| 11  | Contenidos editables          | Historia y textos legales editables desde el panel                                          | Pendiente |
-| 12  | Producción madura             | Evaluar Docker, backups, monitorización                                                     | Pendiente |
+## Fases posteriores
+
+| #   | Fase                  | Contenido                                                                     | Estado    |
+| --- | --------------------- | ----------------------------------------------------------------------------- | --------- |
+| 4   | Horarios y cierres    | Horario semanal y cierres editables desde el panel                            | Pendiente |
+| 6   | Noticias y avisos     | Publicaciones y avisos destacados desde el panel                              | Pendiente |
+| 7   | Reservas              | Formulario con email y luego en BD, con gestión y confirmación desde el panel | Pendiente |
+| 8   | Pedidos gastronómicos | Pedido para recoger, franjas horarias, estados, emails                        | Pendiente |
+| 9   | Tienda                | Productos, stock, compra para recoger                                         | Pendiente |
+| 10  | Multimedia            | Galería de fotos y vídeos                                                     | Pendiente |
+| 11  | Contenidos editables  | Historia y textos legales editables desde el panel                            | Pendiente |
+| 12  | Producción madura     | Evaluar Docker, monitorización                                                | Pendiente |
 
 ## Información necesaria del restaurante (urgente)
 
-- [ ] Dominio actual y quién lo gestiona (acceso a DNS o transferencia)
-- [ ] Carta: platos, precios, alérgenos (de/es)
+- [x] Dominio: el anterior caducó; se compra uno nuevo al publicar
+- [x] Carta (PDF de/en). Faltan alérgenos y precios de algunos platos (provisionales)
 - [ ] Horarios, dirección, teléfono, email
-- [ ] Logo y fotos
-- [ ] Texto de la historia
+- [x] Logo (PDF, sin vectorial ni manual de marca) y 11 fotos (la cocinera autoriza su foto)
+- [ ] Texto de la historia (por ahora lorem)
 - [ ] Datos del Impressum: razón social, titular, dirección, USt-IdNr.
 - [ ] Email que recibe las reservas
-- [ ] 2–3 webs de referencia para el diseño
+- [x] Webs de referencia: muchosmas.eu, aioli-schnoor.de, Instagram del restaurante
+- [x] Dirección: Am Gaswerk 1, 28197 Bremen
 
 ## Decisiones pendientes
 
 **MVP**
 
-- Hosting en la UE (web estática + API Node pequeña) y proveedor de email (SMTP con contrato AVV).
+- Hosting en la UE con Node + MySQL (p. ej. un VPS pequeño) y proveedor de email (SMTP con contrato AVV).
 - Herramienta de prerender/SEO para la SPA.
 - shadcn/ui sí o no (según el diseño).
 - Anti-bot del formulario (honeypot + rate-limit; Turnstile opcional).
@@ -68,7 +70,7 @@ Sin base de datos: los contenidos viven en archivos del repo (JSON/Markdown por 
 **Fase 3**
 
 - ✅ Base de datos: **MySQL 8.4 LTS Community** en local (puerto 3307), base `pachamama` con usuario propio.
-- Capa de datos: **Kysely + mysql2** (recomendada: misma base que Better Auth).
+- ✅ Capa de datos: **Kysely + mysql2** (ADR 0007).
 - Confirmar `disableSignUp` en Better Auth (solo el admin crea usuarios).
 
 **Más adelante**
@@ -86,3 +88,4 @@ Sin base de datos: los contenidos viven en archivos del repo (JSON/Markdown por 
 | 2026-11-18 | Fase 2 completada: monorepo (web + API + shared), `GET /api/v1/health`, i18n de/es, ESLint/Prettier/Vitest, CI de GitHub Actions.                                                                                                            |
 | 2026-11-18 | MySQL 8.4.13 instalado (puerto 3307, junto a MariaDB de XAMPP). Plan MVP aprobado: web pública publicada antes del 01.12; BD y panel después.                                                                                                |
 | 2026-11-21 | Skills de QA, seguridad (OWASP), DSGVO, rendimiento y formularios. Pruebas: Playwright e2e (escritorio + móvil), axe WCAG 2.2 AA, skeleton loader, tests de seguridad de la API, `db:check`. Regla: no cerrar nada sin `check:all` en verde. |
+| 2026-11-21 | Material del restaurante recibido. Plan revisado: BD y carta editable antes del 01.12 (el restaurante no tiene web ni dominio). ADR 0007: Kysely.                                                                                            |
