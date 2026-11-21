@@ -14,7 +14,10 @@ function normalizeOrigin(value: string): string | null {
   }
 }
 
-const allowedOrigin = () => normalizeOrigin(env.WEB_ORIGIN);
+/** Pura para poder probarla: si el origen permitido no se puede normalizar, se rechaza todo (fail closed). */
+export function isAllowedOrigin(origin: string, allowed: string | null): boolean {
+  return allowed !== null && normalizeOrigin(origin) === allowed;
+}
 
 function reject(): never {
   throw new AppError(403, 'CSRF_REJECTED', 'Request origin not allowed');
@@ -33,16 +36,19 @@ export const csrfProtection: RequestHandler = (req, _res, next) => {
 
   const origin = req.headers.origin;
   if (origin !== undefined) {
-    if (normalizeOrigin(origin) !== allowedOrigin()) reject();
-  } else if (req.headers['sec-fetch-site'] !== 'same-origin') {
+    if (!isAllowedOrigin(origin, normalizeOrigin(env.WEB_ORIGIN))) reject();
+  } else if (
+    // Sin Origin (algunas peticiones same-origin no lo envían): el navegador garantiza Fetch Metadata.
+    req.headers['sec-fetch-site'] !== 'same-origin'
+  ) {
     reject();
   }
 
   const length = req.headers['content-length'];
   const hasBody = (length !== undefined && length !== '0') || !!req.headers['transfer-encoding'];
   if (hasBody) {
-    const type = (req.headers['content-type'] ?? '').toLowerCase();
-    if (!ALLOWED_BODY_TYPES.some((t) => type.startsWith(t))) reject();
+    const type = (req.headers['content-type'] ?? '').split(';')[0]!.trim().toLowerCase();
+    if (!ALLOWED_BODY_TYPES.includes(type)) reject();
   }
 
   next();

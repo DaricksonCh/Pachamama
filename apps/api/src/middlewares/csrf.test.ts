@@ -2,7 +2,8 @@ import express from 'express';
 import request from 'supertest';
 import { describe, expect, it } from 'vitest';
 import { env } from '../config/env';
-import { csrfProtection } from './csrf';
+import { createApp } from '../app';
+import { csrfProtection, isAllowedOrigin } from './csrf';
 import { errorHandler } from './error-handler';
 
 function app() {
@@ -27,7 +28,7 @@ describe('protección CSRF de /api/v1', () => {
   it('POST sin Origin ni Sec-Fetch-Site se rechaza', async () => {
     const res = await request(app()).post('/x').send({ a: 1 });
     expect(res.status).toBe(403);
-    expect(res.body.error?.code ?? res.body.code).toBe('CSRF_REJECTED');
+    expect(res.body.error.code).toBe('CSRF_REJECTED');
   });
 
   it('POST con otro Origin se rechaza', async () => {
@@ -67,5 +68,55 @@ describe('protección CSRF de /api/v1', () => {
   it('GET sin Origin pasa', async () => {
     const res = await request(app()).get('/x');
     expect(res.status).toBe(200);
+  });
+
+  it('isAllowedOrigin falla cerrado si el origen permitido no es válido', () => {
+    expect(isAllowedOrigin('null', null)).toBe(false);
+    expect(isAllowedOrigin('http://localhost:5173', null)).toBe(false);
+    expect(isAllowedOrigin('http://localhost:5173/', 'http://localhost:5173')).toBe(true);
+  });
+
+  it('el tipo de medio debe coincidir exactamente', async () => {
+    const res = await request(app())
+      .post('/x')
+      .set('Origin', origin)
+      .set('Content-Type', 'application/jsonfoo')
+      .send('{}');
+    expect(res.status).toBe(403);
+  });
+
+  it('acepta parámetros y mayúsculas en Content-Type', async () => {
+    for (const type of ['application/json; charset=utf-8', 'Application/JSON']) {
+      const res = await request(app())
+        .post('/x')
+        .set('Origin', origin)
+        .set('Content-Type', type)
+        .send('{}');
+      expect(res.status).toBe(200);
+    }
+  });
+
+  it('multipart/form-data pasa la comprobación', async () => {
+    const res = await request(app())
+      .post('/x')
+      .set('Origin', origin)
+      .set('Content-Type', 'multipart/form-data; boundary=x')
+      .send('--x--');
+    expect(res.status).toBe(200);
+  });
+
+  it('un cuerpo sin Content-Type se rechaza', async () => {
+    const res = await request(app())
+      .post('/x')
+      .set('Origin', origin)
+      .unset('Content-Type')
+      .send(Buffer.from('abc'));
+    expect(res.status).toBe(403);
+  });
+
+  it('createApp monta la protección en /api/v1', async () => {
+    const res = await request(createApp()).post('/api/v1/health').send({});
+    expect(res.status).toBe(403);
+    expect(res.body.error.code).toBe('CSRF_REJECTED');
   });
 });
