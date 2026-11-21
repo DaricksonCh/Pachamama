@@ -76,7 +76,6 @@
       "skipToContent": "Saltar al contenido"
     },
     "menu": {
-      "comingSoon": "Esta vista llegará pronto.",
       "categories": {
         "title": "Categorías",
         "new": "Nueva categoría",
@@ -107,7 +106,82 @@
         "archivedNotice": "Esta categoría está archivada y no aparece en la carta."
       },
       "dishes": {
-        "title": "Platos"
+        "title": "Platos",
+        "new": "Nuevo plato",
+        "edit": "Editar plato",
+        "backToList": "Volver a platos",
+        "notFound": "El plato no existe.",
+        "empty": "Todavía no hay platos.",
+        "emptyFiltered": "Ningún plato coincide con estos filtros.",
+        "saved": "Plato guardado.",
+        "archived": "Plato archivado.",
+        "restored": "Plato restaurado (oculto).",
+        "nowVisible": "«{{name}}» ahora es visible.",
+        "nowHidden": "«{{name}}» ahora está oculto.",
+        "archivedNotice": "Este plato está archivado y no aparece en la carta.",
+        "provisional": "Provisional",
+        "noImage": "Sin foto",
+        "noCategory": "—",
+        "hideNamed": "Ocultar {{name}}",
+        "showNamed": "Mostrar {{name}}",
+        "hide": "Ocultar",
+        "show": "Mostrar",
+        "reorderHint": "Para cambiar el orden, filtra solo por una categoría (sin más filtros).",
+        "columns": {
+          "image": "Foto",
+          "name": "Nombre",
+          "category": "Categoría",
+          "price": "Precio",
+          "status": "Estado",
+          "actions": "Acciones"
+        },
+        "filters": {
+          "label": "Filtrar platos",
+          "search": "Buscar por nombre",
+          "category": "Categoría",
+          "allCategories": "Todas las categorías",
+          "status": "Estado",
+          "statusActive": "Visibles y ocultos",
+          "provisional": "Solo provisionales",
+          "withoutImage": "Solo sin foto",
+          "reset": "Quitar filtros"
+        },
+        "form": {
+          "category": "Categoría",
+          "chooseCategory": "Elige una categoría",
+          "nameDe": "Nombre (alemán)",
+          "nameEs": "Nombre (español)",
+          "descriptionDe": "Descripción (alemán)",
+          "descriptionEs": "Descripción (español)",
+          "counter": "{{count}} de {{max}} caracteres",
+          "price": "Precio (€)",
+          "priceHint": "Con coma o punto, p. ej. 12,90.",
+          "diet": "Dieta",
+          "dietNone": "Ninguna",
+          "dietVegetarian": "Vegetariano",
+          "dietVegan": "Vegano",
+          "allergens": "Alérgenos",
+          "photo": "Foto",
+          "photoHint": "JPEG, PNG o WebP, 10 MB como máximo.",
+          "choosePhoto": "Elegir foto",
+          "changePhoto": "Cambiar foto",
+          "removePhoto": "Quitar foto",
+          "keepPhoto": "Conservar foto",
+          "photoRemoved": "La foto se quitará al guardar.",
+          "preview": "Vista previa de la foto",
+          "altDe": "Descripción de la foto (alemán)",
+          "altEs": "Descripción de la foto (español)",
+          "altHint": "Describe la foto para quien no puede verla.",
+          "visible": "Visible en la carta",
+          "provisional": "Provisional (pendiente de revisar)",
+          "provisionalNote": "Nota de revisión",
+          "requiredHint": "Los campos con * son obligatorios."
+        },
+        "errors": {
+          "imageFailed": "No se pudo guardar la foto.",
+          "createdWithoutImage": "Plato guardado, pero la foto no se pudo subir. Vuelve a intentarlo aquí.",
+          "statusFailed": "No se pudo cambiar el estado."
+        }
       },
       "status": {
         "visible": "Visible",
@@ -166,7 +240,12 @@
     "required": "Este campo es obligatorio.",
     "tooLong": "El texto es demasiado largo.",
     "price": "Introduce un precio válido, p. ej. 12,90.",
-    "allergen": "Código de alérgeno no válido."
+    "allergen": "Código de alérgeno no válido.",
+    "invalid": "Valor no válido.",
+    "invalidCategory": "Elige una categoría activa.",
+    "noImage": "El plato no tiene foto.",
+    "imageTooLarge": "La foto es demasiado grande (máx. 10 MB, 40 megapíxeles).",
+    "imageType": "Solo fotos en formato JPEG, PNG o WebP."
   },
   "common": {
     "close": "Cerrar"

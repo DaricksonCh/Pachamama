@@ -1,10 +1,8 @@
 import type { AdminCategory, MenuStatus } from '@pachamama/shared';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
-import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
   TableBody,
@@ -14,10 +12,12 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useCurrentUser } from '@/features/auth/use-current-user';
-import { useCategories, useReorder } from '@/features/menu/api';
+import { useCategories } from '@/features/menu/api';
+import { LoadError, LoadingBlock } from '@/features/menu/load-states';
 import { ReorderButtons } from '@/features/menu/reorder-buttons';
 import { StatusBadge } from '@/features/menu/status-badge';
 import { useCategoryStatus } from '@/features/menu/use-category-status';
+import { useReorderList } from '@/features/menu/use-reorder-list';
 
 type Filter = 'active' | 'archived';
 
@@ -28,79 +28,17 @@ export function CategoriesPage() {
   const [filter, setFilter] = useState<Filter>('active');
   const status: MenuStatus | undefined = filter === 'archived' ? 'archived' : undefined;
   const { data, isPending, isError, refetch } = useCategories(status);
-  const reorder = useReorder('categories');
-  const [announcement, setAnnouncement] = useState('');
-  // El foco se restaura tras pintar la lista nueva: `moves` fuerza ese efecto en cada reordenado.
-  const pendingFocus = useRef<{ id: number; direction: 'up' | 'down' } | null>(null);
-  const [moves, setMoves] = useState(0);
 
   const nameOf = (c: AdminCategory) => (i18n.language === 'es' ? c.nameEs : c.nameDe);
   const categoryStatus = useCategoryStatus(nameOf);
-
-  const move = async (index: number, direction: 'up' | 'down') => {
-    if (!data) return;
-    const ids = data.map((c) => c.id);
-    const target = direction === 'up' ? index - 1 : index + 1;
-    const moved = ids[index];
-    const other = ids[target];
-    if (moved === undefined || other === undefined) return;
-    ids[index] = other;
-    ids[target] = moved;
-    try {
-      await reorder.mutateAsync(ids);
-      const category = data[index];
-      if (category) {
-        setAnnouncement(
-          t('admin.menu.reorder.moved', {
-            name: nameOf(category),
-            position: target + 1,
-            total: ids.length,
-          }),
-        );
-      }
-      pendingFocus.current = { id: moved, direction };
-      setMoves((n) => n + 1);
-    } catch {
-      toast.error(t('admin.menu.errors.reorderFailed'));
-      // La lista pudo quedar desfasada (otra persona añadió o archivó categorías): se recarga.
-      void refetch();
-    }
-  };
-
-  // Tras reordenar, el foco vuelve al botón de la fila movida (si ya está en el extremo, al contrario).
-  useEffect(() => {
-    const target = pendingFocus.current;
-    if (!target || reorder.isPending) return;
-    pendingFocus.current = null;
-    const find = (direction: string) =>
-      document.querySelector<HTMLButtonElement>(
-        `[data-reorder="${target.id}-${direction}"]:not(:disabled)`,
-      );
-    const opposite = target.direction === 'up' ? 'down' : 'up';
-    (find(target.direction) ?? find(opposite))?.focus();
-  }, [moves, reorder.isPending, data]);
+  // Si la lista quedó desfasada (otra persona añadió o archivó categorías), se recarga.
+  const reorder = useReorderList('categories', data, nameOf, () => void refetch());
 
   let content;
   if (isPending) {
-    content = (
-      <div role="status" aria-busy="true" className="space-y-2">
-        <Skeleton className="h-12 w-full" />
-        <Skeleton className="h-12 w-full" />
-        <Skeleton className="h-12 w-full" />
-        <span className="sr-only">{t('admin.loading')}</span>
-      </div>
-    );
+    content = <LoadingBlock rows={['h-12', 'h-12', 'h-12']} />;
   } else if (isError) {
-    content = (
-      <div className="space-y-3">
-        <p role="alert" className="text-destructive">
-          {t('admin.menu.errors.loadFailed')}
-        </p>
-        <Button variant="outline" onClick={() => void refetch()}>
-          {t('admin.retry')}
-        </Button>
-      </div>
-    );
+    content = <LoadError onRetry={() => void refetch()} />;
   } else if (data.length === 0) {
     content = (
       <p className="text-muted-foreground">
@@ -151,7 +89,7 @@ export function CategoriesPage() {
                         total={data.length}
                         name={nameOf(category)}
                         disabled={reorder.isPending}
-                        onMove={(direction) => void move(index, direction)}
+                        onMove={(direction) => void reorder.move(index, direction)}
                       />
                       <Button
                         variant="outline"
@@ -211,7 +149,7 @@ export function CategoriesPage() {
       {content}
 
       <p role="status" className="sr-only">
-        {announcement}
+        {reorder.announcement}
       </p>
       {categoryStatus.dialog}
     </section>

@@ -3,10 +3,10 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useCurrentUser } from '@/features/auth/use-current-user';
 import { useCategory } from '@/features/menu/api';
 import { CategoryForm } from '@/features/menu/category-form';
+import { LoadError, LoadingBlock } from '@/features/menu/load-states';
 import { StatusBadge } from '@/features/menu/status-badge';
 import { useCategoryStatus } from '@/features/menu/use-category-status';
 import type { AdminCategory } from '@pachamama/shared';
@@ -42,25 +42,9 @@ export function CategoryFormPage() {
   } else if (!validId || (error instanceof ApiError && error.status === 404)) {
     body = <p role="alert">{t('admin.menu.categories.notFound')}</p>;
   } else if (isPending) {
-    body = (
-      <div role="status" aria-busy="true" className="max-w-2xl space-y-4">
-        <Skeleton className="h-9 w-full" />
-        <Skeleton className="h-9 w-full" />
-        <Skeleton className="h-20 w-full" />
-        <span className="sr-only">{t('admin.loading')}</span>
-      </div>
-    );
+    body = <LoadingBlock rows={['h-9', 'h-9', 'h-20']} className="max-w-2xl space-y-4" />;
   } else if (error) {
-    body = (
-      <div className="space-y-3">
-        <p role="alert" className="text-destructive">
-          {t('admin.menu.errors.loadFailed')}
-        </p>
-        <Button variant="outline" onClick={() => void refetch()}>
-          {t('admin.retry')}
-        </Button>
-      </div>
-    );
+    body = <LoadError onRetry={() => void refetch()} />;
   } else {
     body = (
       <div className="space-y-6">

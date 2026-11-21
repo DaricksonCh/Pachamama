@@ -76,7 +76,6 @@
       "skipToContent": "Zum Inhalt springen"
     },
     "menu": {
-      "comingSoon": "Diese Ansicht folgt in Kürze.",
       "categories": {
         "title": "Kategorien",
         "new": "Neue Kategorie",
@@ -107,7 +106,82 @@
         "archivedNotice": "Diese Kategorie ist archiviert und erscheint nicht in der Speisekarte."
       },
       "dishes": {
-        "title": "Gerichte"
+        "title": "Gerichte",
+        "new": "Neues Gericht",
+        "edit": "Gericht bearbeiten",
+        "backToList": "Zurück zu den Gerichten",
+        "notFound": "Das Gericht existiert nicht.",
+        "empty": "Es gibt noch keine Gerichte.",
+        "emptyFiltered": "Keine Gerichte passen zu diesen Filtern.",
+        "saved": "Gericht gespeichert.",
+        "archived": "Gericht archiviert.",
+        "restored": "Gericht wiederhergestellt (versteckt).",
+        "nowVisible": "„{{name}}“ ist jetzt sichtbar.",
+        "nowHidden": "„{{name}}“ ist jetzt versteckt.",
+        "archivedNotice": "Dieses Gericht ist archiviert und erscheint nicht in der Speisekarte.",
+        "provisional": "Vorläufig",
+        "noImage": "Ohne Foto",
+        "noCategory": "—",
+        "hideNamed": "{{name}} verstecken",
+        "showNamed": "{{name}} anzeigen",
+        "hide": "Verstecken",
+        "show": "Anzeigen",
+        "reorderHint": "Zum Ändern der Reihenfolge nur nach einer Kategorie filtern (ohne weitere Filter).",
+        "columns": {
+          "image": "Foto",
+          "name": "Name",
+          "category": "Kategorie",
+          "price": "Preis",
+          "status": "Status",
+          "actions": "Aktionen"
+        },
+        "filters": {
+          "label": "Gerichte filtern",
+          "search": "Nach Name suchen",
+          "category": "Kategorie",
+          "allCategories": "Alle Kategorien",
+          "status": "Status",
+          "statusActive": "Sichtbar und versteckt",
+          "provisional": "Nur vorläufige",
+          "withoutImage": "Nur ohne Foto",
+          "reset": "Filter zurücksetzen"
+        },
+        "form": {
+          "category": "Kategorie",
+          "chooseCategory": "Kategorie wählen",
+          "nameDe": "Name (Deutsch)",
+          "nameEs": "Name (Spanisch)",
+          "descriptionDe": "Beschreibung (Deutsch)",
+          "descriptionEs": "Beschreibung (Spanisch)",
+          "counter": "{{count}} von {{max}} Zeichen",
+          "price": "Preis (€)",
+          "priceHint": "Mit Komma oder Punkt, z. B. 12,90.",
+          "diet": "Ernährung",
+          "dietNone": "Keine Angabe",
+          "dietVegetarian": "Vegetarisch",
+          "dietVegan": "Vegan",
+          "allergens": "Allergene",
+          "photo": "Foto",
+          "photoHint": "JPEG, PNG oder WebP, höchstens 10 MB.",
+          "choosePhoto": "Foto auswählen",
+          "changePhoto": "Foto ändern",
+          "removePhoto": "Foto entfernen",
+          "keepPhoto": "Foto behalten",
+          "photoRemoved": "Das Foto wird beim Speichern entfernt.",
+          "preview": "Vorschau des Fotos",
+          "altDe": "Bildbeschreibung (Deutsch)",
+          "altEs": "Bildbeschreibung (Spanisch)",
+          "altHint": "Beschreibt das Foto für Menschen, die es nicht sehen können.",
+          "visible": "In der Speisekarte sichtbar",
+          "provisional": "Vorläufig (noch zu prüfen)",
+          "provisionalNote": "Notiz zur Prüfung",
+          "requiredHint": "Mit * markierte Felder sind Pflichtfelder."
+        },
+        "errors": {
+          "imageFailed": "Das Foto konnte nicht gespeichert werden.",
+          "createdWithoutImage": "Gericht gespeichert, aber das Foto konnte nicht hochgeladen werden. Bitte hier erneut versuchen.",
+          "statusFailed": "Der Status konnte nicht geändert werden."
+        }
       },
       "status": {
         "visible": "Sichtbar",
@@ -166,7 +240,12 @@
     "required": "Dieses Feld ist erforderlich.",
     "tooLong": "Der Text ist zu lang.",
     "price": "Bitte einen gültigen Preis eingeben, z. B. 12,90.",
-    "allergen": "Ungültiger Allergen-Code."
+    "allergen": "Ungültiger Allergen-Code.",
+    "invalid": "Ungültiger Wert.",
+    "invalidCategory": "Bitte eine aktive Kategorie wählen.",
+    "noImage": "Das Gericht hat kein Foto.",
+    "imageTooLarge": "Das Foto ist zu groß (max. 10 MB, 40 Megapixel).",
+    "imageType": "Nur Fotos im Format JPEG, PNG oder WebP."
   },
   "common": {
     "close": "Schließen"
