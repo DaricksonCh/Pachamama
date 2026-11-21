@@ -78,7 +78,32 @@
     "menu": {
       "comingSoon": "Esta vista llegará pronto.",
       "categories": {
-        "title": "Categorías"
+        "title": "Categorías",
+        "new": "Nueva categoría",
+        "edit": "Editar categoría",
+        "backToList": "Volver a categorías",
+        "notFound": "La categoría no existe.",
+        "empty": "Todavía no hay categorías.",
+        "emptyArchived": "No hay categorías archivadas.",
+        "saved": "Categoría guardada.",
+        "archived": "Categoría archivada.",
+        "restored": "Categoría restaurada (oculta).",
+        "columns": {
+          "name": "Nombre",
+          "status": "Estado",
+          "dishes": "Platos",
+          "actions": "Acciones"
+        },
+        "form": {
+          "nameDe": "Nombre (alemán)",
+          "nameEs": "Nombre (español)",
+          "descriptionDe": "Descripción (alemán)",
+          "descriptionEs": "Descripción (español)",
+          "visible": "Visible en la carta"
+        },
+        "errors": {
+          "hasDishes": "No se puede archivar: la categoría aún tiene platos. Archiva o mueve primero sus platos."
+        }
       },
       "dishes": {
         "title": "Platos"
@@ -87,7 +112,50 @@
         "visible": "Visible",
         "hidden": "Oculto",
         "archived": "Archivado"
-      }
+      },
+      "edit": "Editar",
+      "view": "Ver",
+      "save": "Guardar",
+      "saving": "Guardando …",
+      "cancel": "Cancelar",
+      "restore": "Restaurar",
+      "filter": {
+        "label": "Filtrar por estado",
+        "active": "Activas",
+        "archived": "Archivadas"
+      },
+      "reorder": {
+        "up": "Subir {{name}}",
+        "down": "Bajar {{name}}"
+      },
+      "archive": {
+        "action": "Archivar",
+        "confirm": "Archivar",
+        "category": {
+          "title": "¿Archivar «{{name}}»?",
+          "description": "La categoría dejará de aparecer en la carta. Podrás restaurarla desde «Archivadas»."
+        },
+        "dish": {
+          "title": "¿Archivar «{{name}}»?",
+          "description": "El plato dejará de aparecer en la carta. Podrás restaurarlo desde «Archivados»."
+        },
+        "actionNamed": "Archivar {{name}}"
+      },
+      "unsaved": {
+        "title": "Cambios sin guardar",
+        "description": "Si sales ahora, perderás los cambios.",
+        "stay": "Seguir editando",
+        "leave": "Salir sin guardar"
+      },
+      "errors": {
+        "saveFailed": "No se pudo guardar. Inténtalo de nuevo.",
+        "loadFailed": "No se pudieron cargar los datos.",
+        "reorderFailed": "No se pudo cambiar el orden.",
+        "forbidden": "No tienes permiso para esta acción."
+      },
+      "editNamed": "Editar {{name}}",
+      "viewNamed": "Ver {{name}}",
+      "restoreNamed": "Restaurar {{name}}"
     }
   },
   "validation": {

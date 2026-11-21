@@ -78,7 +78,32 @@
     "menu": {
       "comingSoon": "Diese Ansicht folgt in Kürze.",
       "categories": {
-        "title": "Kategorien"
+        "title": "Kategorien",
+        "new": "Neue Kategorie",
+        "edit": "Kategorie bearbeiten",
+        "backToList": "Zurück zu den Kategorien",
+        "notFound": "Die Kategorie existiert nicht.",
+        "empty": "Es gibt noch keine Kategorien.",
+        "emptyArchived": "Es gibt keine archivierten Kategorien.",
+        "saved": "Kategorie gespeichert.",
+        "archived": "Kategorie archiviert.",
+        "restored": "Kategorie wiederhergestellt (versteckt).",
+        "columns": {
+          "name": "Name",
+          "status": "Status",
+          "dishes": "Gerichte",
+          "actions": "Aktionen"
+        },
+        "form": {
+          "nameDe": "Name (Deutsch)",
+          "nameEs": "Name (Spanisch)",
+          "descriptionDe": "Beschreibung (Deutsch)",
+          "descriptionEs": "Beschreibung (Spanisch)",
+          "visible": "In der Speisekarte sichtbar"
+        },
+        "errors": {
+          "hasDishes": "Archivieren nicht möglich: Die Kategorie enthält noch Gerichte. Archivieren oder verschieben Sie zuerst die Gerichte."
+        }
       },
       "dishes": {
         "title": "Gerichte"
@@ -87,7 +112,50 @@
         "visible": "Sichtbar",
         "hidden": "Versteckt",
         "archived": "Archiviert"
-      }
+      },
+      "edit": "Bearbeiten",
+      "view": "Ansehen",
+      "save": "Speichern",
+      "saving": "Wird gespeichert …",
+      "cancel": "Abbrechen",
+      "restore": "Wiederherstellen",
+      "filter": {
+        "label": "Nach Status filtern",
+        "active": "Aktiv",
+        "archived": "Archiviert"
+      },
+      "reorder": {
+        "up": "{{name}} nach oben",
+        "down": "{{name}} nach unten"
+      },
+      "archive": {
+        "action": "Archivieren",
+        "confirm": "Archivieren",
+        "category": {
+          "title": "„{{name}}“ archivieren?",
+          "description": "Die Kategorie erscheint nicht mehr in der Speisekarte. Sie können sie unter „Archiviert“ wiederherstellen."
+        },
+        "dish": {
+          "title": "„{{name}}“ archivieren?",
+          "description": "Das Gericht erscheint nicht mehr in der Speisekarte. Sie können es unter „Archiviert“ wiederherstellen."
+        },
+        "actionNamed": "{{name}} archivieren"
+      },
+      "unsaved": {
+        "title": "Ungespeicherte Änderungen",
+        "description": "Wenn Sie jetzt gehen, gehen die Änderungen verloren.",
+        "stay": "Weiter bearbeiten",
+        "leave": "Ohne Speichern verlassen"
+      },
+      "errors": {
+        "saveFailed": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
+        "loadFailed": "Die Daten konnten nicht geladen werden.",
+        "reorderFailed": "Die Reihenfolge konnte nicht geändert werden.",
+        "forbidden": "Dazu fehlt die Berechtigung."
+      },
+      "editNamed": "{{name}} bearbeiten",
+      "viewNamed": "{{name}} ansehen",
+      "restoreNamed": "{{name}} wiederherstellen"
     }
   },
   "validation": {

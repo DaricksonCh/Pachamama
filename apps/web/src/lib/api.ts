@@ -6,6 +6,8 @@ export class ApiError extends Error {
     public readonly status: number,
     public readonly code: string | undefined,
     message: string,
+    /** Errores por campo de un 400 VALIDATION_ERROR (claves i18n). */
+    public readonly details?: Record<string, string[]>,
   ) {
     super(message);
     this.name = 'ApiError';
@@ -21,7 +23,20 @@ async function toApiError(res: Response, method: string, path: string) {
     typeof error === 'object' && error !== null && 'code' in error && typeof error.code === 'string'
       ? error.code
       : undefined;
-  return new ApiError(res.status, code, `${method} ${path} failed with status ${res.status}`);
+  const details =
+    typeof error === 'object' &&
+    error !== null &&
+    'details' in error &&
+    typeof error.details === 'object' &&
+    error.details !== null
+      ? (error.details as Record<string, string[]>)
+      : undefined;
+  return new ApiError(
+    res.status,
+    code,
+    `${method} ${path} failed with status ${res.status}`,
+    details,
+  );
 }
 
 /**
