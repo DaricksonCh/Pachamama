@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { createApp } from '../../app';
 import { db } from '../../db/database';
 import { ADMIN, loginCookie, ORIGIN, seedStaffUsers, STAFF } from '../../test/auth-helpers';
@@ -44,11 +44,14 @@ async function makeDish(categoryId: number, over: object = {}) {
   return res.body.data as { id: number };
 }
 
-beforeEach(async () => {
-  await resetMenuTables();
+beforeAll(async () => {
   await seedStaffUsers();
   adminCookie = await loginCookie(app, ADMIN.email, ADMIN.password);
   staffCookie = await loginCookie(app, STAFF.email, STAFF.password);
+});
+
+beforeEach(async () => {
+  await resetMenuTables();
 });
 
 describe('permisos', () => {
