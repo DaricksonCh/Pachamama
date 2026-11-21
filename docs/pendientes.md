@@ -43,7 +43,7 @@ Dudas encontradas al pasar la carta a la base de datos. En el panel se marcarán
 | Papa rellena vegan                    | Aparecen dos precios: 8,50 € y 8,00 €                                                                                            | ⏳     |
 | Tamal de Pollo                        | Sin precio claro (¿8,00 €?)                                                                                                      | ⏳     |
 | Causa Acevichada                      | Dos precios: 13,00 € y 10,00 €                                                                                                   | ⏳     |
-| Tiradito                              | Sin precio en el PDF                                                                                                             | ⏳     |
+| Tiradito                              | Sin precio en el PDF: se pone 13,00 € provisional (decidido el 2026-11-21)                                                       | ⏳     |
 | Anticuchos Veganos / de Carne         | Precios 15,00 € y 17,90 €: ¿cuál es de cada uno?                                                                                 | ⏳     |
 | Crema de Oliva / Crema Pikante        | Precios 4,00 € y 1,90 €: ¿cuál es de cada uno?                                                                                   | ⏳     |
 | Arroz Chaufa (3 variantes)            | Alérgeno "R" no existe en la lista (A–N)                                                                                         | ⏳     |
