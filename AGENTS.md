@@ -16,7 +16,7 @@ Todo se paga **en el local** (sin pasarela de pagos). El personal gestiona todo 
 
 - Fase en curso y siguientes: ver [`docs/roadmap.md`](docs/roadmap.md). **Actualízalo al terminar cada fase.**
 - Fase 2 hecha: monorepo funcionando (web + API + shared) con `GET /api/v1/health`. Diseño de la web provisional.
-- **⚠ Fecha límite 01.12.2026** (el restaurante se queda sin web): en curso la **entrega MVP** sin base de datos (diseño → páginas públicas → reservas por email → despliegue). BD y panel admin van después. Detalle en `docs/roadmap.md`.
+- **⚠ Fecha límite 01.12.2026** (el restaurante no tiene web): plan revisado el 2026-11-21. Primero BD + login admin (fase 3) y carta editable desde el panel (fase 5), con el diseño en paralelo; después páginas públicas y publicación. Detalle en `docs/roadmap.md`.
 
 ## Forma de trabajar (obligatorio)
 
@@ -94,12 +94,12 @@ Todavía no hay diseño definitivo en Figma (plan gratuito, MCP muy limitado). E
 | ------------- | ---------------------------------------------------------------------------------------------------------------- |
 | Frontend      | React + Vite, TypeScript, React Router, TanStack Query, react-hook-form, Tailwind CSS + shadcn/ui, react-i18next |
 | Backend       | Node.js + Express 5 (ESM), TypeScript, Zod, helmet, cors, express-rate-limit, pino                               |
-| Base de datos | MySQL 8 (capa de datos: Kysely o Prisma, se decide en fase 3)                                                    |
+| Base de datos | MySQL 8.4 + **Kysely** (mysql2, migraciones de Kysely; ADR 0007)                                                 |
 | Autenticación | Better Auth + plugin `admin` (roles `admin`, `staff`)                                                            |
 | Monorepo      | npm workspaces (sin pnpm)                                                                                        |
 | Tests         | Vitest, Supertest, Playwright                                                                                    |
 
-**Descartado:** Next.js, Drizzle, Docker en desarrollo (se evaluará al desplegar), pasarelas de pago, CMS externo.
+**Descartado:** Next.js, Prisma, Drizzle, Docker en desarrollo (se evaluará al desplegar), pasarelas de pago, CMS externo.
 
 ## Estructura (objetivo tras fase 2)
 

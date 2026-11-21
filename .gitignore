@@ -39,3 +39,6 @@ desktop.ini
 
 # Archivos locales con secretos (scripts de setup, etc.)
 .local/
+
+# Material del restaurante (originales pesados: PDF de 131 MB, fotos sin optimizar)
+material/
