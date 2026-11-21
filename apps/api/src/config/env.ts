@@ -34,6 +34,8 @@ const envSchema = z
       .startsWith('mysql://', { error: 'DATABASE_URL debe empezar por mysql://' }),
     BETTER_AUTH_SECRET: z.string().min(32, { error: 'BETTER_AUTH_SECRET necesita 32+ caracteres' }),
     BETTER_AUTH_URL: z.url().default('http://localhost:3000'),
+    /** Carpeta de las fotos subidas (se sirve en /uploads). En producción: fuera del repo y con copia de seguridad. */
+    UPLOADS_DIR: z.string().min(1).default('./uploads'),
   })
   .superRefine((env, ctx) => {
     if (env.NODE_ENV !== 'production') return;

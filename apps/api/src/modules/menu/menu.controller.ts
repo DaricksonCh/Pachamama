@@ -3,6 +3,7 @@ import {
   categoryUpdateSchema,
   dishInputSchema,
   dishUpdateSchema,
+  imageAltSchema,
   MENU_STATUSES,
   reorderSchema,
 } from '@pachamama/shared';
@@ -79,6 +80,18 @@ export function createMenuController(service: MenuService) {
     const data = await service.updateDish(id(req), parse(dishUpdateSchema, req.body), role);
     res.json({ data });
   };
+  const setDishImage: RequestHandler = async (req, res) => {
+    const alt = parse(imageAltSchema, req.body);
+    if (!req.file) {
+      throw new AppError(400, 'VALIDATION_ERROR', 'Image file required', {
+        image: ['validation.required'],
+      });
+    }
+    res.json({ data: await service.setDishImage(id(req), req.file.buffer, alt) });
+  };
+  const removeDishImage: RequestHandler = async (req, res) => {
+    res.json({ data: await service.removeDishImage(id(req)) });
+  };
   const reorderDishes: RequestHandler = async (req, res) => {
     await service.reorderDishes(parse(reorderSchema, req.body).ids);
     res.status(204).end();
@@ -96,6 +109,8 @@ export function createMenuController(service: MenuService) {
     createDish,
     updateDish,
     reorderDishes,
+    setDishImage,
+    removeDishImage,
   };
 }
 

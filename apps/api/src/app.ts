@@ -39,6 +39,17 @@ export function createApp() {
   // Better Auth va ANTES de express.json(): lee el cuerpo de la petición por su cuenta.
   app.all('/api/auth/*splat', normalizeClientIp, toNodeHandler(auth));
 
+  // Fotos de la carta: URLs inmutables (UUID nuevo en cada subida) → caché de 1 año; sin listados ni dotfiles.
+  app.use(
+    '/uploads',
+    express.static(env.UPLOADS_DIR, {
+      immutable: true,
+      maxAge: '1y',
+      index: false,
+      dotfiles: 'deny',
+    }),
+  );
+
   app.use(express.json({ limit: '100kb' }));
 
   app.use('/api/v1', csrfProtection, apiV1Router);

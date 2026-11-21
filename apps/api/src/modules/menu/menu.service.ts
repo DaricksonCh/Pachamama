@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import {
   ALLERGEN_CODES,
   type AdminCategory,
@@ -11,6 +12,9 @@ import {
   type PublicMenu,
 } from '@pachamama/shared';
 import { AppError } from '../../lib/app-error';
+import { logger } from '../../lib/logger';
+import type { ImageStorage } from './images/image-storage';
+import { processDishImage } from './images/image-processor';
 import type { MenuEvents } from './menu-events';
 import type {
   CategoryWithCount,
@@ -83,7 +87,7 @@ function toDishValues(input: DishUpdate): Partial<DishValues> {
 
 const notFound = (what: string) => new AppError(404, 'NOT_FOUND', `${what} not found`);
 
-export function createMenuService(repo: MenuRepository, events: MenuEvents) {
+export function createMenuService(repo: MenuRepository, events: MenuEvents, storage: ImageStorage) {
   async function requireCategory(id: number) {
     const row = await repo.getCategory(id);
     if (!row) throw notFound('Category');
@@ -102,6 +106,15 @@ export function createMenuService(repo: MenuRepository, events: MenuEvents) {
       throw new AppError(400, 'INVALID_CATEGORY', 'Category does not exist', {
         categoryId: ['validation.invalidCategory'],
       });
+    }
+  }
+
+  /** Borrado de archivos best-effort: la BD ya está al día, un fallo aquí solo deja un archivo huérfano. */
+  async function removeQuietly(key: string) {
+    try {
+      await storage.remove(key);
+    } catch (err) {
+      logger.warn({ err, key }, 'Could not remove dish image files');
     }
   }
 
@@ -205,6 +218,40 @@ export function createMenuService(repo: MenuRepository, events: MenuEvents) {
         });
       }
       await repo.updateDish(id, toDishValues(patch));
+      events.emitMenuChanged();
+      return toAdminDish(await requireDish(id));
+    },
+
+    /** Procesa y guarda la foto, actualiza la BD y borra la anterior. */
+    async setDishImage(
+      id: number,
+      buffer: Buffer,
+      alt: { altDe: string; altEs: string },
+    ): Promise<AdminDish> {
+      const current = await requireDish(id);
+      const variants = await processDishImage(buffer);
+      const key = randomUUID();
+      try {
+        await storage.save(key, variants);
+      } catch (err) {
+        await removeQuietly(key);
+        throw err;
+      }
+      try {
+        await repo.setDishImage(id, { key, ...alt });
+      } catch (err) {
+        await removeQuietly(key);
+        throw err;
+      }
+      if (current.imageKey) await removeQuietly(current.imageKey);
+      events.emitMenuChanged();
+      return toAdminDish(await requireDish(id));
+    },
+
+    async removeDishImage(id: number): Promise<AdminDish> {
+      const current = await requireDish(id);
+      await repo.setDishImage(id, null);
+      if (current.imageKey) await removeQuietly(current.imageKey);
       events.emitMenuChanged();
       return toAdminDish(await requireDish(id));
     },
