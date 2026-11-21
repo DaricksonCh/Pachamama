@@ -1,7 +1,9 @@
+import { toNodeHandler } from 'better-auth/node';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import { pinoHttp } from 'pino-http';
+import { auth } from './auth/auth';
 import { env } from './config/env';
 import { logger } from './lib/logger';
 import { errorHandler } from './middlewares/error-handler';
@@ -18,8 +20,8 @@ export function createApp() {
   app.use(cors({ origin: env.WEB_ORIGIN, credentials: true }));
   app.use(pinoHttp({ logger }));
 
-  // Fase 3: Better Auth se monta AQUÍ, antes de express.json():
-  // app.all('/api/auth/*splat', toNodeHandler(auth));
+  // Better Auth va ANTES de express.json(): lee el cuerpo de la petición por su cuenta.
+  app.all('/api/auth/*splat', toNodeHandler(auth));
 
   app.use(express.json({ limit: '100kb' }));
 

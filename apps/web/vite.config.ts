@@ -13,7 +13,11 @@ export default defineConfig({
     port: 5173,
     // En desarrollo la web y la API comparten origen: /api se reenvía a Express (cookies sin CORS).
     proxy: {
-      '/api': { target: 'http://localhost:3000', changeOrigin: true },
+      // API_PROXY_TARGET: lo usan los e2e para apuntar a su propia API de pruebas.
+      '/api': {
+        target: process.env.API_PROXY_TARGET ?? 'http://localhost:3000',
+        changeOrigin: true,
+      },
     },
   },
   test: {

@@ -17,5 +17,38 @@
     "label": "Sprache",
     "de": "Deutsch",
     "es": "Español"
+  },
+  "admin": {
+    "title": "Verwaltung",
+    "loading": "Wird geladen …",
+    "signOut": "Abmelden",
+    "roles": {
+      "admin": "Administrator",
+      "staff": "Personal"
+    },
+    "errors": {
+      "loadFailed": "Die Verwaltung konnte nicht geladen werden. Bitte später erneut versuchen."
+    },
+    "login": {
+      "title": "Anmelden",
+      "email": "E-Mail",
+      "password": "Passwort",
+      "submit": "Anmelden",
+      "submitting": "Anmeldung läuft …",
+      "errors": {
+        "invalidCredentials": "E-Mail oder Passwort ist falsch.",
+        "tooManyAttempts": "Zu viele Versuche. Bitte warte eine Minute.",
+        "blocked": "Anmeldung nicht möglich. Bitte wende dich an die Verwaltung.",
+        "unexpected": "Etwas ist schiefgelaufen. Bitte erneut versuchen."
+      }
+    },
+    "dashboard": {
+      "welcome": "Hallo, {{name}}",
+      "intro": "Hier verwaltest du bald Speisekarte, Reservierungen und mehr."
+    }
+  },
+  "validation": {
+    "email": "Bitte eine gültige E-Mail-Adresse eingeben.",
+    "required": "Dieses Feld ist erforderlich."
   }
 }
