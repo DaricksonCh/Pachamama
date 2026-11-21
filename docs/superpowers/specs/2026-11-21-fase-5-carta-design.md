@@ -86,21 +86,21 @@ Estas dos rutas sobrescriben el `Cache-Control: no-store` general por `no-cache`
 
 ### Panel (requieren sesión)
 
-| Método | Ruta                                                            | Rol                                                                   |
-| ------ | --------------------------------------------------------------- | --------------------------------------------------------------------- |
-| GET    | `/api/v1/admin/menu/summary`                                    | admin, staff                                                          |
-| GET    | `/api/v1/admin/menu/categories?status=`                         | admin, staff                                                          |
-| POST   | `/api/v1/admin/menu/categories`                                 | admin                                                                 |
-| GET    | `/api/v1/admin/menu/categories/:id`                             | admin, staff                                                          |
-| PATCH  | `/api/v1/admin/menu/categories/:id`                             | admin                                                                 |
-| PUT    | `/api/v1/admin/menu/categories/order`                           | admin                                                                 |
-| GET    | `/api/v1/admin/menu/dishes?categoryId=&status=&q=&provisional=` | admin, staff                                                          |
-| POST   | `/api/v1/admin/menu/dishes`                                     | admin                                                                 |
-| GET    | `/api/v1/admin/menu/dishes/:id`                                 | admin, staff                                                          |
-| PATCH  | `/api/v1/admin/menu/dishes/:id`                                 | admin (staff: solo `status` entre `visible`/`hidden`)                 |
-| PUT    | `/api/v1/admin/menu/dishes/order`                               | admin                                                                 |
-| PUT    | `/api/v1/admin/menu/dishes/:id/image`                           | admin (multipart: `image` + `altDe` + `altEs`, los tres obligatorios) |
-| DELETE | `/api/v1/admin/menu/dishes/:id/image`                           | admin                                                                 |
+| Método | Ruta                                                                          | Rol                                                                   |
+| ------ | ----------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| GET    | `/api/v1/admin/menu/summary`                                                  | admin, staff                                                          |
+| GET    | `/api/v1/admin/menu/categories?status=`                                       | admin, staff                                                          |
+| POST   | `/api/v1/admin/menu/categories`                                               | admin                                                                 |
+| GET    | `/api/v1/admin/menu/categories/:id`                                           | admin, staff                                                          |
+| PATCH  | `/api/v1/admin/menu/categories/:id`                                           | admin                                                                 |
+| PUT    | `/api/v1/admin/menu/categories/order`                                         | admin                                                                 |
+| GET    | `/api/v1/admin/menu/dishes?categoryId=&status=&q=&provisional=&withoutImage=` | admin, staff                                                          |
+| POST   | `/api/v1/admin/menu/dishes`                                                   | admin                                                                 |
+| GET    | `/api/v1/admin/menu/dishes/:id`                                               | admin, staff                                                          |
+| PATCH  | `/api/v1/admin/menu/dishes/:id`                                               | admin (staff: solo `status` entre `visible`/`hidden`)                 |
+| PUT    | `/api/v1/admin/menu/dishes/order`                                             | admin                                                                 |
+| PUT    | `/api/v1/admin/menu/dishes/:id/image`                                         | admin (multipart: `image` + `altDe` + `altEs`, los tres obligatorios) |
+| DELETE | `/api/v1/admin/menu/dishes/:id/image`                                         | admin                                                                 |
 
 Archivar/restaurar = `PATCH { status }`. No hay `DELETE` de registros.
 
