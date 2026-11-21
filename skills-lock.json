@@ -43,6 +43,13 @@
       "skillPath": "skills/.curated/react-hook-form/SKILL.md",
       "computedHash": "1bf04dd22b6b89e075c1418fe864698ae9973fdd6a0a93d76c69bdd7edcacb27"
     },
+    "react-pdf": {
+      "source": "trailofbits/skills-curated",
+      "commit": "6d05be4889017b06fb15069f371afd220daffb62",
+      "sourceType": "github",
+      "skillPath": "plugins/react-pdf/skills/react-pdf/SKILL.md",
+      "computedHash": "5bdd18c8ee33551b990a161a2a5f9344cc10fb00bb4a2aa0eb041cb7a4a8be2c"
+    },
     "shadcn": {
       "source": "shadcn-ui/ui",
       "commit": "968d8cb9dc42ae5d52e8fd356cf84596ec832a26",
