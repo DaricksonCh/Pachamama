@@ -45,9 +45,49 @@
     },
     "dashboard": {
       "welcome": "Hallo, {{name}}",
-      "intro": "Hier verwaltest du bald Speisekarte, Reservierungen und mehr."
+      "intro": "Hier siehst du den Stand der Speisekarte auf einen Blick.",
+      "summaryLabel": "Übersicht der Speisekarte",
+      "visibleDishes": "Sichtbare Gerichte",
+      "hiddenDishes": "{{count}} versteckt",
+      "provisionalDishes": "Vorläufig",
+      "provisionalHint": "Prüfen",
+      "withoutImage": "Ohne Foto",
+      "withoutImageHint": "Foto ergänzen",
+      "categories": "Kategorien",
+      "quickLinks": "Schnellzugriffe",
+      "newDish": "Neues Gericht",
+      "viewPdf": "PDF ansehen",
+      "errors": {
+        "loadFailed": "Die Übersicht konnte nicht geladen werden."
+      }
     },
-    "retry": "Erneut versuchen"
+    "retry": "Erneut versuchen",
+    "nav": {
+      "label": "Hauptnavigation",
+      "home": "Start",
+      "menu": "Speisekarte",
+      "categories": "Kategorien",
+      "dishes": "Gerichte",
+      "pdf": "PDF",
+      "opensInNewTab": "(öffnet in neuem Tab)",
+      "open": "Menü öffnen",
+      "toggle": "Seitenmenü ein-/ausklappen",
+      "mobileDescription": "Zeigt das Seitenmenü auf dem Handy."
+    },
+    "menu": {
+      "comingSoon": "Diese Ansicht folgt in Kürze.",
+      "categories": {
+        "title": "Kategorien"
+      },
+      "dishes": {
+        "title": "Gerichte"
+      },
+      "status": {
+        "visible": "Sichtbar",
+        "hidden": "Versteckt",
+        "archived": "Archiviert"
+      }
+    }
   },
   "validation": {
     "email": "Bitte eine gültige E-Mail-Adresse eingeben.",

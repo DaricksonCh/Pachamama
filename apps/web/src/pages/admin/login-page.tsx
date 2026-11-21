@@ -3,7 +3,7 @@ import { loginSchema } from '@pachamama/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useNavigate } from 'react-router';
+import { Navigate, useNavigate, useSearchParams } from 'react-router';
 import type { z } from 'zod';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AdminLanguageSwitcher } from '@/features/admin/admin-language';
@@ -22,6 +22,13 @@ function loginErrorKey(error: { status?: number; code?: string }) {
   return 'admin.login.errors.unexpected';
 }
 
+/** Destino tras el login: solo rutas internas del panel (evita redirecciones abiertas). */
+function safeNext(value: string | null) {
+  if (!value || !value.startsWith('/admin') || value.startsWith('/admin/login')) return '/admin';
+  // Debe ser /admin o /admin/..., no p. ej. /admin.evil o rutas con barra invertida.
+  return /^\/admin(?:[/?#][^\\]*)?$/.test(value) ? value : '/admin';
+}
+
 const inputClass =
   'w-full rounded-md border border-gray-400 px-3 py-2 focus-visible:outline-2 focus-visible:outline-brand-700';
 
@@ -29,6 +36,7 @@ export function LoginPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const next = safeNext(useSearchParams()[0].get('next'));
   const { data: user, isPending } = useCurrentUser();
   useAdminLanguage();
 
@@ -50,7 +58,7 @@ export function LoginPage() {
       </div>
     );
   }
-  if (user) return <Navigate to="/admin" replace />;
+  if (user) return <Navigate to={next} replace />;
 
   const onSubmit = handleSubmit(async (values) => {
     try {
@@ -65,7 +73,7 @@ export function LoginPage() {
       return;
     }
     await queryClient.invalidateQueries({ queryKey: currentUserQueryKey });
-    await navigate('/admin', { replace: true });
+    await navigate(next, { replace: true });
   });
 
   const fieldError = (id: string, key?: string) =>

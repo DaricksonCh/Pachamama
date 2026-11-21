@@ -45,9 +45,49 @@
     },
     "dashboard": {
       "welcome": "Hola, {{name}}",
-      "intro": "Pronto gestionarás aquí la carta, las reservas y más."
+      "intro": "Aquí ves el estado de la carta de un vistazo.",
+      "summaryLabel": "Resumen de la carta",
+      "visibleDishes": "Platos visibles",
+      "hiddenDishes": "{{count}} ocultos",
+      "provisionalDishes": "Provisionales",
+      "provisionalHint": "Revisar",
+      "withoutImage": "Sin foto",
+      "withoutImageHint": "Añadir foto",
+      "categories": "Categorías",
+      "quickLinks": "Accesos",
+      "newDish": "Nuevo plato",
+      "viewPdf": "Ver PDF",
+      "errors": {
+        "loadFailed": "No se pudo cargar el resumen."
+      }
     },
-    "retry": "Reintentar"
+    "retry": "Reintentar",
+    "nav": {
+      "label": "Navegación principal",
+      "home": "Inicio",
+      "menu": "Carta",
+      "categories": "Categorías",
+      "dishes": "Platos",
+      "pdf": "PDF",
+      "opensInNewTab": "(se abre en una pestaña nueva)",
+      "open": "Abrir menú",
+      "toggle": "Mostrar u ocultar el menú lateral",
+      "mobileDescription": "Muestra el menú lateral en el móvil."
+    },
+    "menu": {
+      "comingSoon": "Esta vista llegará pronto.",
+      "categories": {
+        "title": "Categorías"
+      },
+      "dishes": {
+        "title": "Platos"
+      },
+      "status": {
+        "visible": "Visible",
+        "hidden": "Oculto",
+        "archived": "Archivado"
+      }
+    }
   },
   "validation": {
     "email": "Introduce un email válido.",
