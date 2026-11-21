@@ -12,6 +12,7 @@ import {
   type PublicMenu,
 } from '@pachamama/shared';
 import { AppError } from '../../lib/app-error';
+import { logger } from '../../lib/logger';
 import type { ImageStorage } from './images/image-storage';
 import { processDishImage } from './images/image-processor';
 import type { MenuEvents } from './menu-events';
@@ -105,6 +106,15 @@ export function createMenuService(repo: MenuRepository, events: MenuEvents, stor
       throw new AppError(400, 'INVALID_CATEGORY', 'Category does not exist', {
         categoryId: ['validation.invalidCategory'],
       });
+    }
+  }
+
+  /** Borrado de archivos best-effort: la BD ya está al día, un fallo aquí solo deja un archivo huérfano. */
+  async function removeQuietly(key: string) {
+    try {
+      await storage.remove(key);
+    } catch (err) {
+      logger.warn({ err, key }, 'Could not remove dish image files');
     }
   }
 
@@ -221,14 +231,19 @@ export function createMenuService(repo: MenuRepository, events: MenuEvents, stor
       const current = await requireDish(id);
       const variants = await processDishImage(buffer);
       const key = randomUUID();
-      await storage.save(key, variants);
+      try {
+        await storage.save(key, variants);
+      } catch (err) {
+        await removeQuietly(key);
+        throw err;
+      }
       try {
         await repo.setDishImage(id, { key, ...alt });
       } catch (err) {
-        await storage.remove(key);
+        await removeQuietly(key);
         throw err;
       }
-      if (current.imageKey) await storage.remove(current.imageKey);
+      if (current.imageKey) await removeQuietly(current.imageKey);
       events.emitMenuChanged();
       return toAdminDish(await requireDish(id));
     },
@@ -236,7 +251,7 @@ export function createMenuService(repo: MenuRepository, events: MenuEvents, stor
     async removeDishImage(id: number): Promise<AdminDish> {
       const current = await requireDish(id);
       await repo.setDishImage(id, null);
-      if (current.imageKey) await storage.remove(current.imageKey);
+      if (current.imageKey) await removeQuietly(current.imageKey);
       events.emitMenuChanged();
       return toAdminDish(await requireDish(id));
     },

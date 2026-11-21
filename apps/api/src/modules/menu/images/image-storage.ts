@@ -14,7 +14,13 @@ export function createDiskImageStorage(dir: string): ImageStorage {
   return {
     async save(key, variants) {
       await mkdir(folder, { recursive: true });
-      await Promise.all(variants.map((v) => writeFile(file(key, v.width), v.data)));
+      try {
+        await Promise.all(variants.map((v) => writeFile(file(key, v.width), v.data)));
+      } catch (err) {
+        // Escritura a medias: no dejar archivos huérfanos.
+        await this.remove(key);
+        throw err;
+      }
     },
     async remove(key) {
       await Promise.all(IMAGE_WIDTHS.map((w) => rm(file(key, w), { force: true })));

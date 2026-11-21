@@ -1,5 +1,7 @@
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, writeFileSync } from 'node:fs';
+import { mkdtempSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
 import sharp from 'sharp';
 import request from 'supertest';
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
@@ -7,6 +9,11 @@ import { createApp } from '../../../app';
 import { env } from '../../../config/env';
 import { ADMIN, loginCookie, ORIGIN, seedStaffUsers, STAFF } from '../../../test/auth-helpers';
 import { resetMenuTables } from '../../../test/db-helpers';
+import { db } from '../../../db/database';
+import { createMenuEvents } from '../menu-events';
+import { createMenuRepository } from '../menu.repository';
+import { createMenuService } from '../menu.service';
+import { createDiskImageStorage } from './image-storage';
 import { processDishImage } from './image-processor';
 
 const app = createApp();
@@ -207,10 +214,89 @@ describe('DELETE /admin/menu/dishes/:id/image', () => {
 
 describe('/uploads', () => {
   it('no sale del directorio', async () => {
-    const res = await request(app).get('/uploads/../.env');
-    expect(res.status).toBe(404);
-    const enc = await request(app).get('/uploads/%2e%2e/.env');
-    expect(enc.status).toBeGreaterThanOrEqual(400);
-    expect(enc.status).toBeLessThan(500);
+    const secret = 'SENTINEL-' + Math.random().toString(36).slice(2);
+    writeFileSync(join(dirname(env.UPLOADS_DIR), 'sentinel'), secret);
+    for (const path of [
+      '/uploads/../sentinel',
+      '/uploads/..%2fsentinel',
+      '/uploads/%2e%2e/sentinel',
+    ]) {
+      const res = await request(app).get(path);
+      expect(res.status).toBeGreaterThanOrEqual(400);
+      expect(res.status).toBeLessThan(500);
+      expect(res.text ?? '').not.toContain(secret);
+    }
+  });
+});
+
+describe('endurecimiento del procesado', () => {
+  it('PNG de más de 40 MP (pequeño en disco) → 413 IMAGE_TOO_LARGE', async () => {
+    const png = await sharp({
+      create: { width: 8000, height: 6000, channels: 3, background: '#808080' },
+    })
+      .png({ compressionLevel: 9 })
+      .toBuffer();
+    expect(png.length).toBeLessThan(10 * 1024 * 1024);
+    const res = await upload(png, { filename: 'a.png', type: 'image/png' });
+    expect(res.status).toBe(413);
+    expect(res.body.error.code).toBe('IMAGE_TOO_LARGE');
+  });
+
+  it('SVG → 415', async () => {
+    const svg = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"/>');
+    const res = await upload(svg, { filename: 'a.svg', type: 'image/svg+xml' });
+    expect(res.status).toBe(415);
+    expect(res.body.error.code).toBe('UNSUPPORTED_IMAGE');
+  });
+
+  it('GIF → 415', async () => {
+    const gif = await sharp({ create: { width: 20, height: 20, channels: 3, background: '#fff' } })
+      .gif()
+      .toBuffer();
+    const res = await upload(gif, { filename: 'a.gif', type: 'image/gif' });
+    expect(res.status).toBe(415);
+    expect(res.body.error.code).toBe('UNSUPPORTED_IMAGE');
+  });
+
+  it('JPEG truncado → 415', async () => {
+    const jpeg = await jpegWithExif(1600, 1200);
+    const res = await upload(jpeg.subarray(0, Math.floor(jpeg.length / 2)));
+    expect(res.status).toBe(415);
+    expect(res.body.error.code).toBe('UNSUPPORTED_IMAGE');
+  });
+});
+
+describe('limpieza de archivos (service)', () => {
+  it('si storage.remove falla, la operación sigue y se emite el evento', async () => {
+    const events = createMenuEvents();
+    let emitted = 0;
+    events.onMenuChanged(() => emitted++);
+    const saved: string[] = [];
+    const service = createMenuService(createMenuRepository(db), events, {
+      save: async (key) => void saved.push(key),
+      remove: async () => {
+        throw new Error('disk error');
+      },
+    });
+    const jpeg = await jpegWithExif(1000, 800);
+    const alt = { altDe: 'a', altEs: 'b' };
+    await service.setDishImage(dishId, jpeg, alt);
+    const replaced = await service.setDishImage(dishId, jpeg, alt);
+    expect(replaced.imageUrl).not.toBeNull();
+    const removed = await service.removeDishImage(dishId);
+    expect(removed.imageUrl).toBeNull();
+    expect(emitted).toBe(3);
+  });
+
+  it('si storage.save falla a medias, no quedan archivos (disco)', async () => {
+    const dir = mkdtempSync(join(tmpdir(), 'pachamama-partial-'));
+    const storage = createDiskImageStorage(dir);
+    await expect(
+      storage.save('k', [
+        { width: 400, data: Buffer.from('x') },
+        { width: 800, data: undefined as unknown as Buffer },
+      ]),
+    ).rejects.toThrow();
+    expect(existsSync(join(dir, 'dishes', 'k-400.webp'))).toBe(false);
   });
 });

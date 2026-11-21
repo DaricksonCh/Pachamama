@@ -6,7 +6,7 @@ export const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 
 const multerUpload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: MAX_IMAGE_BYTES, files: 1 },
+  limits: { fileSize: MAX_IMAGE_BYTES, files: 1, fields: 4, parts: 5 },
 });
 
 /** Campo `image` (un archivo) + campos de texto; traduce los errores de multer a AppError. */
