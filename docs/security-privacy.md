@@ -4,22 +4,51 @@ El sitio está dirigido a público de habla alemana y trata datos personales (no
 
 ## Seguridad de la aplicación
 
-| Tema         | Medida                                                                                                |
-| ------------ | ----------------------------------------------------------------------------------------------------- |
-| Validación   | Todo input externo validado con Zod en el servidor (aunque ya se valide en el navegador)              |
-| Autorización | Cada endpoint admin con `requireAuth` + `requireRole`; denegar por defecto                            |
-| Sesiones     | Better Auth; cookies `httpOnly`, `secure` en producción, `sameSite=lax`                               |
-| Contraseñas  | Gestionadas y hasheadas por Better Auth; sin registro público                                         |
-| Cabeceras    | `helmet` con Content-Security-Policy estricta                                                         |
-| CORS         | Origen explícito (`WEB_ORIGIN`) y `credentials: true`; en dev, proxy de Vite (mismo origen)           |
-| Abuso / spam | `express-rate-limit` en formularios públicos y login; honeypot; anti-bot (Turnstile u otro) a decidir |
-| SQL          | Solo consultas parametrizadas (query builder/ORM), nunca concatenar SQL                               |
-| Subidas      | Solo usuarios autenticados; lista blanca de tipos MIME y tamaño máximo; nombres de archivo generados  |
-| Importes     | Precios y totales calculados en el servidor                                                           |
-| Secretos     | Solo en `.env` (fuera de Git); `.env.example` sin valores reales                                      |
-| Errores      | Sin trazas ni detalles internos en respuestas de producción                                           |
-| Logs         | Sin datos personales ni tokens                                                                        |
-| Dependencias | `npm audit` en CI; actualizaciones periódicas                                                         |
+| Tema         | Medida                                                                                                                                                                                      |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Validación   | Todo input externo validado con Zod en el servidor (aunque ya se valide en el navegador)                                                                                                    |
+| Autorización | Cada endpoint admin con `requireAuth` + `requireRole`; denegar por defecto                                                                                                                  |
+| Sesiones     | Better Auth; cookies `httpOnly`, `secure` (`__Secure-pachamama.*`) en producción, `sameSite=lax`. Ver "Autenticación del personal"                                                          |
+| Contraseñas  | Hash scrypt (Better Auth); 12–128 caracteres, sin reglas de complejidad (NIST SP 800-63B); sin registro público                                                                             |
+| Cabeceras    | `helmet` con Content-Security-Policy estricta                                                                                                                                               |
+| CORS         | Origen explícito (`WEB_ORIGIN`) y `credentials: true`; en dev, proxy de Vite (mismo origen)                                                                                                 |
+| Abuso / spam | `express-rate-limit` en formularios públicos y login; honeypot; anti-bot (Turnstile u otro) a decidir                                                                                       |
+| SQL          | Solo consultas parametrizadas (query builder/ORM), nunca concatenar SQL                                                                                                                     |
+| Subidas      | Solo usuarios autenticados; lista blanca de tipos MIME y tamaño máximo; nombres de archivo generados                                                                                        |
+| Importes     | Precios y totales calculados en el servidor                                                                                                                                                 |
+| Secretos     | Solo en `.env` (fuera de Git); `.env.example` sin valores reales                                                                                                                            |
+| Errores      | Sin trazas ni detalles internos en respuestas de producción                                                                                                                                 |
+| Logs         | Sin datos personales ni tokens: los logs de peticiones solo guardan método, ruta (sin query) y estado; nada de IP, user agent ni cabeceras. La auditoría de login registra solo el `userId` |
+| Dependencias | `npm audit` en CI; actualizaciones periódicas                                                                                                                                               |
+
+## Autenticación del personal (fase 3)
+
+| Tema             | Medida                                                                                                            |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Alta de usuarios | Solo un admin (`npm run admin:create` o el panel). Sin registro público                                           |
+| Roles            | `admin` (gestiona usuarios, **sin** permiso de suplantar a otros) y `staff`. Rol desconocido o vacío → sin acceso |
+| Sesión           | 7 días, se renueva una vez al día con actividad; acciones sensibles exigen login de menos de 1 hora               |
+| Fuerza bruta     | 5 intentos de login por minuto e IP → 429. Contador en memoria (válido con un solo proceso de la API)             |
+| CSRF             | Comprobación de origen y Fetch Metadata de Better Auth, activas también en los tests                              |
+| Bloqueo          | Un usuario bloqueado pierde el acceso al momento, también con la sesión abierta                                   |
+| Caché            | Todas las respuestas de `/api` llevan `Cache-Control: no-store` (equipos compartidos del local)                   |
+
+### Despliegue: IP real del cliente (obligatorio)
+
+El límite de intentos depende de conocer la IP real. Express solo se fía de `X-Forwarded-For` si viene de un proxy de confianza (`TRUST_PROXY`, por defecto `loopback`), y pasa a Better Auth una única IP calculada por él.
+
+- La API escucha **solo en local**: `API_HOST=127.0.0.1` (la validación de entorno lo exige en producción).
+- nginx en el mismo servidor: `proxy_set_header X-Forwarded-For $remote_addr;` (sobrescribir).
+- Si hubiera otro proxy delante (CDN), añadir su rango a `TRUST_PROXY`.
+
+### Datos personales del personal (Beschäftigtendaten, § 26 BDSG)
+
+| Dato                        | Dónde      | Para qué                              | Plazo                                                                                     |
+| --------------------------- | ---------- | ------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Nombre, email, rol          | `users`    | Acceso al panel                       | Mientras trabaje en el restaurante                                                        |
+| IP y navegador de la sesión | `sessions` | Seguridad (detectar accesos extraños) | Hasta que caduca la sesión (máx. 7 días sin uso); `npm run db:cleanup` las borra a diario |
+
+**Pendiente antes de publicar:** programar `npm run db:cleanup` a diario (cron) e incluir este tratamiento en la información al personal.
 
 ## Privacidad (DSGVO)
 

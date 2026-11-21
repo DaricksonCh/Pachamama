@@ -15,7 +15,7 @@ Todo se paga **en el local** (sin pasarela de pagos). El personal gestiona todo 
 ## Estado actual
 
 - Fase en curso y siguientes: ver [`docs/roadmap.md`](docs/roadmap.md). **Actualízalo al terminar cada fase.**
-- Fase 2 hecha: monorepo funcionando (web + API + shared) con `GET /api/v1/health`. Diseño de la web provisional.
+- Fase 3 hecha: Kysely + migraciones, Better Auth (login del personal en `/admin`, roles admin/staff). Diseño de la web provisional.
 - **⚠ Fecha límite 01.12.2026** (el restaurante no tiene web): plan revisado el 2026-11-21. Primero BD + login admin (fase 3) y carta editable desde el panel (fase 5), con el diseño en paralelo; después páginas públicas y publicación. Detalle en `docs/roadmap.md`.
 
 ## Forma de trabajar (obligatorio)
@@ -126,20 +126,23 @@ docs/              # arquitectura, flujos, seguridad, MCP, decisiones, roadmap
 
 Desde la raíz del repo:
 
-| Comando                         | Qué hace                                                            |
-| ------------------------------- | ------------------------------------------------------------------- |
-| `npm install`                   | Instala dependencias de todos los paquetes                          |
-| `npm run dev`                   | API en http://localhost:3000 + web en http://localhost:5173 (proxy) |
-| `npm run typecheck`             | TypeScript en todos los paquetes                                    |
-| `npm run lint`                  | ESLint                                                              |
-| `npm run format`                | Prettier (escribe) · `npm run format:check` solo comprueba          |
-| `npm test`                      | Vitest en todos los paquetes                                        |
-| `npm run build`                 | Build de producción (API con tsup, web con Vite)                    |
-| `npm run check`                 | typecheck + lint + formato + tests unitarios                        |
-| `npm run test:e2e`              | Flujos de usuario en navegador (Playwright, escritorio y móvil)     |
-| `npm run check:all`             | `check` + build + e2e: **obligatorio en verde antes de cerrar**     |
-| `npm run db:check`              | Comprueba la BD local (versión, utf8mb4, mínimo privilegio)         |
-| `npm run dev -w @pachamama/api` | Solo un paquete (`-w` = workspace)                                  |
+| Comando                                            | Qué hace                                                                     |
+| -------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `npm install`                                      | Instala dependencias de todos los paquetes                                   |
+| `npm run dev`                                      | API en http://localhost:3000 + web en http://localhost:5173 (proxy)          |
+| `npm run typecheck`                                | TypeScript en todos los paquetes                                             |
+| `npm run lint`                                     | ESLint                                                                       |
+| `npm run format`                                   | Prettier (escribe) · `npm run format:check` solo comprueba                   |
+| `npm test`                                         | Vitest en todos los paquetes                                                 |
+| `npm run build`                                    | Build de producción (API con tsup, web con Vite)                             |
+| `npm run check`                                    | typecheck + lint + formato + tests unitarios                                 |
+| `npm run test:e2e`                                 | Flujos de usuario en navegador (Playwright, escritorio y móvil)              |
+| `npm run check:all`                                | `check` + build + e2e: **obligatorio en verde antes de cerrar**              |
+| `npm run db:check`                                 | Comprueba la BD local (versión, utf8mb4, mínimo privilegio)                  |
+| `npm run db:migrate`                               | Aplica las migraciones pendientes (`db:migrate:down` deshace una)            |
+| `npm run db:cleanup`                               | Borra sesiones y verificaciones caducadas (DSGVO; cron diario en producción) |
+| `npm run admin:create -- --email <e> --name "<n>"` | Crea un admin (pide la contraseña sin mostrarla)                             |
+| `npm run dev -w @pachamama/api`                    | Solo un paquete (`-w` = workspace)                                           |
 
 Versiones fijadas: Node 24, npm 11, **TypeScript 6.0** (TS 7 aún no es compatible con typescript-eslint; ver ADR 0006).
 
@@ -152,6 +155,7 @@ Versiones fijadas: Node 24, npm 11, **TypeScript 6.0** (TS 7 aún no es compatib
 | [`docs/domain-flows.md`](docs/domain-flows.md)         | Reservas, pedidos y tienda: estados y reglas   |
 | [`docs/security-privacy.md`](docs/security-privacy.md) | Seguridad y DSGVO                              |
 | [`docs/testing.md`](docs/testing.md)                   | Estrategia de pruebas y qué exige cada cambio  |
+| [`docs/api.md`](docs/api.md)                           | Endpoints, accesos y códigos de error          |
 | [`docs/mcp.md`](docs/mcp.md)                           | Cómo añadir servidores MCP en cada herramienta |
 | [`docs/decisions/`](docs/decisions/)                   | Registro de decisiones (ADR)                   |
 

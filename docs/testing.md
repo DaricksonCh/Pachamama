@@ -59,7 +59,7 @@ Todo formulario público (reservas, pedidos, contacto, login) debe tener tests d
 | JSON roto              | → 400 con formato estándar, sin filtrar detalles ✅ ya existe                               |
 | Prototype pollution    | `__proto__` en el cuerpo sin efecto ✅ ya existe                                            |
 | Consentimiento (DSGVO) | Sin casilla de privacidad marcada → no se envía                                             |
-| CSRF / sesión (fase 3) | Endpoints admin sin sesión → 401; con rol insuficiente → 403                                |
+| CSRF / sesión          | Sin sesión → 401; rol insuficiente → 403; origen ajeno con cookie → 403 ✅ ya existe        |
 | Datos en logs          | Emails y teléfonos no aparecen en los logs                                                  |
 
 ### Backend (API)
@@ -68,8 +68,11 @@ Por endpoint: caso feliz, validación (400), no encontrado (404), permisos (401/
 
 ### Base de datos
 
-- Ahora: `npm run db:check` (conexión, versión 8.4, `utf8mb4`, usuario propio sin privilegios globales ni `GRANT OPTION`, aislado de otras bases, puede crear y borrar tablas).
-- Fase 3: cada migración se prueba **up y down** contra una base `pachamama_test`; los repositorios tienen tests de integración con datos reales; la CI levanta un servicio MySQL 8.4.
+- `npm run db:check` (conexión, versión 8.4, `utf8mb4`, usuario propio sin privilegios globales ni `GRANT OPTION`, aislado de otras bases, puede crear y borrar tablas).
+- **BD de tests aislada `pachamama_test`**: los tests de la API la vacían y la migran al empezar (`src/test/global-setup.ts`). Si el nombre de la base no termina en `_test`, los tests **abortan** para no tocar datos reales.
+- `src/db/migrations.test.ts`: todas las migraciones se aplican, se deshacen (down) y se vuelven a aplicar; convención snake_case, `utf8mb4`, `DATETIME(3)` y claves foráneas en cascada.
+- Los **e2e levantan su propia API (3100) y web (5174)** contra `pachamama_test` (nunca reutilizan `npm run dev`) y cargan usuarios de prueba con `e2e:seed`.
+- En la CI, un contenedor MySQL 8.4 desechable (`TEST_DATABASE_URL`).
 
 ### Frontend
 

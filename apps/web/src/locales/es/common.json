@@ -17,5 +17,40 @@
     "label": "Idioma",
     "de": "Deutsch",
     "es": "Español"
+  },
+  "admin": {
+    "title": "Administración",
+    "loading": "Cargando …",
+    "signOut": "Cerrar sesión",
+    "roles": {
+      "admin": "Administrador",
+      "staff": "Personal"
+    },
+    "errors": {
+      "loadFailed": "No se pudo cargar el panel. Inténtalo de nuevo más tarde.",
+      "signOutFailed": "No se pudo cerrar la sesión: sigues conectado. Inténtalo de nuevo."
+    },
+    "login": {
+      "title": "Iniciar sesión",
+      "email": "Email",
+      "password": "Contraseña",
+      "submit": "Entrar",
+      "submitting": "Entrando …",
+      "errors": {
+        "invalidCredentials": "El email o la contraseña no son correctos.",
+        "tooManyAttempts": "Demasiados intentos. Espera un minuto.",
+        "blocked": "No puedes iniciar sesión. Contacta con la administración.",
+        "unexpected": "Algo salió mal. Inténtalo de nuevo."
+      }
+    },
+    "dashboard": {
+      "welcome": "Hola, {{name}}",
+      "intro": "Pronto gestionarás aquí la carta, las reservas y más."
+    },
+    "retry": "Reintentar"
+  },
+  "validation": {
+    "email": "Introduce un email válido.",
+    "required": "Este campo es obligatorio."
   }
 }
