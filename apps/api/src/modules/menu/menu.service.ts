@@ -97,7 +97,8 @@ export function createMenuService(repo: MenuRepository, events: MenuEvents) {
   }
 
   async function assertCategoryExists(id: number) {
-    if (!(await repo.getCategory(id))) {
+    const category = await repo.getCategory(id);
+    if (!category || category.status === 'archived') {
       throw new AppError(400, 'INVALID_CATEGORY', 'Category does not exist', {
         categoryId: ['validation.invalidCategory'],
       });
@@ -189,7 +190,12 @@ export function createMenuService(repo: MenuRepository, events: MenuEvents) {
         }
       }
       const current = await requireDish(id);
-      if (patch.categoryId !== undefined) await assertCategoryExists(patch.categoryId);
+      if (role !== 'admin' && current.status === 'archived') {
+        throw new AppError(403, 'FORBIDDEN', 'Insufficient permissions');
+      }
+      if (patch.categoryId !== undefined && patch.categoryId !== current.categoryId) {
+        await assertCategoryExists(patch.categoryId);
+      }
       if (
         (patch.imageAltDe !== undefined || patch.imageAltEs !== undefined) &&
         current.imageKey === null

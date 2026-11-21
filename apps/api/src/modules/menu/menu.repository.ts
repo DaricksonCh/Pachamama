@@ -187,8 +187,15 @@ export function createMenuRepository(db: Kysely<Database>) {
     /** Reasigna sort_order 1..n según el orden recibido. Devuelve false si algún id no existe. */
     async setDishOrder(ids: number[]): Promise<boolean> {
       return db.transaction().execute(async (trx) => {
-        const found = await trx.selectFrom('dishes').select('id').where('id', 'in', ids).execute();
-        if (found.length !== ids.length) return false;
+        const found = await trx
+          .selectFrom('dishes')
+          .select(['id', 'categoryId'])
+          .where('id', 'in', ids)
+          .execute();
+        // Todos deben existir y pertenecer a la misma categoría.
+        if (found.length !== ids.length || new Set(found.map((d) => d.categoryId)).size > 1) {
+          return false;
+        }
         for (const [index, id] of ids.entries()) {
           await trx
             .updateTable('dishes')
