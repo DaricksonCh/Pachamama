@@ -17,6 +17,13 @@ export async function resetAuthTables() {
   await db.deleteFrom('users').execute();
 }
 
+/** Vacía carta (platos primero por la FK RESTRICT). Solo BD de tests. */
+export async function resetMenuTables() {
+  await assertConnectedToTestDatabase();
+  await db.deleteFrom('dishes').execute();
+  await db.deleteFrom('menuCategories').execute();
+}
+
 let ipCounter = 0;
 
 /** IP distinta por petición/test para que el rate-limit de un test no afecte a otro. */

@@ -4,6 +4,15 @@ import { db } from './database';
 import { migrateDownAll, migrateToLatest } from './migrator';
 import { migrations } from './migrations';
 
+const AUTH_AND_MENU_TABLES = [
+  'accounts',
+  'dishes',
+  'menu_categories',
+  'sessions',
+  'users',
+  'verifications',
+];
+
 async function tableNames() {
   const { rows } = await sql<{ name: string }>`
     SELECT table_name AS name FROM information_schema.tables
@@ -27,7 +36,7 @@ afterAll(async () => {
 
 describe('migraciones', () => {
   it('están todas aplicadas y crean las tablas de autenticación', async () => {
-    expect(await tableNames()).toEqual(['accounts', 'sessions', 'users', 'verifications']);
+    expect(await tableNames()).toEqual(AUTH_AND_MENU_TABLES);
   });
 
   it('siguen la convención: snake_case, utf8mb4 y fechas DATETIME(3)', async () => {
@@ -51,7 +60,7 @@ describe('migraciones', () => {
 
     const up = await migrateToLatest(db);
     expect(up.every((r) => r.status === 'Success')).toBe(true);
-    expect(await tableNames()).toEqual(['accounts', 'sessions', 'users', 'verifications']);
+    expect(await tableNames()).toEqual(AUTH_AND_MENU_TABLES);
   });
 
   it('borrar un usuario borra en cascada sus sesiones y cuentas', async () => {
@@ -61,7 +70,36 @@ describe('migraciones', () => {
       WHERE constraint_schema = DATABASE()`.execute(db);
     expect(rows.map((r) => `${r.table}:${r.rule}`).sort()).toEqual([
       'accounts:CASCADE',
+      'dishes:RESTRICT',
       'sessions:CASCADE',
     ]);
+  });
+
+  it('dishes: precio DECIMAL(10,2), alérgenos SET y estado ENUM', async () => {
+    const dishes = await columns('dishes');
+    expect(dishes.price?.type).toBe('decimal(10,2)');
+    expect(dishes.allergens?.type).toMatch(/^set\('A','B','C'/);
+    expect(dishes.allergens?.type).toContain("'N'");
+    expect(dishes.status?.type).toBe("enum('visible','hidden','archived')");
+    expect(dishes.diet?.type).toBe("enum('vegan','vegetarian')");
+    expect(dishes.diet?.nullable).toBe('YES');
+  });
+
+  it('dishes: la clave foránea a categorías es RESTRICT', async () => {
+    await sql`DELETE FROM dishes`.execute(db);
+    await sql`DELETE FROM menu_categories`.execute(db);
+    await expect(
+      sql`INSERT INTO dishes (category_id, name_de, name_es, price) VALUES (999999, 'a', 'b', 1.00)`.execute(
+        db,
+      ),
+    ).rejects.toThrow();
+
+    await sql`INSERT INTO menu_categories (name_de, name_es) VALUES ('K', 'C')`.execute(db);
+    await sql`INSERT INTO dishes (category_id, name_de, name_es, price)
+      SELECT id, 'a', 'b', 1.00 FROM menu_categories`.execute(db);
+    await expect(sql`DELETE FROM menu_categories`.execute(db)).rejects.toThrow();
+
+    await sql`DELETE FROM dishes`.execute(db);
+    await sql`DELETE FROM menu_categories`.execute(db);
   });
 });

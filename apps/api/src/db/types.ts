@@ -60,11 +60,53 @@ export interface VerificationsTable {
   updatedAt: DefaultDate;
 }
 
+export type MenuStatus = 'visible' | 'hidden' | 'archived';
+
+/** Columna con valor por defecto en BD: opcional al insertar. */
+type WithDefault<T> = ColumnType<T, T | undefined, T>;
+
+export interface MenuCategoriesTable {
+  id: AutoId;
+  nameDe: string;
+  nameEs: string;
+  descriptionDe: string | null;
+  descriptionEs: string | null;
+  sortOrder: WithDefault<number>;
+  status: WithDefault<MenuStatus>;
+  createdAt: DefaultDate;
+  updatedAt: DefaultDate;
+}
+
+export interface DishesTable {
+  id: AutoId;
+  categoryId: number;
+  nameDe: string;
+  nameEs: string;
+  descriptionDe: string | null;
+  descriptionEs: string | null;
+  /** DECIMAL(10,2): mysql2 lo devuelve como string ("12.50"). */
+  price: string;
+  diet: 'vegan' | 'vegetarian' | null;
+  /** SET('A'..'N'): cadena separada por comas ("A,G"), vacía si no hay alérgenos. */
+  allergens: WithDefault<string>;
+  imageKey: string | null;
+  imageAltDe: string | null;
+  imageAltEs: string | null;
+  sortOrder: WithDefault<number>;
+  status: WithDefault<MenuStatus>;
+  isProvisional: WithDefault<boolean>;
+  provisionalNote: string | null;
+  createdAt: DefaultDate;
+  updatedAt: DefaultDate;
+}
+
 export interface Database {
   users: UsersTable;
   sessions: SessionsTable;
   accounts: AccountsTable;
   verifications: VerificationsTable;
+  menuCategories: MenuCategoriesTable;
+  dishes: DishesTable;
 }
 
 export type User = Selectable<UsersTable>;
