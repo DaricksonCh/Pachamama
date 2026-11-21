@@ -26,7 +26,8 @@
     "db:migrate": "npm run db:migrate -w @pachamama/api",
     "db:migrate:down": "npm run db:migrate:down -w @pachamama/api",
     "admin:create": "npm run admin:create -w @pachamama/api --",
-    "db:cleanup": "npm run db:cleanup -w @pachamama/api"
+    "db:cleanup": "npm run db:cleanup -w @pachamama/api",
+    "db:seed:menu": "npm run db:seed:menu -w @pachamama/api --"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
