@@ -4,39 +4,29 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { ZodError } from 'zod';
 import { createApp } from '../app';
 import { db } from '../db/database';
-import { resetAuthTables, uniqueIp } from '../test/db-helpers';
+import {
+  ADMIN,
+  loginCookie as loginCookieWith,
+  ORIGIN,
+  seedStaffUsers,
+  signIn as signInWith,
+  STAFF,
+} from '../test/auth-helpers';
+import { uniqueIp } from '../test/db-helpers';
 import { auth } from './auth';
 import { createStaffUser } from './create-staff-user';
 
 const app = createApp();
-const ORIGIN = 'http://localhost:5173';
-const ADMIN = { name: 'Ana Admin', email: 'admin@pachamama.test', password: 'Admin-Passw0rd-123' };
-const STAFF = {
-  name: 'Sergio Staff',
-  email: 'staff@pachamama.test',
-  password: 'Staff-Passw0rd-123',
-};
-
-function signIn(email: string, password: string, ip = uniqueIp()) {
-  return request(app)
-    .post('/api/auth/sign-in/email')
-    .set('Origin', ORIGIN)
-    .set('X-Forwarded-For', ip)
-    .send({ email, password });
+function signIn(email: string, password: string, ip?: string) {
+  return signInWith(app, email, password, ip);
 }
 
-/** Inicia sesión y devuelve la cookie de sesión lista para reenviar. */
-async function loginCookie(email: string, password: string) {
-  const res = await signIn(email, password);
-  expect(res.status).toBe(200);
-  const cookies = ([] as string[]).concat(res.headers['set-cookie'] ?? []);
-  return cookies.map((c) => c.split(';')[0]).join('; ');
+function loginCookie(email: string, password: string) {
+  return loginCookieWith(app, email, password);
 }
 
 beforeEach(async () => {
-  await resetAuthTables();
-  await createStaffUser(auth, { ...ADMIN, role: 'admin' });
-  await createStaffUser(auth, { ...STAFF, role: 'staff' });
+  await seedStaffUsers();
 });
 
 describe('alta de usuarios', () => {
