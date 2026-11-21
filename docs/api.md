@@ -25,6 +25,17 @@ Protecciones: comprobación de origen (CSRF) con `WEB_ORIGIN` como origen de con
 
 Los schemas de respuesta viven en `packages/shared` (`healthResponseSchema`, `staffUserSchema`).
 
+## Carta — pública (`/api/v1/menu`)
+
+Sin sesión ni datos personales. Solo categorías y platos **visibles** (nunca `status`, `isProvisional` ni `provisionalNote`). Ambas rutas responden `Cache-Control: no-cache` + `ETag` con la versión de la carta: el navegador revalida siempre y recibe **304** si nada cambió; cualquier escritura en el panel cambia la versión.
+
+| Método | Ruta                     | Respuesta                                                                                                                                                                      |
+| ------ | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| GET    | `/api/v1/menu`           | `{ data: PublicMenu }` · `ETag: "<versión>-json"`                                                                                                                              |
+| GET    | `/api/v1/menu/pdf?lang=` | PDF A4 generado (`application/pdf`, `inline`; `pachamama-karte-de.pdf` / `pachamama-carta-es.pdf`). `lang`: `de` o `es`; ausente o inválido → `de`. `ETag: "<versión>-<lang>"` |
+
+El PDF se genera con `@react-pdf/renderer` (ADR 0009) y se guarda en memoria por idioma hasta el siguiente cambio de la carta. `<versión>` = `<arranque>.<n>`: cambia también al reiniciar el proceso, así un ETag antiguo nunca coincide con otra carta.
+
 ## Carta — panel (`/api/v1/admin/menu`)
 
 Requieren sesión. Las escrituras exigen `Origin` de la web y `Content-Type: application/json` (CSRF). Respuestas `{ data }`; los PUT de orden devuelven 204. Archivar/restaurar = `PATCH { status }`; no hay `DELETE`.
