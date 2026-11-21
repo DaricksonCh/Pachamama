@@ -13,7 +13,8 @@ export const E2E_ADMIN = {
 };
 
 export const E2E_STAFF = {
-  name: 'Pablo Personal',
+  // Nombre con un intento de XSS: debe mostrarse como texto, nunca ejecutarse.
+  name: 'Pablo <img src=x onerror=alert(1)>',
   email: 'e2e-staff@pachamama.test',
   password: 'E2e-Staff-Passw0rd!',
 };

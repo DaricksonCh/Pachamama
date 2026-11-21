@@ -1,5 +1,5 @@
 import { sql } from 'kysely';
-import { applyTestEnv } from './test-env';
+import { applyTestEnv, assertTestDatabaseName } from './test-env';
 
 /**
  * Una vez por ejecución: deja la BD de tests vacía y con todas las migraciones aplicadas.
@@ -12,6 +12,12 @@ export default async function globalSetup() {
   const db = createDatabase(process.env.DATABASE_URL);
 
   try {
+    // Segunda barrera antes de borrar nada: la conexión real apunta a una base *_test.
+    const { rows: current } = await sql<{ name: string | null }>`SELECT DATABASE() AS name`.execute(
+      db,
+    );
+    assertTestDatabaseName(current[0]?.name);
+
     const { rows } = await sql<{ name: string }>`
       SELECT table_name AS name FROM information_schema.tables
       WHERE table_schema = DATABASE()`.execute(db);

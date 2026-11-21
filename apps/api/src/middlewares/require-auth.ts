@@ -20,7 +20,9 @@ export const requireAuth: RequestHandler = async (
   if (!session) {
     throw new AppError(401, 'UNAUTHORIZED', 'Authentication required');
   }
-  if (session.user.banned) {
+  const { banned, banExpires } = session.user;
+  // Igual que el plugin admin: un bloqueo con fecha de fin deja de aplicar al vencer.
+  if (banned && (!banExpires || new Date(banExpires) > new Date())) {
     throw new AppError(403, 'FORBIDDEN', 'Account disabled');
   }
   res.locals.session = session;

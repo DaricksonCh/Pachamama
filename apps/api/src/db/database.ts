@@ -16,6 +16,14 @@ export function createDatabase(url: string = env.DATABASE_URL) {
     dateStrings: false,
     connectionLimit: 10,
     charset: 'utf8mb4_0900_ai_ci',
+    // BOOLEAN en MySQL es TINYINT(1): mysql2 lo devuelve como 0/1. Lo convertimos a boolean real.
+    typeCast(field, next) {
+      if (field.type === 'TINY' && field.length === 1) {
+        const value = field.string();
+        return value === null ? null : value === '1';
+      }
+      return next();
+    },
   });
 
   return new Kysely<Database>({

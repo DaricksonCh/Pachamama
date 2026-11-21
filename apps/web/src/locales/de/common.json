@@ -27,7 +27,8 @@
       "staff": "Personal"
     },
     "errors": {
-      "loadFailed": "Die Verwaltung konnte nicht geladen werden. Bitte später erneut versuchen."
+      "loadFailed": "Die Verwaltung konnte nicht geladen werden. Bitte später erneut versuchen.",
+      "signOutFailed": "Abmelden fehlgeschlagen – du bist noch angemeldet. Bitte erneut versuchen."
     },
     "login": {
       "title": "Anmelden",
@@ -45,7 +46,8 @@
     "dashboard": {
       "welcome": "Hallo, {{name}}",
       "intro": "Hier verwaltest du bald Speisekarte, Reservierungen und mehr."
-    }
+    },
+    "retry": "Erneut versuchen"
   },
   "validation": {
     "email": "Bitte eine gültige E-Mail-Adresse eingeben.",

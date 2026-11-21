@@ -14,7 +14,8 @@
     "db:migrate:down": "tsx scripts/migrate.ts down",
     "admin:create": "tsx scripts/create-admin.ts",
     "e2e:seed": "tsx scripts/e2e-seed.ts",
-    "e2e:serve": "tsx scripts/e2e-server.ts"
+    "e2e:serve": "tsx scripts/e2e-server.ts",
+    "db:cleanup": "tsx scripts/cleanup.ts"
   },
   "dependencies": {
     "@better-auth/kysely-adapter": "^1.7.27",

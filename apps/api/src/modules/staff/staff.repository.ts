@@ -7,7 +7,7 @@ export function createStaffRepository(db: Kysely<Database>) {
     listUsers() {
       return db
         .selectFrom('users')
-        .select(['id', 'name', 'email', 'role', 'banned', 'createdAt'])
+        .select(['id', 'name', 'email', 'role'])
         .orderBy('createdAt', 'asc')
         .execute();
     },

@@ -6,6 +6,6 @@ import { createAuthClient } from 'better-auth/react';
  * lo reenvía el proxy de Vite, así la cookie de sesión es de primera parte.
  */
 export const authClient = createAuthClient({
-  baseURL: typeof window === 'undefined' ? 'http://localhost:5173' : window.location.origin,
+  baseURL: window.location.origin,
   plugins: [adminClient()],
 });

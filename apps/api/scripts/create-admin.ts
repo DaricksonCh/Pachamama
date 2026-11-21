@@ -2,12 +2,14 @@
  * Crea el primer usuario administrador del panel.
  *   npm run admin:create -- --email persona@ejemplo.de --name "Nombre"
  * La contraseña se pide por teclado sin mostrarla (nunca como argumento: quedaría en el historial).
- * Para entornos sin teclado (CI) se puede pasar en la variable ADMIN_PASSWORD.
+ * Para entornos sin teclado (CI) se puede pasar en la variable ADMIN_PASSWORD, solo desde un
+ * gestor de secretos: nunca escrita en la línea de comandos (quedaría en el historial).
  */
 import { createInterface } from 'node:readline';
 import { Writable } from 'node:stream';
 import { parseArgs } from 'node:util';
-import { PASSWORD_MIN_LENGTH } from '@pachamama/shared';
+import { PASSWORD_MIN_LENGTH, ROLES } from '@pachamama/shared';
+import { z } from 'zod';
 import { auth } from '../src/auth/auth';
 import { createStaffUser } from '../src/auth/create-staff-user';
 import { db } from '../src/db/database';
@@ -51,11 +53,15 @@ try {
     if (password !== repeat) throw new Error('Las contraseñas no coinciden');
   }
 
+  // Un rol mal escrito (p. ej. "staf") no debe acabar creando un admin.
+  const role = z.enum(ROLES).safeParse(values.role);
+  if (!role.success) throw new Error(`Rol no válido: "${values.role}". Usa: ${ROLES.join(', ')}`);
+
   const user = await createStaffUser(auth, {
     email: values.email,
     name: values.name,
     password,
-    role: values.role === 'staff' ? 'staff' : 'admin',
+    role: role.data,
   });
   console.log(`✔ Usuario creado: ${user.email} (${user.role})`);
 } catch (err) {
@@ -69,5 +75,6 @@ try {
   console.error('✖', message);
   process.exitCode = 1;
 } finally {
+  delete process.env.ADMIN_PASSWORD;
   await db.destroy();
 }

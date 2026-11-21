@@ -1,6 +1,7 @@
 import { staffUserSchema } from '@pachamama/shared';
 import request from 'supertest';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { ZodError } from 'zod';
 import { createApp } from '../app';
 import { db } from '../db/database';
 import { resetAuthTables, uniqueIp } from '../test/db-helpers';
@@ -61,7 +62,17 @@ describe('alta de usuarios', () => {
         password: 'corta',
         role: 'staff',
       }),
-    ).rejects.toThrow();
+    ).rejects.toThrow(ZodError);
+  });
+
+  it('normaliza el email (espacios y mayúsculas) al crear el usuario', async () => {
+    const user = await createStaffUser(auth, {
+      name: 'Eva Espacios',
+      email: '  Eva@Pachamama.TEST ',
+      password: 'Eva-Passw0rd-12345',
+      role: 'staff',
+    });
+    expect(user.email).toBe('eva@pachamama.test');
   });
 
   it('no permite registrarse desde fuera (sin registro público)', async () => {
@@ -257,5 +268,93 @@ describe('permisos de la API', () => {
       .set('Cookie', cookie)
       .send({ userId: 'cualquiera', role: 'admin' });
     expect(res.status).toBe(403);
+  });
+
+  it('las respuestas con datos personales no se guardan en caché (no-store)', async () => {
+    const cookie = await loginCookie(STAFF.email, STAFF.password);
+    const res = await request(app).get('/api/v1/me').set('Cookie', cookie);
+    expect(res.headers['cache-control']).toBe('no-store');
+  });
+
+  it('un usuario bloqueado con la sesión ya abierta pierde el acceso (403)', async () => {
+    const cookie = await loginCookie(STAFF.email, STAFF.password);
+    await db.updateTable('users').set({ banned: true }).where('email', '=', STAFF.email).execute();
+
+    const res = await request(app).get('/api/v1/me').set('Cookie', cookie);
+    expect(res.status).toBe(403);
+  });
+
+  it('un bloqueo temporal ya vencido no impide el acceso', async () => {
+    const cookie = await loginCookie(STAFF.email, STAFF.password);
+    await db
+      .updateTable('users')
+      .set({ banned: true, banExpires: new Date(Date.now() - 60_000) })
+      .where('email', '=', STAFF.email)
+      .execute();
+
+    const res = await request(app).get('/api/v1/me').set('Cookie', cookie);
+    expect(res.status).toBe(200);
+  });
+
+  it('un usuario sin rol o con un rol desconocido no entra en rutas de admin', async () => {
+    const cookie = await loginCookie(STAFF.email, STAFF.password);
+    for (const role of [null, 'superadmin']) {
+      await db.updateTable('users').set({ role }).where('email', '=', STAFF.email).execute();
+      const res = await request(app).get('/api/v1/admin/users').set('Cookie', cookie);
+      expect(res.status).toBe(403);
+    }
+  });
+
+  it('ni siquiera el admin puede suplantar a otro usuario (permiso retirado)', async () => {
+    const cookie = await loginCookie(ADMIN.email, ADMIN.password);
+    const staff = await db
+      .selectFrom('users')
+      .select('id')
+      .where('email', '=', STAFF.email)
+      .executeTakeFirstOrThrow();
+
+    const res = await request(app)
+      .post('/api/auth/admin/impersonate-user')
+      .set('Origin', ORIGIN)
+      .set('X-Forwarded-For', uniqueIp())
+      .set('Cookie', cookie)
+      .send({ userId: staff.id });
+    expect(res.status).toBe(403);
+  });
+});
+
+describe('IP del cliente para el límite de intentos', () => {
+  it('rotar IPs falsas en X-Forwarded-For no salta el límite', async () => {
+    // El salto de confianza (el proxy) siempre añade la IP real al final de la cadena.
+    const realIp = uniqueIp();
+    const statuses: number[] = [];
+    for (let i = 0; i < 6; i++) {
+      const res = await request(app)
+        .post('/api/auth/sign-in/email')
+        .set('Origin', ORIGIN)
+        .set('X-Forwarded-For', `198.51.100.${i + 1}, ${realIp}`)
+        .send({ email: ADMIN.email, password: `mala-${i}` });
+      statuses.push(res.status);
+    }
+    expect(statuses[5]).toBe(429);
+  });
+
+  it('detrás del proxy, un atacante no bloquea el login de otra persona', async () => {
+    // Cadenas como las que deja un nginx que AÑADE la IP real a la cabecera del cliente.
+    const attacker = uniqueIp();
+    for (let i = 0; i < 6; i++) {
+      await request(app)
+        .post('/api/auth/sign-in/email')
+        .set('Origin', ORIGIN)
+        .set('X-Forwarded-For', `203.0.113.${i + 1}, ${attacker}`)
+        .send({ email: ADMIN.email, password: `mala-${i}` });
+    }
+
+    const legit = await request(app)
+      .post('/api/auth/sign-in/email')
+      .set('Origin', ORIGIN)
+      .set('X-Forwarded-For', `192.0.2.77, ${uniqueIp()}`)
+      .send({ email: ADMIN.email, password: ADMIN.password });
+    expect(legit.status).toBe(200);
   });
 });

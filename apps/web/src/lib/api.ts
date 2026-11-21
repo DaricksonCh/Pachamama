@@ -24,9 +24,14 @@ export async function apiGet<TSchema extends z.ZodType>(
   const res = await fetch(path, { credentials: 'include', ...init });
   if (!res.ok) {
     const body: unknown = await res.json().catch(() => null);
+    const error =
+      typeof body === 'object' && body !== null && 'error' in body ? body.error : undefined;
     const code =
-      typeof body === 'object' && body !== null && 'error' in body
-        ? (body.error as { code?: string }).code
+      typeof error === 'object' &&
+      error !== null &&
+      'code' in error &&
+      typeof error.code === 'string'
+        ? error.code
         : undefined;
     throw new ApiError(res.status, code, `GET ${path} failed with status ${res.status}`);
   }

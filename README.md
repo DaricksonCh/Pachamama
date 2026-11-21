@@ -14,18 +14,23 @@ En desarrollo, por fases. Ver [`docs/roadmap.md`](docs/roadmap.md).
 
 ## Empezar
 
-Requisitos: Node.js 24, npm 11 (MySQL 8 a partir de la fase 3).
+Requisitos: Node.js 24, npm 11 y MySQL 8.4 (base `pachamama` + base de tests `pachamama_test`).
 
 ```bash
 npm install
-cp .env.example .env   # opcional por ahora: hay valores por defecto
+cp .env.example .env        # rellenar DATABASE_URL y BETTER_AUTH_SECRET
+npm run db:migrate          # crea/actualiza las tablas
+npm run admin:create -- --email persona@ejemplo.de --name "Nombre"   # primer admin (pide la contraseña)
 npm run dev
 ```
 
+Base de tests (una vez, como root): `apps/api/scripts/sql/create-test-database.sql`.
+
 - Web: http://localhost:5173
 - API: http://localhost:3000/api/v1/health
+- Panel: http://localhost:5173/admin
 
-Antes de subir cambios: `npm run check` (typecheck, lint, formato y tests).
+Antes de subir cambios: `npm run check:all` (typecheck, lint, formato, tests, build y e2e).
 
 ## Estructura
 

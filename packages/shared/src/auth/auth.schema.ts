@@ -17,8 +17,16 @@ export const PASSWORD_MAX_LENGTH = 128;
  * Login del panel. Los mensajes son claves i18n (la web las traduce).
  * Sin pistas de longitud en el login: eso solo se valida al crear la contraseña.
  */
+/** Email normalizado: en Zod 4 .trim() va antes del formato, por eso se usa pipe(). */
+const normalizedEmail = (error?: string) =>
+  z
+    .string()
+    .trim()
+    .toLowerCase()
+    .pipe(z.email(error ? { error } : undefined).max(255));
+
 export const loginSchema = z.object({
-  email: z.email({ error: 'validation.email' }).trim().toLowerCase().max(255),
+  email: normalizedEmail('validation.email'),
   password: z.string().min(1, { error: 'validation.required' }).max(PASSWORD_MAX_LENGTH),
 });
 export type LoginInput = z.infer<typeof loginSchema>;
@@ -26,7 +34,7 @@ export type LoginInput = z.infer<typeof loginSchema>;
 /** Alta de un usuario del personal (script del primer admin y, más adelante, el panel). */
 export const createStaffUserSchema = z.object({
   name: z.string().trim().min(2).max(100),
-  email: z.email().trim().toLowerCase().max(255),
+  email: normalizedEmail(),
   password: z.string().min(PASSWORD_MIN_LENGTH).max(PASSWORD_MAX_LENGTH),
   role: z.enum(ROLES),
 });

@@ -49,10 +49,62 @@ test.describe('panel /admin: login y acceso', () => {
     await expect(page).toHaveURL(/\/admin\/login$/);
   });
 
-  test('el personal entra con su rol', async ({ page }) => {
+  test('el personal entra con su rol y su nombre con XSS se muestra como texto', async ({
+    page,
+  }) => {
+    let dialogOpened = false;
+    page.on('dialog', async (dialog) => {
+      dialogOpened = true;
+      await dialog.dismiss();
+    });
+
     await page.goto('/admin/login');
     await fillLogin(page, E2E_STAFF.email, E2E_STAFF.password);
+
     await expect(page.getByText('(Personal)')).toBeVisible();
+    // El nombre guardado en la BD lleva <img onerror>: debe verse literal, sin crear ningún <img>.
+    await expect(page.getByRole('heading', { name: `Hallo, ${E2E_STAFF.name}` })).toBeVisible();
+    await expect(page.locator('img[src="x"]')).toHaveCount(0);
+    expect(dialogOpened).toBe(false);
+  });
+
+  test('el panel se puede usar en español y recuerda el idioma', async ({ page }) => {
+    await page.goto('/admin/login');
+    await page.getByRole('button', { name: 'Español' }).click();
+
+    await expect(page.locator('html')).toHaveAttribute('lang', 'es');
+    await expect(page.getByRole('heading', { name: 'Iniciar sesión' })).toBeVisible();
+
+    await page.getByLabel('Email').fill(E2E_ADMIN.email);
+    await page.getByLabel('Contraseña').fill(E2E_ADMIN.password);
+    await page.getByRole('button', { name: 'Entrar' }).click();
+
+    await expect(page.getByRole('heading', { name: `Hola, ${E2E_ADMIN.name}` })).toBeVisible();
+    await page.reload();
+    await expect(page.getByRole('button', { name: 'Cerrar sesión' })).toBeVisible();
+    await expect(page.locator('html')).toHaveAttribute('lang', 'es');
+  });
+
+  test('si cerrar sesión falla, avisa y no finge que salió', async ({ page }) => {
+    await page.goto('/admin/login');
+    await fillLogin(page, E2E_ADMIN.email, E2E_ADMIN.password);
+    await expect(page).toHaveURL(/\/admin$/);
+
+    await page.route('**/api/auth/sign-out', (route) => route.fulfill({ status: 500, body: '{}' }));
+    await page.getByRole('button', { name: 'Abmelden' }).click();
+
+    await expect(page.getByRole('alert')).toContainText('Abmelden fehlgeschlagen');
+    await expect(page).toHaveURL(/\/admin$/);
+  });
+
+  test('sin conexión al enviar el login, muestra un error', async ({ page }) => {
+    await page.goto('/admin/login');
+    await page.route('**/api/auth/sign-in/email', (route) => route.abort('connectionrefused'));
+    await fillLogin(page, E2E_ADMIN.email, E2E_ADMIN.password);
+
+    await expect(page.getByRole('alert')).toHaveText(
+      'Etwas ist schiefgelaufen. Bitte erneut versuchen.',
+    );
   });
 
   test('credenciales incorrectas muestran un error genérico', async ({ page }) => {
@@ -84,17 +136,17 @@ test.describe('panel /admin: login y acceso', () => {
     await expect(page).toHaveURL(/\/admin\/login$/);
   });
 
-  test('un intento de XSS en el email se muestra como texto, no se ejecuta', async ({ page }) => {
-    let dialogOpened = false;
-    page.on('dialog', async (dialog) => {
-      dialogOpened = true;
-      await dialog.dismiss();
+  test('la validación rechaza un email malformado sin enviarlo', async ({ page }) => {
+    let signInCalled = false;
+    page.on('request', (req) => {
+      if (req.url().includes('/api/auth/sign-in')) signInCalled = true;
     });
     await page.goto('/admin/login');
     await fillLogin(page, '"><img src=x onerror=alert(1)>@x.de', 'x');
 
     await expect(page.getByText('Bitte eine gültige E-Mail-Adresse eingeben.')).toBeVisible();
-    expect(dialogOpened).toBe(false);
+    await expect(page.getByLabel('E-Mail')).toHaveAttribute('aria-describedby', 'email-error');
+    expect(signInCalled).toBe(false);
   });
 
   test('la página de login cumple WCAG 2.2 AA', async ({ page }) => {

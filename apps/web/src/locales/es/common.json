@@ -27,7 +27,8 @@
       "staff": "Personal"
     },
     "errors": {
-      "loadFailed": "No se pudo cargar el panel. Inténtalo de nuevo más tarde."
+      "loadFailed": "No se pudo cargar el panel. Inténtalo de nuevo más tarde.",
+      "signOutFailed": "No se pudo cerrar la sesión: sigues conectado. Inténtalo de nuevo."
     },
     "login": {
       "title": "Iniciar sesión",
@@ -45,7 +46,8 @@
     "dashboard": {
       "welcome": "Hola, {{name}}",
       "intro": "Pronto gestionarás aquí la carta, las reservas y más."
-    }
+    },
+    "retry": "Reintentar"
   },
   "validation": {
     "email": "Introduce un email válido.",
