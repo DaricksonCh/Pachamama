@@ -115,7 +115,10 @@ describe('orden', () => {
 
 describe('carta pública (service)', () => {
   it('solo categorías y platos visibles; una categoría oculta oculta sus platos', async () => {
-    const service = createMenuService(createMenuRepository(db), createMenuEvents());
+    const service = createMenuService(createMenuRepository(db), createMenuEvents(), {
+      save: async () => {},
+      remove: async () => {},
+    });
     const shown = await makeCategory({ nameDe: 'Sichtbar' });
     const hidden = await makeCategory({ status: 'hidden', nameDe: 'Versteckt' });
     const archived = await makeCategory({ nameDe: 'Archiv' });

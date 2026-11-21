@@ -179,6 +179,18 @@ export function createMenuRepository(db: Kysely<Database>) {
       });
     },
 
+    async setDishImage(id: number, image: { key: string; altDe: string; altEs: string } | null) {
+      await db
+        .updateTable('dishes')
+        .set({
+          imageKey: image?.key ?? null,
+          imageAltDe: image?.altDe ?? null,
+          imageAltEs: image?.altEs ?? null,
+        })
+        .where('id', '=', id)
+        .execute();
+    },
+
     async updateDish(id: number, patch: Partial<DishValues>) {
       if (Object.keys(patch).length === 0) return;
       await db.updateTable('dishes').set(patch).where('id', '=', id).execute();
