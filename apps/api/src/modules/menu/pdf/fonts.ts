@@ -79,6 +79,9 @@ let queue: Promise<unknown> = Promise.resolve();
  * español generado después del alemán). `Font.reset()` no sirve (no borra la carga en caché),
  * así que se descargan las fuentes a mano: los archivos (unos 280 KB) se releen en
  * milisegundos. La cola evita descargarlas a mitad de otro render.
+ * Depende de la estructura interna de react-pdf 4.9.0 (`sources[].data/loadResultPromise`): por
+ * eso la versión está fijada sin `^` en apps/api/package.json; al actualizarla, revisar este
+ * apaño y su test (public-menu-pdf-fonts.test.ts).
  */
 export function renderWithFreshFonts<T>(render: () => Promise<T>): Promise<T> {
   const run = queue.then(() => {

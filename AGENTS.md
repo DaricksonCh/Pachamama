@@ -143,6 +143,7 @@ Desde la raíz del repo:
 | `npm run db:migrate`                               | Aplica las migraciones pendientes (`db:migrate:down` deshace una)            |
 | `npm run db:cleanup`                               | Borra sesiones y verificaciones caducadas (DSGVO; cron diario en producción) |
 | `npm run admin:create -- --email <e> --name "<n>"` | Crea un admin (pide la contraseña sin mostrarla)                             |
+| `npm run db:seed:menu -- [--photos <dir>]`         | Carta inicial si está vacía (+ `material/fotos`); reiniciar la API después   |
 | `npm run dev -w @pachamama/api`                    | Solo un paquete (`-w` = workspace)                                           |
 
 Versiones fijadas: Node 24, npm 11, **TypeScript 6.0** (TS 7 aún no es compatible con typescript-eslint; ver ADR 0006).
