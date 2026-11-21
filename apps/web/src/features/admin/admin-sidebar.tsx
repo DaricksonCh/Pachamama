@@ -6,7 +6,6 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -26,11 +25,10 @@ export function AdminSidebar() {
 
   return (
     <Sidebar>
-      <SidebarHeader>
-        <span className="px-2 py-1 font-display text-lg font-semibold">{t('app.name')}</span>
-      </SidebarHeader>
       <SidebarContent>
         <nav aria-label={t('admin.nav.label')} className="flex flex-col gap-2">
+          {/* El nombre va dentro del <nav>: así todo el lateral está dentro de un landmark. */}
+          <span className="px-4 pt-3 font-display text-lg font-semibold">{t('app.name')}</span>
           <SidebarGroup>
             <SidebarMenu>
               <SidebarMenuItem>

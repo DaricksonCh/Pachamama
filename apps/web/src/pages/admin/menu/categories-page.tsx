@@ -1,5 +1,5 @@
 import type { AdminCategory, MenuStatus } from '@pachamama/shared';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { toast } from 'sonner';
@@ -14,11 +14,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useCurrentUser } from '@/features/auth/use-current-user';
-import { useCategories, useReorder, useSaveCategory } from '@/features/menu/api';
-import { ArchiveDialog } from '@/features/menu/archive-dialog';
+import { useCategories, useReorder } from '@/features/menu/api';
 import { ReorderButtons } from '@/features/menu/reorder-buttons';
 import { StatusBadge } from '@/features/menu/status-badge';
-import { ApiError } from '@/lib/api';
+import { useCategoryStatus } from '@/features/menu/use-category-status';
 
 type Filter = 'active' | 'archived';
 
@@ -30,11 +29,13 @@ export function CategoriesPage() {
   const status: MenuStatus | undefined = filter === 'archived' ? 'archived' : undefined;
   const { data, isPending, isError, refetch } = useCategories(status);
   const reorder = useReorder('categories');
-  const save = useSaveCategory();
-  const [toArchive, setToArchive] = useState<AdminCategory | null>(null);
-  const [archiveError, setArchiveError] = useState<string | null>(null);
+  const [announcement, setAnnouncement] = useState('');
+  // El foco se restaura tras pintar la lista nueva: `moves` fuerza ese efecto en cada reordenado.
+  const pendingFocus = useRef<{ id: number; direction: 'up' | 'down' } | null>(null);
+  const [moves, setMoves] = useState(0);
 
   const nameOf = (c: AdminCategory) => (i18n.language === 'es' ? c.nameEs : c.nameDe);
+  const categoryStatus = useCategoryStatus(nameOf);
 
   const move = async (index: number, direction: 'up' | 'down') => {
     if (!data) return;
@@ -47,35 +48,37 @@ export function CategoriesPage() {
     ids[target] = moved;
     try {
       await reorder.mutateAsync(ids);
+      const category = data[index];
+      if (category) {
+        setAnnouncement(
+          t('admin.menu.reorder.moved', {
+            name: nameOf(category),
+            position: target + 1,
+            total: ids.length,
+          }),
+        );
+      }
+      pendingFocus.current = { id: moved, direction };
+      setMoves((n) => n + 1);
     } catch {
       toast.error(t('admin.menu.errors.reorderFailed'));
+      // La lista pudo quedar desfasada (otra persona añadió o archivó categorías): se recarga.
+      void refetch();
     }
   };
 
-  const confirmArchive = async () => {
-    if (!toArchive) return;
-    setArchiveError(null);
-    try {
-      await save.mutateAsync({ id: toArchive.id, data: { status: 'archived' } });
-      toast.success(t('admin.menu.categories.archived'));
-      setToArchive(null);
-    } catch (err) {
-      setArchiveError(
-        err instanceof ApiError && err.code === 'CATEGORY_HAS_DISHES'
-          ? 'admin.menu.categories.errors.hasDishes'
-          : 'admin.menu.errors.saveFailed',
+  // Tras reordenar, el foco vuelve al botón de la fila movida (si ya está en el extremo, al contrario).
+  useEffect(() => {
+    const target = pendingFocus.current;
+    if (!target || reorder.isPending) return;
+    pendingFocus.current = null;
+    const find = (direction: string) =>
+      document.querySelector<HTMLButtonElement>(
+        `[data-reorder="${target.id}-${direction}"]:not(:disabled)`,
       );
-    }
-  };
-
-  const restore = async (category: AdminCategory) => {
-    try {
-      await save.mutateAsync({ id: category.id, data: { status: 'hidden' } });
-      toast.success(t('admin.menu.categories.restored'));
-    } catch {
-      toast.error(t('admin.menu.errors.saveFailed'));
-    }
-  };
+    const opposite = target.direction === 'up' ? 'down' : 'up';
+    (find(target.direction) ?? find(opposite))?.focus();
+  }, [moves, reorder.isPending, data]);
 
   let content;
   if (isPending) {
@@ -143,6 +146,7 @@ export function CategoriesPage() {
                   {isAdmin && filter === 'active' ? (
                     <>
                       <ReorderButtons
+                        id={category.id}
                         index={index}
                         total={data.length}
                         name={nameOf(category)}
@@ -153,10 +157,7 @@ export function CategoriesPage() {
                         variant="outline"
                         size="sm"
                         aria-label={t('admin.menu.archive.actionNamed', { name: nameOf(category) })}
-                        onClick={() => {
-                          setArchiveError(null);
-                          setToArchive(category);
-                        }}
+                        onClick={() => categoryStatus.askArchive(category)}
                       >
                         {t('admin.menu.archive.action')}
                       </Button>
@@ -166,9 +167,9 @@ export function CategoriesPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={save.isPending}
+                      disabled={categoryStatus.isPending}
                       aria-label={t('admin.menu.restoreNamed', { name: nameOf(category) })}
-                      onClick={() => void restore(category)}
+                      onClick={() => void categoryStatus.restore(category)}
                     >
                       {t('admin.menu.restore')}
                     </Button>
@@ -209,17 +210,10 @@ export function CategoriesPage() {
 
       {content}
 
-      <ArchiveDialog
-        open={toArchive !== null}
-        kind="category"
-        name={toArchive ? nameOf(toArchive) : ''}
-        error={archiveError}
-        pending={save.isPending}
-        onConfirm={() => void confirmArchive()}
-        onOpenChange={(open) => {
-          if (!open) setToArchive(null);
-        }}
-      />
+      <p role="status" className="sr-only">
+        {announcement}
+      </p>
+      {categoryStatus.dialog}
     </section>
   );
 }

@@ -20,6 +20,12 @@ type FormOutput = z.output<typeof categoryInputSchema>;
 type FieldName = 'nameDe' | 'nameEs' | 'descriptionDe' | 'descriptionEs';
 
 const FIELDS: readonly FieldName[] = ['nameDe', 'nameEs', 'descriptionDe', 'descriptionEs'];
+const LABEL_KEYS: Record<FieldName, string> = {
+  nameDe: 'admin.menu.categories.form.nameDe',
+  nameEs: 'admin.menu.categories.form.nameEs',
+  descriptionDe: 'admin.menu.categories.form.descriptionDe',
+  descriptionEs: 'admin.menu.categories.form.descriptionEs',
+};
 
 function toDefaults(category?: AdminCategory): FormInput {
   return {
@@ -49,7 +55,8 @@ export function CategoryForm({
     control,
     handleSubmit,
     setError,
-    formState: { errors, isDirty, isSubmitting },
+    setFocus,
+    formState: { errors, isDirty, isSubmitting, submitCount },
   } = useForm<FormInput, unknown, FormOutput>({
     resolver: zodResolver(categoryInputSchema),
     defaultValues: toDefaults(category),
@@ -86,6 +93,8 @@ export function CategoryForm({
     }
   });
 
+  const invalidFields = FIELDS.filter((field) => errors[field]?.message);
+
   const text = (name: FieldName, labelKey: string, multiline = false) => {
     const error = errors[name]?.message;
     const required = name === 'nameDe' || name === 'nameEs';
@@ -115,10 +124,35 @@ export function CategoryForm({
 
   return (
     <form onSubmit={onSubmit} noValidate className="max-w-2xl space-y-5">
-      {text('nameDe', 'admin.menu.categories.form.nameDe')}
-      {text('nameEs', 'admin.menu.categories.form.nameEs')}
-      {text('descriptionDe', 'admin.menu.categories.form.descriptionDe', true)}
-      {text('descriptionEs', 'admin.menu.categories.form.descriptionEs', true)}
+      {submitCount > 0 && invalidFields.length > 0 ? (
+        <div
+          role="alert"
+          className="rounded-md border border-destructive/40 bg-red-50 p-4 text-sm text-red-900"
+        >
+          <p className="font-medium">{t('admin.menu.errors.summary')}</p>
+          <ul className="mt-2 list-disc space-y-1 ps-5">
+            {invalidFields.map((field) => (
+              <li key={field}>
+                <a
+                  href={`#category-${field}`}
+                  className="underline underline-offset-2"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setFocus(field);
+                  }}
+                >
+                  {t(LABEL_KEYS[field])}
+                </a>
+                : {t(errors[field]?.message ?? '')}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+      {text('nameDe', LABEL_KEYS.nameDe)}
+      {text('nameEs', LABEL_KEYS.nameEs)}
+      {text('descriptionDe', LABEL_KEYS.descriptionDe, true)}
+      {text('descriptionEs', LABEL_KEYS.descriptionEs, true)}
 
       {isArchived ? null : (
         <Controller

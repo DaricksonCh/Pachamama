@@ -103,7 +103,8 @@
         },
         "errors": {
           "hasDishes": "Archivieren nicht möglich: Die Kategorie enthält noch Gerichte. Archivieren oder verschieben Sie zuerst die Gerichte."
-        }
+        },
+        "archivedNotice": "Diese Kategorie ist archiviert und erscheint nicht in der Speisekarte."
       },
       "dishes": {
         "title": "Gerichte"
@@ -126,7 +127,8 @@
       },
       "reorder": {
         "up": "{{name}} nach oben",
-        "down": "{{name}} nach unten"
+        "down": "{{name}} nach unten",
+        "moved": "{{name}}: Position {{position}} von {{total}}."
       },
       "archive": {
         "action": "Archivieren",
@@ -151,7 +153,8 @@
         "saveFailed": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
         "loadFailed": "Die Daten konnten nicht geladen werden.",
         "reorderFailed": "Die Reihenfolge konnte nicht geändert werden.",
-        "forbidden": "Dazu fehlt die Berechtigung."
+        "forbidden": "Dazu fehlt die Berechtigung.",
+        "summary": "Bitte die markierten Felder prüfen:"
       },
       "editNamed": "{{name}} bearbeiten",
       "viewNamed": "{{name}} ansehen",

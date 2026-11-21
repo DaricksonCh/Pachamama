@@ -14,6 +14,19 @@ export class ApiError extends Error {
   }
 }
 
+/** Errores por campo `{ campo: [clave i18n, …] }`; ignora cualquier otra forma. */
+function toFieldErrors(value: unknown): Record<string, string[]> | undefined {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return undefined;
+  const result: Record<string, string[]> = {};
+  for (const [field, messages] of Object.entries(value)) {
+    if (Array.isArray(messages)) {
+      const texts = messages.filter((m): m is string => typeof m === 'string');
+      if (texts.length > 0) result[field] = texts;
+    }
+  }
+  return Object.keys(result).length > 0 ? result : undefined;
+}
+
 /** Extrae el código estable `{ error: { code } }` de una respuesta de error. */
 async function toApiError(res: Response, method: string, path: string) {
   const body: unknown = await res.json().catch(() => null);
@@ -23,14 +36,9 @@ async function toApiError(res: Response, method: string, path: string) {
     typeof error === 'object' && error !== null && 'code' in error && typeof error.code === 'string'
       ? error.code
       : undefined;
-  const details =
-    typeof error === 'object' &&
-    error !== null &&
-    'details' in error &&
-    typeof error.details === 'object' &&
-    error.details !== null
-      ? (error.details as Record<string, string[]>)
-      : undefined;
+  const details = toFieldErrors(
+    typeof error === 'object' && error !== null && 'details' in error ? error.details : undefined,
+  );
   return new ApiError(
     res.status,
     code,

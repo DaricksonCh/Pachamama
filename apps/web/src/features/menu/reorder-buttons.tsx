@@ -4,12 +4,15 @@ import { Button } from '@/components/ui/button';
 
 /** Subir/bajar con botones (alternativa accesible a arrastrar). `name` rotula cada botón. */
 export function ReorderButtons({
+  id,
   index,
   total,
   name,
   disabled,
   onMove,
 }: {
+  /** Identifica la fila: permite devolver el foco al botón tras reordenar. */
+  id: number;
   index: number;
   total: number;
   name: string;
@@ -24,6 +27,7 @@ export function ReorderButtons({
         variant="outline"
         size="icon"
         disabled={disabled || index === 0}
+        data-reorder={`${id}-up`}
         aria-label={t('admin.menu.reorder.up', { name })}
         onClick={() => onMove('up')}
       >
@@ -34,6 +38,7 @@ export function ReorderButtons({
         variant="outline"
         size="icon"
         disabled={disabled || index === total - 1}
+        data-reorder={`${id}-down`}
         aria-label={t('admin.menu.reorder.down', { name })}
         onClick={() => onMove('down')}
       >

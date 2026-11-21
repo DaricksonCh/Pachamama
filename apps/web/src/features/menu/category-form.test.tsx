@@ -1,7 +1,7 @@
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryRouter, RouterProvider } from 'react-router';
+import { createMemoryRouter, Link, RouterProvider } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
 import { createQueryClient } from '@/lib/query-client';
@@ -109,5 +109,85 @@ describe('CategoryForm', () => {
     expect(screen.getByLabelText(/Nombre \(alemán\)/)).toBeDisabled();
     expect(screen.getByLabelText(/Nombre \(alemán\)/)).toHaveValue('Vorspeisen');
     expect(screen.queryByRole('button', { name: 'Guardar' })).not.toBeInTheDocument();
+  });
+
+  it('shows an error summary on submit with links that focus each invalid field', async () => {
+    renderForm();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar' }));
+
+    const summary = await screen.findByRole('alert');
+    expect(summary).toHaveTextContent('Revisa los campos marcados');
+    const link = within(summary).getByRole('link', { name: 'Nombre (español)' });
+    await userEvent.click(link);
+    expect(screen.getByLabelText(/Nombre [(]español[)]/)).toHaveFocus();
+  });
+});
+
+describe('CategoryForm unsaved changes', () => {
+  function renderWithLeaveLink(onSaved?: (router: ReturnType<typeof createMemoryRouter>) => void) {
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/',
+          element: (
+            <>
+              <Link to="/other">Salir</Link>
+              <CategoryForm onSaved={() => onSaved?.(router)} />
+            </>
+          ),
+        },
+        { path: '/other', element: <p>Otra página</p> },
+      ],
+      { initialEntries: ['/'] },
+    );
+    render(
+      <QueryClientProvider client={createQueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>,
+    );
+    return router;
+  }
+
+  it('navigates freely while the form is pristine', async () => {
+    const router = renderWithLeaveLink();
+
+    await userEvent.click(screen.getByRole('link', { name: 'Salir' }));
+
+    await waitFor(() => expect(router.state.location.pathname).toBe('/other'));
+  });
+
+  it('asks before leaving a dirty form; staying keeps the form, leaving navigates', async () => {
+    const router = renderWithLeaveLink();
+    await userEvent.type(screen.getByLabelText(/Nombre [(]alemán[)]/), 'Algo');
+
+    await userEvent.click(screen.getByRole('link', { name: 'Salir' }));
+    const dialog = await screen.findByRole('alertdialog');
+    expect(dialog).toHaveTextContent('Cambios sin guardar');
+
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Seguir editando' }));
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument());
+    expect(router.state.location.pathname).toBe('/');
+    expect(screen.getByLabelText(/Nombre [(]alemán[)]/)).toHaveValue('Algo');
+
+    await userEvent.click(screen.getByRole('link', { name: 'Salir' }));
+    await userEvent.click(
+      within(await screen.findByRole('alertdialog')).getByRole('button', {
+        name: 'Salir sin guardar',
+      }),
+    );
+    await waitFor(() => expect(router.state.location.pathname).toBe('/other'));
+  });
+
+  it('does not block navigation right after a successful save', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(Response.json({ data: CATEGORY }));
+    const router = renderWithLeaveLink((r) => void r.navigate('/other'));
+
+    await userEvent.type(screen.getByLabelText(/Nombre [(]alemán[)]/), 'Desserts');
+    await userEvent.type(screen.getByLabelText(/Nombre [(]español[)]/), 'Postres');
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar' }));
+
+    await waitFor(() => expect(router.state.location.pathname).toBe('/other'));
+    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
   });
 });

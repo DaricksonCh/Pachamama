@@ -18,7 +18,9 @@ async function api(page: Page, method: string, path: string, body: unknown) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
-      return (await res.json()) as { data: { id: number } };
+      const json = (await res.json()) as { data: { id: number } };
+      if (!res.ok) throw new Error(`${method} ${path} -> ${res.status} ${JSON.stringify(json)}`);
+      return json;
     },
     { method, path, body },
   );
@@ -99,6 +101,8 @@ test.describe('panel /admin: categorías de la carta', () => {
     await createCategory(page, first);
     await createCategory(page, second);
     await page.goto('/admin/menu/categories');
+    await expect(row(page, first)).toBeVisible();
+    await expect(row(page, second)).toBeVisible();
 
     const positions = async () => {
       const names = await page.locator('tbody tr td:first-child').allTextContents();
@@ -107,21 +111,33 @@ test.describe('panel /admin: categorías de la carta', () => {
     const before = await positions();
     expect(before.first).toBeLessThan(before.second);
 
-    await page.getByRole('button', { name: `${second} nach oben` }).click();
-    await expect
-      .poll(async () => {
-        const p = await positions();
-        return p.second < p.first;
-      })
-      .toBe(true);
+    // Otros tests crean categorías a la vez: si la lista queda desfasada la API rechaza el
+    // orden, la página se recarga y el segundo intento ya va con la lista al día.
+    await expect(async () => {
+      await page.getByRole('button', { name: `${second} nach oben` }).click();
+      await expect
+        .poll(
+          async () => {
+            const p = await positions();
+            return p.second < p.first;
+          },
+          { timeout: 3000 },
+        )
+        .toBe(true);
+    }).toPass({ timeout: 20_000 });
 
-    await page.getByRole('button', { name: `${second} nach unten` }).click();
-    await expect
-      .poll(async () => {
-        const p = await positions();
-        return p.first < p.second;
-      })
-      .toBe(true);
+    await expect(async () => {
+      await page.getByRole('button', { name: `${second} nach unten` }).click();
+      await expect
+        .poll(
+          async () => {
+            const p = await positions();
+            return p.first < p.second;
+          },
+          { timeout: 3000 },
+        )
+        .toBe(true);
+    }).toPass({ timeout: 20_000 });
   });
 
   test('no deja archivar una categoría con platos y sí una vacía, que se restaura', async ({

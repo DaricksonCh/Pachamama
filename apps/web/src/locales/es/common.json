@@ -103,7 +103,8 @@
         },
         "errors": {
           "hasDishes": "No se puede archivar: la categoría aún tiene platos. Archiva o mueve primero sus platos."
-        }
+        },
+        "archivedNotice": "Esta categoría está archivada y no aparece en la carta."
       },
       "dishes": {
         "title": "Platos"
@@ -126,7 +127,8 @@
       },
       "reorder": {
         "up": "Subir {{name}}",
-        "down": "Bajar {{name}}"
+        "down": "Bajar {{name}}",
+        "moved": "{{name}}: posición {{position}} de {{total}}."
       },
       "archive": {
         "action": "Archivar",
@@ -151,7 +153,8 @@
         "saveFailed": "No se pudo guardar. Inténtalo de nuevo.",
         "loadFailed": "No se pudieron cargar los datos.",
         "reorderFailed": "No se pudo cambiar el orden.",
-        "forbidden": "No tienes permiso para esta acción."
+        "forbidden": "No tienes permiso para esta acción.",
+        "summary": "Revisa los campos marcados:"
       },
       "editNamed": "Editar {{name}}",
       "viewNamed": "Ver {{name}}",

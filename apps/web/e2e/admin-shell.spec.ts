@@ -95,6 +95,11 @@ test.describe('panel /admin: navegación lateral e inicio', () => {
     context,
   }, testInfo) => {
     await signIn(page);
+    // Esperar al resumen: si su petición aún vuela al borrar la sesión, el 401 redirige antes del clic.
+    await expect(page.getByRole('region', { name: 'Übersicht der Speisekarte' })).toHaveAttribute(
+      'aria-busy',
+      'false',
+    );
     await context.clearCookies();
 
     if (testInfo.project.name === 'mobile') {
