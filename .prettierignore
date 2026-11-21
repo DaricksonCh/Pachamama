@@ -4,3 +4,6 @@ coverage
 package-lock.json
 skills-lock.json
 .claude/skills
+
+# Espacio de trabajo local de los agentes (ignorado por git)
+.superpowers/
