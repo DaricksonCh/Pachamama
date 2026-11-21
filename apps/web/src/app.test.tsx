@@ -47,6 +47,16 @@ describe('home page', () => {
     ).toBeInTheDocument();
   });
 
+  it('shows a skeleton loader while the API status is loading', async () => {
+    vi.spyOn(globalThis, 'fetch').mockReturnValue(new Promise<Response>(() => {}));
+    renderAt('/de');
+
+    const status = await screen.findByRole('status');
+    expect(status).toHaveAttribute('aria-busy', 'true');
+    expect(screen.getAllByTestId('skeleton')).toHaveLength(2);
+    expect(status).toHaveTextContent('Wird geprüft');
+  });
+
   it('shows an error state when the API is down', async () => {
     mockHealth(false);
     renderAt('/de');

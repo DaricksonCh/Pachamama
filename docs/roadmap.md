@@ -77,11 +77,12 @@ Sin base de datos: los contenidos viven en archivos del repo (JSON/Markdown por 
 
 ## Historial
 
-| Fecha      | Hito                                                                                                                                                                                             |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 2026-11-10 | Fase 0: plan de arquitectura y auditoría de herramientas aprobados. Repo GitHub creado.                                                                                                          |
-| 2026-11-18 | Proyecto movido fuera de OneDrive a `C:\claude-code`. Fase 1 completada.                                                                                                                         |
-| 2026-11-18 | Flujo de ramas `main` + `development` + `feat/*`. find-skills instalado; herramientas de IA documentadas en `docs/tooling.md`.                                                                   |
-| 2026-11-18 | Skills globales y de proyecto instaladas (frontend, backend, BD, Superpowers); subagentes `code-reviewer` y `qa-tester`. Diseño: se creará con `frontend-design` + referencias (Figma opcional). |
-| 2026-11-18 | Fase 2 completada: monorepo (web + API + shared), `GET /api/v1/health`, i18n de/es, ESLint/Prettier/Vitest, CI de GitHub Actions.                                                                |
-| 2026-11-18 | MySQL 8.4.13 instalado (puerto 3307, junto a MariaDB de XAMPP). Plan MVP aprobado: web pública publicada antes del 01.12; BD y panel después.                                                    |
+| Fecha      | Hito                                                                                                                                                                                                                                         |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-11-10 | Fase 0: plan de arquitectura y auditoría de herramientas aprobados. Repo GitHub creado.                                                                                                                                                      |
+| 2026-11-18 | Proyecto movido fuera de OneDrive a `C:\claude-code`. Fase 1 completada.                                                                                                                                                                     |
+| 2026-11-18 | Flujo de ramas `main` + `development` + `feat/*`. find-skills instalado; herramientas de IA documentadas en `docs/tooling.md`.                                                                                                               |
+| 2026-11-18 | Skills globales y de proyecto instaladas (frontend, backend, BD, Superpowers); subagentes `code-reviewer` y `qa-tester`. Diseño: se creará con `frontend-design` + referencias (Figma opcional).                                             |
+| 2026-11-18 | Fase 2 completada: monorepo (web + API + shared), `GET /api/v1/health`, i18n de/es, ESLint/Prettier/Vitest, CI de GitHub Actions.                                                                                                            |
+| 2026-11-18 | MySQL 8.4.13 instalado (puerto 3307, junto a MariaDB de XAMPP). Plan MVP aprobado: web pública publicada antes del 01.12; BD y panel después.                                                                                                |
+| 2026-11-21 | Skills de QA, seguridad (OWASP), DSGVO, rendimiento y formularios. Pruebas: Playwright e2e (escritorio + móvil), axe WCAG 2.2 AA, skeleton loader, tests de seguridad de la API, `db:check`. Regla: no cerrar nada sin `check:all` en verde. |
