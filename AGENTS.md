@@ -77,6 +77,7 @@ Antes de empezar una tarea, el agente **consulta (carga) las skills que le corre
 | Escribir tests                                     | `testing-strategy`, `test-driven-development`, `vitest`, `playwright-best-practices`, `e2e-testing-patterns`                      |
 | Probar la web en el navegador                      | `webapp-testing`, `playwright-cli`                                                                                                |
 | SEO, rendimiento, auditoría antes de publicar      | `seo`, `performance`, `core-web-vitals`, `best-practices`, `web-quality-audit`                                                    |
+| PDF (carta descargable)                            | `react-pdf`                                                                                                                       |
 | Configurar Vite                                    | `vite`                                                                                                                            |
 | Un bug o un test que falla                         | `systematic-debugging`                                                                                                            |
 | Antes de decir "terminado" o hacer commit          | `verification-before-completion`                                                                                                  |
