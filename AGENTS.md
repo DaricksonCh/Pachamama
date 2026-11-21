@@ -23,7 +23,8 @@ Todo se paga **en el local** (sin pasarela de pagos). El personal gestiona todo 
 - **Fase por fase.** No empezar una fase sin el visto bueno explícito del usuario.
 - No escribir código ni tocar la base de datos fuera de la fase aprobada.
 - Antes de una decisión técnica importante, proponer y esperar aprobación; después, registrarla en `docs/decisions/` (ADR).
-- Cada fase termina con: verificación (typecheck, lint, tests, build cuando existan) → commit → push → actualizar `docs/roadmap.md`.
+- Cada fase termina con: verificación → commit → push → actualizar `docs/roadmap.md`.
+- **No terminar hasta que todas las pruebas hayan sido superadas con éxito.** Ninguna tarea, fase o fusión se da por hecha hasta que `npm run check:all` está en verde (y `npm run db:check` si toca la BD). Si algo falla, se arregla la causa y se vuelve a ejecutar todo; nunca se borra, salta ni debilita un test para que pase. Cada cambio incluye los tests que exige [`docs/testing.md`](docs/testing.md).
 - Comunicación con el usuario en **español**. Código, nombres de variables y commits en **inglés**.
 
 ## Git: ramas y flujo
@@ -54,6 +55,7 @@ Para trabajo extenso, el agente principal delega en subagentes (cada uno trabaja
 | 2+ tareas sin dependencias entre sí                           | Skill `dispatching-parallel-agents` (en paralelo)                                    |
 | Revisar una rama antes de fusionar en `development`           | Subagente del proyecto `code-reviewer` (`.claude/agents/`)                           |
 | Verificar una fase (typecheck, lint, tests, build, navegador) | Subagente del proyecto `qa-tester`                                                   |
+| Formularios, datos personales, auth, páginas legales, deploy  | Subagente del proyecto `security-privacy-reviewer` (OWASP + DSGVO)                   |
 | Buscar en mucho código                                        | Subagente integrado `Explore`                                                        |
 
 Reglas: un subagente que **escribe** código nunca comparte archivos con otro en paralelo; los de revisión/QA solo leen y reportan; el agente principal comprueba siempre el resultado antes de darlo por hecho.
@@ -109,7 +111,10 @@ Desde la raíz del repo:
 | `npm run format`                | Prettier (escribe) · `npm run format:check` solo comprueba          |
 | `npm test`                      | Vitest en todos los paquetes                                        |
 | `npm run build`                 | Build de producción (API con tsup, web con Vite)                    |
-| `npm run check`                 | typecheck + lint + formato + tests (lo mismo que comprueba la CI)   |
+| `npm run check`                 | typecheck + lint + formato + tests unitarios                        |
+| `npm run test:e2e`              | Flujos de usuario en navegador (Playwright, escritorio y móvil)     |
+| `npm run check:all`             | `check` + build + e2e: **obligatorio en verde antes de cerrar**     |
+| `npm run db:check`              | Comprueba la BD local (versión, utf8mb4, mínimo privilegio)         |
 | `npm run dev -w @pachamama/api` | Solo un paquete (`-w` = workspace)                                  |
 
 Versiones fijadas: Node 24, npm 11, **TypeScript 6.0** (TS 7 aún no es compatible con typescript-eslint; ver ADR 0006).
@@ -122,6 +127,7 @@ Versiones fijadas: Node 24, npm 11, **TypeScript 6.0** (TS 7 aún no es compatib
 | [`docs/architecture.md`](docs/architecture.md)         | Arquitectura técnica                           |
 | [`docs/domain-flows.md`](docs/domain-flows.md)         | Reservas, pedidos y tienda: estados y reglas   |
 | [`docs/security-privacy.md`](docs/security-privacy.md) | Seguridad y DSGVO                              |
+| [`docs/testing.md`](docs/testing.md)                   | Estrategia de pruebas y qué exige cada cambio  |
 | [`docs/mcp.md`](docs/mcp.md)                           | Cómo añadir servidores MCP en cada herramienta |
 | [`docs/decisions/`](docs/decisions/)                   | Registro de decisiones (ADR)                   |
 
