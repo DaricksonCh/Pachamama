@@ -23,15 +23,15 @@ El sitio está dirigido a público de habla alemana y trata datos personales (no
 
 ## Autenticación del personal (fase 3)
 
-| Tema             | Medida                                                                                                            |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Alta de usuarios | Solo un admin (`npm run admin:create` o el panel). Sin registro público                                           |
-| Roles            | `admin` (gestiona usuarios, **sin** permiso de suplantar a otros) y `staff`. Rol desconocido o vacío → sin acceso |
-| Sesión           | 7 días, se renueva una vez al día con actividad; acciones sensibles exigen login de menos de 1 hora               |
-| Fuerza bruta     | 5 intentos de login por minuto e IP → 429. Contador en memoria (válido con un solo proceso de la API)             |
-| CSRF             | Comprobación de origen y Fetch Metadata de Better Auth, activas también en los tests                              |
-| Bloqueo          | Un usuario bloqueado pierde el acceso al momento, también con la sesión abierta                                   |
-| Caché            | Todas las respuestas de `/api` llevan `Cache-Control: no-store` (equipos compartidos del local)                   |
+| Tema             | Medida                                                                                                                                                                                           |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Alta de usuarios | Solo un admin (`npm run admin:create` o el panel). Sin registro público                                                                                                                          |
+| Roles            | `admin` (gestiona usuarios, **sin** permiso de suplantar a otros) y `staff`. Rol desconocido o vacío → sin acceso                                                                                |
+| Sesión           | 7 días, se renueva una vez al día con actividad; acciones sensibles exigen login de menos de 1 hora                                                                                              |
+| Fuerza bruta     | 5 intentos de login por minuto e IP → 429. Contador en memoria (válido con un solo proceso de la API)                                                                                            |
+| CSRF             | Better Auth: comprobación de origen y Fetch Metadata. `/api/v1`: middleware `csrf` (Origin = `WEB_ORIGIN`, o `Sec-Fetch-Site: same-origin`; cuerpo solo JSON/multipart) en POST/PUT/PATCH/DELETE |
+| Bloqueo          | Un usuario bloqueado pierde el acceso al momento, también con la sesión abierta                                                                                                                  |
+| Caché            | Todas las respuestas de `/api` llevan `Cache-Control: no-store` (equipos compartidos del local)                                                                                                  |
 
 ### Despliegue: IP real del cliente (obligatorio)
 

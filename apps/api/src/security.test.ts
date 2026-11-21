@@ -78,7 +78,7 @@ describe('entradas maliciosas o mal formadas', () => {
   });
 
   it('la API real responde 404 estándar a métodos o rutas no previstos', async () => {
-    const res = await request(app).delete('/api/v1/health');
+    const res = await request(app).delete('/api/v1/health').set('Origin', env.WEB_ORIGIN);
 
     expect(res.status).toBe(404);
     expect(res.body.error.code).toBe('NOT_FOUND');

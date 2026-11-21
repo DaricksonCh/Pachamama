@@ -76,7 +76,6 @@ El restaurante **se queda sin página web ese día**. Prioridad absoluta: tener 
 
 **Seguridad (anotado en la revisión de la fase 3)**
 
-- Fase 5, con la primera ruta que modifique datos: middleware CSRF para `/api/v1` (Origin/Sec-Fetch-Site contra `WEB_ORIGIN` y `application/json`).
 - Antes de publicar: cron diario de `npm run db:cleanup`, nginx con `X-Forwarded-For $remote_addr`, `API_HOST=127.0.0.1`, información al personal sobre sus datos de acceso.
 - Valorar: límite de intentos también por email, lista local de contraseñas comunes, sesión más corta en dispositivos compartidos, colación `utf8mb4_0900_as_ci` en `users.email`, manejo global de 401 en la web.
 

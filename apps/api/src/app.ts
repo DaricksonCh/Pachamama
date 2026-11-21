@@ -8,6 +8,7 @@ import { env } from './config/env';
 import { httpLogSerializers } from './lib/http-log';
 import { logger } from './lib/logger';
 import { normalizeClientIp } from './middlewares/client-ip';
+import { csrfProtection } from './middlewares/csrf';
 import { errorHandler } from './middlewares/error-handler';
 import { notFound } from './middlewares/not-found';
 import { apiV1Router } from './routes';
@@ -40,7 +41,7 @@ export function createApp() {
 
   app.use(express.json({ limit: '100kb' }));
 
-  app.use('/api/v1', apiV1Router);
+  app.use('/api/v1', csrfProtection, apiV1Router);
 
   app.use(notFound);
   app.use(errorHandler);
