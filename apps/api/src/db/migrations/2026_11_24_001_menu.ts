@@ -1,5 +1,25 @@
 import { type Kysely, sql } from 'kysely';
-import { ALLERGEN_CODES, DIETS, MENU_STATUSES } from '@pachamama/shared';
+
+// Valores congelados a propósito: una migración es una instantánea inmutable y no debe
+// depender de constantes compartidas que puedan cambiar después.
+const STATUSES = ['visible', 'hidden', 'archived'] as const;
+const DIETS = ['vegan', 'vegetarian'] as const;
+const ALLERGEN_CODES = [
+  'A',
+  'B',
+  'C',
+  'D',
+  'E',
+  'F',
+  'G',
+  'H',
+  'I',
+  'J',
+  'K',
+  'L',
+  'M',
+  'N',
+] as const;
 
 const enumOf = (values: readonly string[]) =>
   sql.raw(`enum(${values.map((v) => `'${v}'`).join(',')})`);
@@ -22,7 +42,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('description_de', 'varchar(500)')
     .addColumn('description_es', 'varchar(500)')
     .addColumn('sort_order', 'integer', (col) => col.notNull().defaultTo(0))
-    .addColumn('status', enumOf(MENU_STATUSES), (col) => col.notNull().defaultTo('visible'))
+    .addColumn('status', enumOf(STATUSES), (col) => col.notNull().defaultTo('visible'))
     .addColumn('created_at', sql`datetime(3)`, (col) => col.notNull().defaultTo(now))
     .addColumn('updated_at', onUpdate)
     .execute();
@@ -42,7 +62,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('image_alt_de', 'varchar(200)')
     .addColumn('image_alt_es', 'varchar(200)')
     .addColumn('sort_order', 'integer', (col) => col.notNull().defaultTo(0))
-    .addColumn('status', enumOf(MENU_STATUSES), (col) => col.notNull().defaultTo('visible'))
+    .addColumn('status', enumOf(STATUSES), (col) => col.notNull().defaultTo('visible'))
     .addColumn('is_provisional', 'boolean', (col) => col.notNull().defaultTo(false))
     .addColumn('provisional_note', 'varchar(300)')
     .addColumn('created_at', sql`datetime(3)`, (col) => col.notNull().defaultTo(now))
