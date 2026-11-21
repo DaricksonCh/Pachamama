@@ -4,6 +4,9 @@ import { AdminLayout } from '@/layouts/admin-layout';
 import { LanguageLayout } from '@/layouts/language-layout';
 import { DashboardPage } from '@/pages/admin/dashboard-page';
 import { LoginPage } from '@/pages/admin/login-page';
+import { CategoriesPage } from '@/pages/admin/menu/categories-page';
+import { CategoryFormPage } from '@/pages/admin/menu/category-form-page';
+import { DishesPage } from '@/pages/admin/menu/placeholder-pages';
 import { HomePage } from '@/pages/home-page';
 
 export const routes: RouteObject[] = [
@@ -13,7 +16,15 @@ export const routes: RouteObject[] = [
   {
     path: '/admin',
     element: <AdminLayout />,
-    children: [{ index: true, element: <DashboardPage /> }],
+    children: [
+      { index: true, element: <DashboardPage /> },
+      // Marcadores: los listados y formularios reales llegan en las tareas siguientes de la fase 5.
+      { path: 'menu/categories', element: <CategoriesPage /> },
+      { path: 'menu/categories/new', element: <CategoryFormPage /> },
+      { path: 'menu/categories/:id', element: <CategoryFormPage /> },
+      { path: 'menu/dishes', element: <DishesPage /> },
+      { path: 'menu/dishes/new', element: <DishesPage /> },
+    ],
   },
   {
     path: '/:lang',

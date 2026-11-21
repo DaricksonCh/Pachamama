@@ -45,12 +45,130 @@
     },
     "dashboard": {
       "welcome": "Hallo, {{name}}",
-      "intro": "Hier verwaltest du bald Speisekarte, Reservierungen und mehr."
+      "intro": "Hier siehst du den Stand der Speisekarte auf einen Blick.",
+      "summaryLabel": "Übersicht der Speisekarte",
+      "visibleDishes": "Sichtbare Gerichte",
+      "hiddenDishes": "{{count}} versteckt",
+      "provisionalDishes": "Vorläufig",
+      "provisionalHint": "Prüfen",
+      "withoutImage": "Ohne Foto",
+      "withoutImageHint": "Foto ergänzen",
+      "categories": "Kategorien",
+      "quickLinks": "Schnellzugriffe",
+      "newDish": "Neues Gericht",
+      "viewPdf": "PDF ansehen",
+      "errors": {
+        "loadFailed": "Die Übersicht konnte nicht geladen werden."
+      }
     },
-    "retry": "Erneut versuchen"
+    "retry": "Erneut versuchen",
+    "nav": {
+      "label": "Hauptnavigation",
+      "home": "Start",
+      "menu": "Speisekarte",
+      "categories": "Kategorien",
+      "dishes": "Gerichte",
+      "pdf": "PDF",
+      "opensInNewTab": "(öffnet in neuem Tab)",
+      "open": "Menü öffnen",
+      "toggle": "Seitenmenü ein-/ausklappen",
+      "mobileDescription": "Zeigt das Seitenmenü auf dem Handy.",
+      "skipToContent": "Zum Inhalt springen"
+    },
+    "menu": {
+      "comingSoon": "Diese Ansicht folgt in Kürze.",
+      "categories": {
+        "title": "Kategorien",
+        "new": "Neue Kategorie",
+        "edit": "Kategorie bearbeiten",
+        "backToList": "Zurück zu den Kategorien",
+        "notFound": "Die Kategorie existiert nicht.",
+        "empty": "Es gibt noch keine Kategorien.",
+        "emptyArchived": "Es gibt keine archivierten Kategorien.",
+        "saved": "Kategorie gespeichert.",
+        "archived": "Kategorie archiviert.",
+        "restored": "Kategorie wiederhergestellt (versteckt).",
+        "columns": {
+          "name": "Name",
+          "status": "Status",
+          "dishes": "Gerichte",
+          "actions": "Aktionen"
+        },
+        "form": {
+          "nameDe": "Name (Deutsch)",
+          "nameEs": "Name (Spanisch)",
+          "descriptionDe": "Beschreibung (Deutsch)",
+          "descriptionEs": "Beschreibung (Spanisch)",
+          "visible": "In der Speisekarte sichtbar"
+        },
+        "errors": {
+          "hasDishes": "Archivieren nicht möglich: Die Kategorie enthält noch Gerichte. Archivieren oder verschieben Sie zuerst die Gerichte."
+        },
+        "archivedNotice": "Diese Kategorie ist archiviert und erscheint nicht in der Speisekarte."
+      },
+      "dishes": {
+        "title": "Gerichte"
+      },
+      "status": {
+        "visible": "Sichtbar",
+        "hidden": "Versteckt",
+        "archived": "Archiviert"
+      },
+      "edit": "Bearbeiten",
+      "view": "Ansehen",
+      "save": "Speichern",
+      "saving": "Wird gespeichert …",
+      "cancel": "Abbrechen",
+      "restore": "Wiederherstellen",
+      "filter": {
+        "label": "Nach Status filtern",
+        "active": "Aktiv",
+        "archived": "Archiviert"
+      },
+      "reorder": {
+        "up": "{{name}} nach oben",
+        "down": "{{name}} nach unten",
+        "moved": "{{name}}: Position {{position}} von {{total}}."
+      },
+      "archive": {
+        "action": "Archivieren",
+        "confirm": "Archivieren",
+        "category": {
+          "title": "„{{name}}“ archivieren?",
+          "description": "Die Kategorie erscheint nicht mehr in der Speisekarte. Sie können sie unter „Archiviert“ wiederherstellen."
+        },
+        "dish": {
+          "title": "„{{name}}“ archivieren?",
+          "description": "Das Gericht erscheint nicht mehr in der Speisekarte. Sie können es unter „Archiviert“ wiederherstellen."
+        },
+        "actionNamed": "{{name}} archivieren"
+      },
+      "unsaved": {
+        "title": "Ungespeicherte Änderungen",
+        "description": "Wenn Sie jetzt gehen, gehen die Änderungen verloren.",
+        "stay": "Weiter bearbeiten",
+        "leave": "Ohne Speichern verlassen"
+      },
+      "errors": {
+        "saveFailed": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
+        "loadFailed": "Die Daten konnten nicht geladen werden.",
+        "reorderFailed": "Die Reihenfolge konnte nicht geändert werden.",
+        "forbidden": "Dazu fehlt die Berechtigung.",
+        "summary": "Bitte die markierten Felder prüfen:"
+      },
+      "editNamed": "{{name}} bearbeiten",
+      "viewNamed": "{{name}} ansehen",
+      "restoreNamed": "{{name}} wiederherstellen"
+    }
   },
   "validation": {
     "email": "Bitte eine gültige E-Mail-Adresse eingeben.",
-    "required": "Dieses Feld ist erforderlich."
+    "required": "Dieses Feld ist erforderlich.",
+    "tooLong": "Der Text ist zu lang.",
+    "price": "Bitte einen gültigen Preis eingeben, z. B. 12,90.",
+    "allergen": "Ungültiger Allergen-Code."
+  },
+  "common": {
+    "close": "Schließen"
   }
 }

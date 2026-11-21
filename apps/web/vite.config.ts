@@ -4,6 +4,8 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import { configDefaults } from 'vitest/config';
 
+const apiTarget = process.env.API_PROXY_TARGET ?? 'http://localhost:3000';
+
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
@@ -14,10 +16,9 @@ export default defineConfig({
     // En desarrollo la web y la API comparten origen: /api se reenvía a Express (cookies sin CORS).
     proxy: {
       // API_PROXY_TARGET: lo usan los e2e para apuntar a su propia API de pruebas.
-      '/api': {
-        target: process.env.API_PROXY_TARGET ?? 'http://localhost:3000',
-        changeOrigin: true,
-      },
+      '/api': { target: apiTarget, changeOrigin: true },
+      // Fotos de la carta (subidas a la API): mismo origen también en desarrollo.
+      '/uploads': { target: apiTarget, changeOrigin: true },
     },
   },
   test: {
