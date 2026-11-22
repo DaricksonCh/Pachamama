@@ -4,21 +4,22 @@ Para el próximo agente o persona que continúe. Antes de nada, lee `AGENTS.md` 
 
 ## Dónde estamos
 
-| Bloque              | Estado                                    | Dónde                                                                            |
-| ------------------- | ----------------------------------------- | -------------------------------------------------------------------------------- |
-| F3 BD + login       | ✅ en `development`                       | —                                                                                |
-| F5 Carta editable   | ✅ en `development`                       | —                                                                                |
-| M1 Diseño           | ✅ en `development` (PR #2 fusionada)     | ADR 0010                                                                         |
-| M2 Páginas públicas | ✅ hecho, **PR #3 abierta, sin fusionar** | rama `feat/m2-paginas-publicas`, https://github.com/DaricksonCh/Pachamama/pull/3 |
-| M4 Publicación      | ⏳ sin empezar (necesita visto bueno)     | `docs/roadmap.md`                                                                |
+| Bloque              | Estado                                             | Dónde             |
+| ------------------- | -------------------------------------------------- | ----------------- |
+| F3 BD + login       | ✅ en `development`                                | —                 |
+| F5 Carta editable   | ✅ en `development`                                | —                 |
+| M1 Diseño           | ✅ en `development` (PR #2 fusionada)              | ADR 0010          |
+| M2 Páginas públicas | ✅ en `development` (PR #3 fusionada, CI en verde) | ADR 0011          |
+| M4 Publicación      | ⏳ sin empezar (necesita visto bueno)              | `docs/roadmap.md` |
 
 Plan aprobado de M1 + M2: `docs/superpowers/plans/2026-11-22-m1-m2-web-publica.md`.
 
 ## Siguiente paso inmediato
 
-1. Comprobar la CI de la PR #3 (`gh pr checks 3`). En local, `npm run check:all` pasó en verde: 334 tests unitarios y 129 e2e.
-2. Si la CI está en verde, fusionar: `gh pr merge 3 --merge --delete-branch`, luego `git switch development && git pull`.
-3. Pedir al usuario el visto bueno para **M4** (publicación). No empezarla sin él.
+1. M2 ya está en `development` (fusionada el 2026-11-22; `check:all` en verde: 334 unitarios, 129 e2e).
+2. Pedir al usuario el visto bueno para **M4** (publicación) o para los cambios de diseño y PDF que ha pedido (ver «Pendiente»). No empezar ninguno sin él.
+3. `development` → `main` solo con aprobación del usuario (hito estable).
+4. El repositorio no tiene activada la fusión automática en GitHub: espera a la CI (`gh pr checks <n> --watch`) y fusiona a mano.
 
 ## M2: qué contiene
 
