@@ -1,18 +1,17 @@
-import { publicPath, type Language } from '@pachamama/shared';
+import { publicPath } from '@pachamama/shared';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { PageHeader } from '@/components/public/page-header';
 import { Photo } from '@/components/public/photo';
 import { ReserveButton } from '@/components/public/reserve-button';
+import { textLinkClass } from '@/components/public/styles';
+import { useLang } from '@/components/public/use-lang';
 import { usePageMeta } from '@/components/public/use-page-meta';
-
-const textLink =
-  'rounded-sm font-semibold text-selva underline decoration-maiz decoration-2 underline-offset-[6px] hover:decoration-selva focus-visible:outline-2 focus-visible:outline-offset-4';
 
 /** Story page. The real text is pending (docs/pendientes.md): placeholder copy plus a visible note. */
 export function StoryPage() {
-  const { t, i18n } = useTranslation();
-  const lang = i18n.language as Language;
+  const { t } = useTranslation();
+  const lang = useLang();
   usePageMeta(t('pages.story.title'), t('pages.story.description'));
 
   return (
@@ -91,7 +90,7 @@ export function StoryPage() {
           </h2>
           <div className="flex flex-wrap items-center gap-6">
             <ReserveButton />
-            <Link to={publicPath('menu', lang)} className={textLink}>
+            <Link to={publicPath('menu', lang)} className={textLinkClass}>
               {t('story.seeMenu')}
             </Link>
           </div>

@@ -57,6 +57,7 @@ test.describe('public menu page', () => {
     await expect(page).toHaveURL(/#category-\d+$/);
     const heading = page.getByRole('heading', { level: 2, name: category });
     await expect(heading).toBeInViewport();
+    await expect(heading).toBeFocused();
     await expect
       .poll(async () => {
         const navBox = await nav.boundingBox();
@@ -90,16 +91,20 @@ test.describe('public menu page', () => {
       await route.continue();
     });
 
-    await page.goto('/de/speisekarte');
-    const loading = page.getByTestId('menu-loading');
-    await expect(loading).toHaveAttribute('aria-busy', 'true');
-    await expect(loading.getByRole('status')).toHaveText('Speisekarte wird geladen …');
-    const skeleton = page.getByTestId('skeleton').first();
-    await expect(skeleton).toBeVisible();
-    await expect(skeleton).toHaveCSS('animation-name', 'none');
+    try {
+      await page.goto('/de/speisekarte');
+      const loading = page.getByTestId('menu-loading');
+      await expect(loading).toHaveAttribute('aria-busy', 'true');
+      await expect(loading.getByRole('status')).toHaveText('Speisekarte wird geladen …');
+      const skeleton = page.getByTestId('skeleton').first();
+      await expect(skeleton).toBeVisible();
+      await expect(skeleton).toHaveCSS('animation-name', 'none');
 
-    release();
-    await expect(loading).toHaveCount(0);
+      release();
+      await expect(loading).toHaveCount(0);
+    } finally {
+      release();
+    }
   });
 
   test('shows an error when the API fails and recovers with retry', async ({ page }) => {

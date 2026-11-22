@@ -1,17 +1,17 @@
 import {
   LEGAL_PLACEHOLDER,
+  PRIVACY_POLICY_UPDATED,
   RESTAURANT_INFO,
   legalHasPlaceholders,
   publicPath,
-  type Language,
 } from '@pachamama/shared';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { PageHeader } from '@/components/public/page-header';
+import { ProvisionalMark } from '@/components/public/provisional-mark';
+import { textLinkClass } from '@/components/public/styles';
+import { useLang } from '@/components/public/use-lang';
 import { usePageMeta } from '@/components/public/use-page-meta';
-
-const textLink =
-  'rounded-sm font-semibold text-selva underline decoration-maiz decoration-2 underline-offset-[6px] hover:decoration-selva focus-visible:outline-2 focus-visible:outline-offset-4';
 
 const h2 = 'font-display text-2xl font-medium tracking-tight text-selva';
 
@@ -41,17 +41,22 @@ const SECTIONS: { id: Section; paragraphs: string[] }[] = [
 
 /** Datenschutzerklärung. Describes only what the site really does; see docs/security-privacy.md. */
 export function PrivacyPage() {
-  const { t, i18n } = useTranslation();
-  const lang = i18n.language as Language;
+  const { t } = useTranslation();
+  const lang = useLang();
   usePageMeta(t('pages.privacy.title'), t('pages.privacy.description'));
   const { legal, phone, email } = RESTAURANT_INFO;
   const provisional = legalHasPlaceholders();
 
   const value = (v: string) => (v === LEGAL_PLACEHOLDER ? t('privacy.pending') : v);
+  const updated = new Intl.DateTimeFormat(lang === 'de' ? 'de-DE' : 'es-ES', {
+    dateStyle: 'long',
+    timeZone: 'UTC',
+  }).format(new Date(`${PRIVACY_POLICY_UPDATED}T00:00:00Z`));
   const text = (section: Section, key: string) =>
     t(`privacy.sections.${section}.${key}`, {
       provider: value(legal.hostingProvider),
       retention: value(legal.logRetention),
+      date: updated,
     });
 
   return (
@@ -89,16 +94,18 @@ export function PrivacyPage() {
                     <br />
                     {legal.address.postalCode} {legal.address.city}
                     <br />
-                    <a href={`tel:${phone.e164}`} className={textLink}>
+                    <a href={`tel:${phone.e164}`} className={textLinkClass}>
                       {phone.display}
                     </a>
+                    <ProvisionalMark />
                     <br />
-                    <a href={`mailto:${email}`} className={textLink}>
+                    <a href={`mailto:${email}`} className={textLinkClass}>
                       {email}
                     </a>
+                    <ProvisionalMark />
                   </address>
                   <p className="leading-relaxed">
-                    <Link to={publicPath('imprint', lang)} className={textLink}>
+                    <Link to={publicPath('imprint', lang)} className={textLinkClass}>
                       {t('privacy.sections.controller.imprintLink')}
                     </Link>
                   </p>

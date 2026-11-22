@@ -365,6 +365,8 @@
     "email": "Correo electrónico",
     "mapAlt": "Mapa de los alrededores con una marca en el restaurante, Am Gaswerk 1, Bremen",
     "mapAttribution": "© colaboradores de OpenStreetMap",
+    "mapLicense": "(ODbL)",
+    "provisional": "provisional",
     "openGoogle": "Abrir en Google Maps",
     "openOsm": "Abrir en OpenStreetMap",
     "newTab": "(se abre en una pestaña nueva)",
@@ -385,7 +387,9 @@
       "phone": "Teléfono",
       "email": "Correo electrónico",
       "vatId": "Número de identificación fiscal (IVA) según el § 27a UStG",
+      "economicId": "Número de identificación económica (si existe)",
       "register": "Registro mercantil (si está inscrito)",
+      "authority": "Autoridad de control competente (licencia de hostelería) según el § 5 apdo. 1 n.º 3 DDG",
       "responsible": "Responsable del contenido según el § 18 apdo. 2 MStV"
     },
     "disputes": {
@@ -447,7 +451,7 @@
       },
       "updated": {
         "title": "Fecha",
-        "p1": "Fecha: 22 de noviembre de 2026. Adaptamos esta política cuando cambie la web o la normativa."
+        "p1": "Fecha: {{date}}. Adaptamos esta política cuando cambie la web o la normativa."
       }
     }
   }

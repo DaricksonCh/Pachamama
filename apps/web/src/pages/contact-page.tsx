@@ -1,11 +1,11 @@
-import { RESTAURANT_INFO, type Language } from '@pachamama/shared';
+import { RESTAURANT_INFO } from '@pachamama/shared';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/public/page-header';
+import { ProvisionalMark } from '@/components/public/provisional-mark';
 import { ReserveButton } from '@/components/public/reserve-button';
+import { textLinkClass } from '@/components/public/styles';
+import { useLang } from '@/components/public/use-lang';
 import { usePageMeta } from '@/components/public/use-page-meta';
-
-const textLink =
-  'rounded-sm font-semibold text-selva underline decoration-maiz decoration-2 underline-offset-[6px] hover:decoration-selva focus-visible:outline-2 focus-visible:outline-offset-4';
 
 const GOOGLE_MAPS_URL =
   'https://www.google.com/maps/search/?api=1&query=Am+Gaswerk+1,+28197+Bremen';
@@ -14,8 +14,8 @@ const OSM_URL =
 const OSM_COPYRIGHT_URL = 'https://www.openstreetmap.org/copyright';
 
 export function ContactPage() {
-  const { t, i18n } = useTranslation();
-  const lang = i18n.language as Language;
+  const { t } = useTranslation();
+  const lang = useLang();
   const { address, openingHours, phone, email } = RESTAURANT_INFO;
   usePageMeta(t('pages.contact.title'), t('pages.contact.description'));
 
@@ -38,15 +38,17 @@ export function ContactPage() {
             <dd>{openingHours[lang]}</dd>
             <dt className="font-semibold">{t('contact.phone')}</dt>
             <dd>
-              <a href={`tel:${phone.e164}`} className={textLink}>
+              <a href={`tel:${phone.e164}`} className={textLinkClass}>
                 {phone.display}
               </a>
+              <ProvisionalMark />
             </dd>
             <dt className="font-semibold">{t('contact.email')}</dt>
             <dd>
-              <a href={`mailto:${email}`} className={textLink}>
+              <a href={`mailto:${email}`} className={textLinkClass}>
                 {email}
               </a>
+              <ProvisionalMark />
             </dd>
           </dl>
 
@@ -82,7 +84,8 @@ export function ContactPage() {
             >
               {t('contact.mapAttribution')}
               <span className="sr-only"> {t('contact.newTab')}</span>
-            </a>
+            </a>{' '}
+            {t('contact.mapLicense')}
             <span className="block">{t('contact.mapNote')}</span>
           </figcaption>
           <ul className="flex flex-wrap gap-x-6 gap-y-2">
@@ -91,14 +94,14 @@ export function ContactPage() {
                 href={GOOGLE_MAPS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={textLink}
+                className={textLinkClass}
               >
                 {t('contact.openGoogle')}
                 <span className="sr-only"> {t('contact.newTab')}</span>
               </a>
             </li>
             <li>
-              <a href={OSM_URL} target="_blank" rel="noopener noreferrer" className={textLink}>
+              <a href={OSM_URL} target="_blank" rel="noopener noreferrer" className={textLinkClass}>
                 {t('contact.openOsm')}
                 <span className="sr-only"> {t('contact.newTab')}</span>
               </a>

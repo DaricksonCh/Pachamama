@@ -62,9 +62,11 @@ test.describe('páginas públicas: Geschichte/Historia y Kontakt/Contacto', () =
     });
 
     await page.goto('/de/kontakt');
-    await expect(page.getByRole('img', { name: /Karte der Umgebung/ })).toBeVisible();
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await page.waitForLoadState('networkidle');
+    const map = page.getByRole('img', { name: /Karte der Umgebung/ });
+    await map.scrollIntoViewIfNeeded();
+    await expect
+      .poll(() => map.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0))
+      .toBe(true);
 
     expect(external).toEqual([]);
   });

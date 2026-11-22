@@ -1,16 +1,16 @@
-import { RESTAURANT_INFO, publicPath, type Language } from '@pachamama/shared';
+import { RESTAURANT_INFO, publicPath } from '@pachamama/shared';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { Photo } from '@/components/public/photo';
+import { ProvisionalMark } from '@/components/public/provisional-mark';
 import { ReserveButton } from '@/components/public/reserve-button';
+import { textLinkClass } from '@/components/public/styles';
+import { useLang } from '@/components/public/use-lang';
 import { usePageMeta } from '@/components/public/use-page-meta';
 
-const textLink =
-  'rounded-sm font-semibold text-selva underline decoration-maiz decoration-2 underline-offset-[6px] hover:decoration-selva focus-visible:outline-2 focus-visible:outline-offset-4';
-
 export function HomePage() {
-  const { t, i18n } = useTranslation();
-  const lang = i18n.language as Language;
+  const { t } = useTranslation();
+  const lang = useLang();
   const { address, openingHours, phone } = RESTAURANT_INFO;
   usePageMeta(undefined, t('meta.homeDescription'));
 
@@ -61,7 +61,7 @@ export function HomePage() {
           >
             {t('home.kitchen.title')}
           </h2>
-          <Link to={publicPath('menu', lang)} className={textLink}>
+          <Link to={publicPath('menu', lang)} className={textLinkClass}>
             {t('home.kitchen.link')}
           </Link>
         </div>
@@ -142,14 +142,15 @@ export function HomePage() {
               <dd>{openingHours[lang]}</dd>
               <dt className="font-semibold">{t('home.visit.phone')}</dt>
               <dd>
-                <a href={`tel:${phone.e164}`} className={textLink}>
+                <a href={`tel:${phone.e164}`} className={textLinkClass}>
                   {phone.display}
                 </a>
+                <ProvisionalMark />
               </dd>
             </dl>
             <div className="flex flex-wrap items-center gap-6">
               <ReserveButton tone="onLight" />
-              <Link to={publicPath('contact', lang)} className={textLink}>
+              <Link to={publicPath('contact', lang)} className={textLinkClass}>
                 {t('home.visit.link')}
               </Link>
             </div>
@@ -177,7 +178,7 @@ export function HomePage() {
               {t('home.story.title')}
             </h2>
             <p className="text-lg leading-relaxed">{t('home.story.text')}</p>
-            <Link to={publicPath('story', lang)} className={textLink}>
+            <Link to={publicPath('story', lang)} className={textLinkClass}>
               {t('home.story.link')}
             </Link>
           </div>

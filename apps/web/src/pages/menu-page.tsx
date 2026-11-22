@@ -1,6 +1,8 @@
 import { ALLERGENS, type AllergenCode, type Language, type PublicMenu } from '@pachamama/shared';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/public/page-header';
+import { navLinkClass, textLinkClass } from '@/components/public/styles';
+import { useLang } from '@/components/public/use-lang';
 import { usePageMeta } from '@/components/public/use-page-meta';
 import { Skeleton } from '@/components/ui/skeleton';
 import { menuPdfUrl } from '@/features/menu/pdf-url';
@@ -9,20 +11,32 @@ import { usePublicMenu } from '@/features/menu/public-api';
 type Category = PublicMenu['categories'][number];
 type Dish = Category['dishes'][number];
 
-const textLink =
-  'rounded-sm font-semibold text-selva underline decoration-maiz decoration-2 underline-offset-[6px] hover:decoration-selva focus-visible:outline-2 focus-visible:outline-offset-4';
+const priceFormats = new Map<Language, Intl.NumberFormat>();
+/** One formatter per language, created on first use. */
+function priceFormat(lang: Language) {
+  let format = priceFormats.get(lang);
+  if (!format) {
+    format = new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'es-ES', {
+      style: 'currency',
+      currency: 'EUR',
+    });
+    priceFormats.set(lang, format);
+  }
+  return format;
+}
 
 const pickText = (lang: Language, de: string, es: string) => (lang === 'de' ? de : es);
 
 /** Opens the PDF in a new tab, like the admin panel does. */
 function PdfLink({ tone }: { tone: 'onDark' | 'onLight' }) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const lang = useLang();
   const style =
     tone === 'onDark'
       ? 'inline-flex min-h-11 items-center rounded-md border border-papel/60 px-5 py-2.5 font-semibold hover:bg-papel/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-maiz'
-      : textLink;
+      : textLinkClass;
   return (
-    <a href={menuPdfUrl(i18n.language)} target="_blank" rel="noopener noreferrer" className={style}>
+    <a href={menuPdfUrl(lang)} target="_blank" rel="noopener noreferrer" className={style}>
       {t('menu.pdf')}
       <span className="sr-only"> {t('menu.pdfHint')}</span>
     </a>
@@ -57,10 +71,7 @@ function MenuSkeleton() {
 
 function DishItem({ dish, lang }: { dish: Dish; lang: Language }) {
   const { t } = useTranslation();
-  const price = new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'es-ES', {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(dish.price);
+  const price = priceFormat(lang).format(dish.price);
   const description = pickText(lang, dish.descriptionDe ?? '', dish.descriptionEs ?? '');
   const { image } = dish;
 
@@ -97,7 +108,6 @@ function DishItem({ dish, lang }: { dish: Dish; lang: Language }) {
                 {dish.allergens.map((code) => (
                   <li
                     key={code}
-                    title={ALLERGENS[code][lang]}
                     className="inline-flex size-6 items-center justify-center rounded-sm border border-tierra/40 text-xs font-semibold"
                   >
                     <span aria-hidden="true">{code}</span>
@@ -125,7 +135,15 @@ function CategoryNav({ categories, lang }: { categories: Category[]; lang: Langu
           <li key={category.id} className="shrink-0">
             <a
               href={`#category-${category.id}`}
-              className="inline-flex min-h-11 items-center font-semibold text-selva underline decoration-maiz decoration-2 underline-offset-[6px] hover:decoration-selva focus-visible:outline-2 focus-visible:outline-offset-[-2px]"
+              className={navLinkClass}
+              onClick={() => {
+                // Move focus to the heading so keyboard and screen reader users land on the section.
+                requestAnimationFrame(() =>
+                  document
+                    .getElementById(`category-${category.id}-title`)
+                    ?.focus({ preventScroll: true }),
+                );
+              }}
             >
               {pickText(lang, category.nameDe, category.nameEs)}
             </a>
@@ -161,7 +179,8 @@ function MenuContent({ menu, lang }: { menu: PublicMenu; lang: Language }) {
             >
               <h2
                 id={`category-${category.id}-title`}
-                className="font-display text-4xl font-medium tracking-tight text-selva"
+                tabIndex={-1}
+                className="font-display text-4xl font-medium tracking-tight text-selva focus-visible:outline-2 focus-visible:outline-offset-4"
               >
                 {pickText(lang, category.nameDe, category.nameEs)}
               </h2>
@@ -188,7 +207,7 @@ function MenuContent({ menu, lang }: { menu: PublicMenu; lang: Language }) {
             <dl className="mt-4 grid gap-x-8 gap-y-1 text-sm sm:grid-cols-2 lg:grid-cols-3">
               {used.map((code) => (
                 <div key={code} className="flex gap-2">
-                  <dt className="w-5 font-semibold">{code}</dt>
+                  <dt className="min-w-5 font-semibold">{code}</dt>
                   <dd>{ALLERGENS[code][lang]}</dd>
                 </div>
               ))}
@@ -202,8 +221,8 @@ function MenuContent({ menu, lang }: { menu: PublicMenu; lang: Language }) {
 }
 
 export function MenuPage() {
-  const { t, i18n } = useTranslation();
-  const lang = i18n.language as Language;
+  const { t } = useTranslation();
+  const lang = useLang();
   const { data, isPending, isError, refetch, isFetching } = usePublicMenu();
   usePageMeta(t('pages.menu.title'), t('pages.menu.description'));
 

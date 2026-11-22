@@ -1,21 +1,22 @@
 import { LEGAL_PLACEHOLDER, RESTAURANT_INFO, legalHasPlaceholders } from '@pachamama/shared';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/public/page-header';
+import { ProvisionalMark } from '@/components/public/provisional-mark';
+import { textLinkClass } from '@/components/public/styles';
+import { useLang } from '@/components/public/use-lang';
 import { usePageMeta } from '@/components/public/use-page-meta';
-
-const textLink =
-  'rounded-sm font-semibold text-selva underline decoration-maiz decoration-2 underline-offset-[6px] hover:decoration-selva focus-visible:outline-2 focus-visible:outline-offset-4';
 
 const h2 = 'font-display text-2xl font-medium tracking-tight text-selva';
 
 /** Impressum (§ 5 DDG). German is binding; Spanish is a courtesy translation of the same content. */
 export function ImprintPage() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const lang = useLang();
   usePageMeta(t('pages.imprint.title'), t('pages.imprint.description'));
   const { legal, phone, email } = RESTAURANT_INFO;
   const provisional = legalHasPlaceholders();
 
-  const value = (v: string) => (v === LEGAL_PLACEHOLDER ? t('imprint.pending') : v);
+  const value = (v: string | null) => (v === LEGAL_PLACEHOLDER ? t('imprint.pending') : (v ?? ''));
 
   return (
     <>
@@ -28,7 +29,7 @@ export function ImprintPage() {
               {t('imprint.notice')}
             </p>
           ) : null}
-          {i18n.language === 'es' ? (
+          {lang === 'es' ? (
             <p className="text-sm text-muted-foreground">{t('imprint.translationNote')}</p>
           ) : null}
 
@@ -53,20 +54,34 @@ export function ImprintPage() {
               </dd>
               <dt className="font-semibold">{t('imprint.provider.phone')}</dt>
               <dd>
-                <a href={`tel:${phone.e164}`} className={textLink}>
+                <a href={`tel:${phone.e164}`} className={textLinkClass}>
                   {phone.display}
                 </a>
+                <ProvisionalMark />
               </dd>
               <dt className="font-semibold">{t('imprint.provider.email')}</dt>
               <dd>
-                <a href={`mailto:${email}`} className={textLink}>
+                <a href={`mailto:${email}`} className={textLinkClass}>
                   {email}
                 </a>
+                <ProvisionalMark />
               </dd>
               <dt className="font-semibold">{t('imprint.provider.vatId')}</dt>
               <dd>{value(legal.vatId)}</dd>
-              <dt className="font-semibold">{t('imprint.provider.register')}</dt>
-              <dd>{value(legal.commercialRegister)}</dd>
+              {legal.economicId !== null ? (
+                <>
+                  <dt className="font-semibold">{t('imprint.provider.economicId')}</dt>
+                  <dd>{value(legal.economicId)}</dd>
+                </>
+              ) : null}
+              {legal.commercialRegister !== null ? (
+                <>
+                  <dt className="font-semibold">{t('imprint.provider.register')}</dt>
+                  <dd>{value(legal.commercialRegister)}</dd>
+                </>
+              ) : null}
+              <dt className="font-semibold">{t('imprint.provider.authority')}</dt>
+              <dd>{value(legal.supervisoryAuthority)}</dd>
               <dt className="font-semibold">{t('imprint.provider.responsible')}</dt>
               <dd>{value(legal.contentResponsible)}</dd>
             </dl>

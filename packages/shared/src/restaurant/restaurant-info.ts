@@ -7,6 +7,9 @@
 /** Marker for legal data the owner has not supplied yet. Pages show it as "[ausstehend]" / "[pendiente]". */
 export const LEGAL_PLACEHOLDER = 'PENDIENTE' as const;
 
+/** Last revision of the privacy policy (ISO date); the page formats it per language. */
+export const PRIVACY_POLICY_UPDATED = '2026-11-22';
+
 const ADDRESS = { street: 'Am Gaswerk 1', postalCode: '28197', city: 'Bremen' } as const;
 
 export const RESTAURANT_INFO = {
@@ -17,6 +20,8 @@ export const RESTAURANT_INFO = {
     de: 'Di–So 13:00–22:00 · Mo Ruhetag',
     es: 'Mar–Dom 13:00–22:00 · Lunes cerrado',
   },
+  /** False while phone and email are placeholders; pages then mark them as provisional. */
+  contactConfirmed: false,
   /** PROVISIONAL: E.164 for `tel:` links, plus the display form. */
   phone: { e164: '+494210000000', display: '0421 000 000 0' },
   /** PROVISIONAL */
@@ -32,8 +37,12 @@ export const RESTAURANT_INFO = {
     address: ADDRESS,
     addressConfirmed: false,
     vatId: LEGAL_PLACEHOLDER,
-    /** Optional: only if the business is entered in a commercial register. */
-    commercialRegister: LEGAL_PLACEHOLDER,
+    /** Wirtschafts-ID (§ 27a UStG), if the business has one; `null` = not applicable (row hidden). */
+    economicId: LEGAL_PLACEHOLDER as string | null,
+    /** `null` = not entered in a commercial register (row hidden); placeholder = still to confirm. */
+    commercialRegister: LEGAL_PLACEHOLDER as string | null,
+    /** Responsible authority, e.g. for the Gaststättenerlaubnis (§ 5 Abs. 1 Nr. 3 DDG). */
+    supervisoryAuthority: LEGAL_PLACEHOLDER,
     /** Responsible for content under § 18 Abs. 2 MStV. */
     contentResponsible: LEGAL_PLACEHOLDER,
     /** Hosting provider (privacy policy). */
@@ -45,22 +54,25 @@ export const RESTAURANT_INFO = {
   provisionalFields: ['openingHours', 'phone', 'email', 'legal'],
 } as const;
 
-/** True while any Impressum / privacy datum is still a placeholder or unconfirmed. */
+/** True while phone and email are placeholders the restaurant has not confirmed. */
+export function contactIsProvisional(): boolean {
+  return !RESTAURANT_INFO.contactConfirmed;
+}
+
+/** True while any Impressum / privacy datum is still a placeholder or unconfirmed (`null` = n/a, OK). */
 export function legalHasPlaceholders(): boolean {
-  const { addressConfirmed, operatorName, legalForm, representative } = RESTAURANT_INFO.legal;
-  const { vatId, commercialRegister, contentResponsible } = RESTAURANT_INFO.legal;
-  const { hostingProvider, logRetention } = RESTAURANT_INFO.legal;
-  return (
-    !addressConfirmed ||
-    [
-      operatorName,
-      legalForm,
-      representative,
-      vatId,
-      commercialRegister,
-      contentResponsible,
-      hostingProvider,
-      logRetention,
-    ].some((v) => v === LEGAL_PLACEHOLDER)
-  );
+  const { legal } = RESTAURANT_INFO;
+  const values: (string | null)[] = [
+    legal.operatorName,
+    legal.legalForm,
+    legal.representative,
+    legal.vatId,
+    legal.economicId,
+    legal.commercialRegister,
+    legal.supervisoryAuthority,
+    legal.contentResponsible,
+    legal.hostingProvider,
+    legal.logRetention,
+  ];
+  return !legal.addressConfirmed || values.some((v) => v === LEGAL_PLACEHOLDER);
 }
