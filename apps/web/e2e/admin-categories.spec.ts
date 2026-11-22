@@ -40,7 +40,7 @@ test.describe('panel /admin: categorías de la carta', () => {
     await expect(row(page, renamed)).toBeVisible();
   });
 
-  test('un formulario vacío marca los dos nombres como inválidos y enfoca el primero', async ({
+  test('un formulario vacío marca los dos nombres como inválidos y enfoca el resumen de errores', async ({
     page,
   }) => {
     await signIn(page);
@@ -51,6 +51,13 @@ test.describe('panel /admin: categorías de la carta', () => {
     const de = page.getByLabel(/Name \(Deutsch\)/);
     await expect(de).toHaveAttribute('aria-invalid', 'true');
     await expect(page.getByLabel(/Name \(Spanisch\)/)).toHaveAttribute('aria-invalid', 'true');
+
+    // Patrón WCAG: el foco va al resumen de errores; desde su enlace se llega al primer campo.
+    const summary = page
+      .getByRole('alert')
+      .filter({ hasText: 'Bitte die markierten Felder prüfen' });
+    await expect(summary).toBeFocused();
+    await summary.getByRole('link', { name: /Name \(Deutsch\)/ }).click();
     await expect(de).toBeFocused();
   });
 
