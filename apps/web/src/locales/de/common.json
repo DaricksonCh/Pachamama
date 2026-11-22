@@ -80,6 +80,23 @@
       "description": "Wie Pachamama Restaurant personenbezogene Daten auf dieser Website verarbeitet."
     }
   },
+  "menu": {
+    "lead": "Peruanische Gerichte, frisch zubereitet. Alle Preise in Euro, Bezahlung im Restaurant.",
+    "pdf": "Speisekarte als PDF",
+    "pdfHint": "(PDF, öffnet in neuem Tab)",
+    "categoriesNav": "Kategorien der Speisekarte",
+    "allergens": "Allergene",
+    "legendTitle": "Allergene",
+    "askStaff": "Fragen zu Allergenen? Sprechen Sie unser Team an.",
+    "loading": "Speisekarte wird geladen …",
+    "error": "Die Speisekarte konnte nicht geladen werden. Bitte versuchen Sie es erneut.",
+    "retry": "Erneut versuchen",
+    "empty": "Die Speisekarte wird gerade aktualisiert. Sie können sie auch als PDF ansehen.",
+    "diet": {
+      "vegan": "Vegan",
+      "vegetarian": "Vegetarisch"
+    }
+  },
   "status": {
     "label": "API-Status",
     "loading": "Wird geprüft …",

@@ -80,6 +80,23 @@
       "description": "Cómo trata Pachamama Restaurant los datos personales en esta web."
     }
   },
+  "menu": {
+    "lead": "Platos peruanos preparados al momento. Precios en euros, pago en el local.",
+    "pdf": "Carta en PDF",
+    "pdfHint": "(PDF, se abre en una pestaña nueva)",
+    "categoriesNav": "Categorías de la carta",
+    "allergens": "Alérgenos",
+    "legendTitle": "Alérgenos",
+    "askStaff": "¿Preguntas sobre alérgenos? Consulte con nuestro personal.",
+    "loading": "Cargando la carta …",
+    "error": "No se pudo cargar la carta. Inténtelo de nuevo.",
+    "retry": "Reintentar",
+    "empty": "Estamos actualizando la carta. También puede verla en PDF.",
+    "diet": {
+      "vegan": "Vegano",
+      "vegetarian": "Vegetariano"
+    }
+  },
   "status": {
     "label": "Estado de la API",
     "loading": "Comprobando …",
