@@ -80,6 +80,15 @@ describe('anonymizePastReservations', () => {
     expect((await loadEvent(id)).message).toBe('Personal text');
   });
 
+  it('keeps a reservation at exactly N days and anonymizes one at N days + 1 ms', async () => {
+    const exact = await insertReservation(daysAgo(90));
+    const over = await insertReservation(new Date(daysAgo(90).getTime() - 1));
+
+    expect(await anonymizePastReservations(db, NOW, 90)).toBe(1);
+    expect((await load(exact)).anonymizedAt).toBeNull();
+    expect((await load(over)).anonymizedAt).toEqual(NOW);
+  });
+
   it('does not count already anonymized reservations again', async () => {
     const earlier = daysAgo(10);
     const id = await insertReservation(daysAgo(120), earlier);

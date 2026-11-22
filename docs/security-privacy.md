@@ -50,11 +50,11 @@ El límite de intentos depende de conocer la IP real. Express solo se fía de `X
 | Nombre, email, rol          | `users`    | Acceso al panel                       | Mientras trabaje en el restaurante                                                        |
 | IP y navegador de la sesión | `sessions` | Seguridad (detectar accesos extraños) | Hasta que caduca la sesión (máx. 7 días sin uso); `npm run db:cleanup` las borra a diario |
 
+**Pendiente antes de publicar:** programar `npm run db:cleanup` a diario (cron) e incluir este tratamiento en la información al personal.
+
 ### Retención de reservas
 
-Las reservas se anonimizan 90 días después de la fecha de la reserva (`RESERVATIONS_RETENTION_DAYS`, mínimo 30). La tarea diaria `npm run db:cleanup` sustituye nombre, email, teléfono y comentario por valores vacíos (nombre `—`) y borra el texto y el asunto de los mensajes del historial. Se conservan estado, fecha y número de personas solo para estadísticas.
-
-**Pendiente antes de publicar:** programar `npm run db:cleanup` a diario (cron) e incluir este tratamiento en la información al personal.
+Las reservas se anonimizan tras la fecha de la reserva: 90 días por defecto (`RESERVATIONS_RETENTION_DAYS`, mínimo 30). La tarea diaria `npm run db:cleanup` sustituye nombre, email, teléfono y comentario por valores vacíos (nombre `—`) y borra el texto y el asunto de los mensajes del historial. Se conservan estado, fecha y número de personas solo para estadísticas.
 
 ## Privacidad (DSGVO)
 
