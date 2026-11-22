@@ -87,6 +87,10 @@
     "privacy": {
       "title": "Política de privacidad",
       "description": "Cómo trata Pachamama Restaurant los datos personales en esta web."
+    },
+    "reservations": {
+      "title": "Reservar mesa",
+      "description": "Reserva tu mesa en Pachamama, Bremen: elige personas, día y hora en pocos pasos."
     }
   },
   "menu": {
@@ -348,7 +352,18 @@
     "invalidCategory": "Elige una categoría activa.",
     "noImage": "El plato no tiene foto.",
     "imageTooLarge": "La foto es demasiado grande (máx. 10 MB, 40 megapíxeles).",
-    "imageType": "Solo fotos en formato JPEG, PNG o WebP."
+    "imageType": "Solo fotos en formato JPEG, PNG o WebP.",
+    "date": "Elige una fecha válida.",
+    "time": "Elige una hora válida.",
+    "phone": "Introduce un teléfono válido (solo cifras, + y espacios).",
+    "language": "Idioma no válido.",
+    "privacy": "Debes aceptar la política de privacidad.",
+    "range": "El rango no es válido.",
+    "overlap": "Los tramos se solapan.",
+    "int": "Introduce un número entero.",
+    "partyMin": "Indica al menos una persona.",
+    "partyMax": "Demasiadas personas para reservar en línea.",
+    "partySizeRange": "Número de personas fuera del rango permitido."
   },
   "common": {
     "close": "Cerrar"
@@ -466,6 +481,76 @@
         "title": "Fecha",
         "p1": "Fecha: {{date}}. Adaptamos esta política cuando cambie la web o la normativa."
       }
+    }
+  },
+  "reservations": {
+    "lead": "Elige personas, día y hora. Te confirmaremos la reserva por correo. Se paga en el local.",
+    "progress": "Pasos de la reserva",
+    "steps": {
+      "party": "Personas",
+      "date": "Fecha",
+      "time": "Hora",
+      "details": "Datos"
+    },
+    "next": "Siguiente",
+    "back": "Atrás",
+    "submit": "Enviar solicitud",
+    "sending": "Enviando …",
+    "retry": "Reintentar",
+    "summary": {
+      "title": "Tu reserva",
+      "pending": "aún sin elegir"
+    },
+    "party": {
+      "heading": "¿Cuántas personas?",
+      "groupLabel": "Número de personas",
+      "option_one": "{{count}} persona",
+      "option_other": "{{count}} personas",
+      "more": "Más",
+      "moreText": "Para grupos de más de {{max}} personas, llámanos al",
+      "orContact": "o escríbenos desde la página de",
+      "contactLink": "contacto",
+      "loading": "Cargando …"
+    },
+    "date": {
+      "heading": "¿Qué día?",
+      "loading": "Cargando los días disponibles …",
+      "noDays": "No hay días disponibles este mes. Prueba con el mes siguiente.",
+      "sameDay": "Las reservas para el mismo día solo se hacen por teléfono:"
+    },
+    "time": {
+      "heading": "¿A qué hora?",
+      "lunch": "Mediodía",
+      "dinner": "Noche",
+      "full": "completo",
+      "loading": "Cargando las horas …",
+      "empty": "No hay horas disponibles ese día para tu grupo. Elige otro día."
+    },
+    "details": {
+      "heading": "Tus datos",
+      "requiredHint": "Los campos con * son obligatorios.",
+      "name": "Nombre",
+      "email": "Email",
+      "phone": "Teléfono",
+      "comment": "Comentario",
+      "optional": "opcional",
+      "privacyShort": "Privacidad",
+      "privacyBefore": "He leído y acepto la",
+      "privacyLink": "política de privacidad",
+      "privacyAfter": ".",
+      "newTab": "(se abre en una pestaña nueva)"
+    },
+    "errors": {
+      "slotFull": "Esa hora ya no está disponible. Elige otra, por favor.",
+      "rateLimited": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
+      "network": "Sin conexión o el servidor no responde. Inténtalo de nuevo.",
+      "generic": "No se pudo enviar la solicitud. Revisa los datos e inténtalo de nuevo.",
+      "loadFailed": "No se pudo cargar la disponibilidad."
+    },
+    "success": {
+      "title": "Solicitud recibida",
+      "next": "Te responderemos por correo para confirmar la reserva. Revisa tu correo (y la carpeta de spam).",
+      "home": "Volver al inicio"
     }
   }
 }

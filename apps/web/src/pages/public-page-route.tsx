@@ -5,15 +5,17 @@ import { ContactPage } from './contact-page';
 import { ImprintPage } from './imprint-page';
 import { MenuPage } from './menu-page';
 import { PrivacyPage } from './privacy-page';
+import { ReservationsPage } from './reservations-page';
 import { StoryPage } from './story-page';
 
-/** Pages routed today. `reservations` joins in phase 7 (see RESERVATIONS_MODE). */
+/** Pages routed today. the link to `reservations` is switched on by RESERVATIONS_MODE. */
 const PAGES: Partial<Record<PublicPage, ComponentType>> = {
   menu: MenuPage,
   story: StoryPage,
   contact: ContactPage,
   imprint: ImprintPage,
   privacy: PrivacyPage,
+  reservations: ReservationsPage,
 };
 
 /**

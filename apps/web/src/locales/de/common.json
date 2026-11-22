@@ -87,6 +87,10 @@
     "privacy": {
       "title": "Datenschutzerklärung",
       "description": "Wie Pachamama Restaurant personenbezogene Daten auf dieser Website verarbeitet."
+    },
+    "reservations": {
+      "title": "Tisch reservieren",
+      "description": "Reservieren Sie Ihren Tisch bei Pachamama in Bremen: Personen, Tag und Uhrzeit in wenigen Schritten."
     }
   },
   "menu": {
@@ -348,7 +352,18 @@
     "invalidCategory": "Bitte eine aktive Kategorie wählen.",
     "noImage": "Das Gericht hat kein Foto.",
     "imageTooLarge": "Das Foto ist zu groß (max. 10 MB, 40 Megapixel).",
-    "imageType": "Nur Fotos im Format JPEG, PNG oder WebP."
+    "imageType": "Nur Fotos im Format JPEG, PNG oder WebP.",
+    "date": "Bitte ein gültiges Datum wählen.",
+    "time": "Bitte eine gültige Uhrzeit wählen.",
+    "phone": "Bitte eine gültige Telefonnummer eingeben (nur Ziffern, + und Leerzeichen).",
+    "language": "Ungültige Sprache.",
+    "privacy": "Bitte die Datenschutzerklärung akzeptieren.",
+    "range": "Der Bereich ist ungültig.",
+    "overlap": "Die Zeiträume überschneiden sich.",
+    "int": "Bitte eine ganze Zahl eingeben.",
+    "partyMin": "Bitte mindestens eine Person angeben.",
+    "partyMax": "Zu viele Personen für eine Online-Reservierung.",
+    "partySizeRange": "Personenzahl außerhalb des erlaubten Bereichs."
   },
   "common": {
     "close": "Schließen"
@@ -466,6 +481,76 @@
         "title": "Stand",
         "p1": "Stand: {{date}}. Wir passen diese Erklärung an, wenn sich die Website oder die Rechtslage ändert."
       }
+    }
+  },
+  "reservations": {
+    "lead": "Wählen Sie Personen, Tag und Uhrzeit. Wir bestätigen Ihre Reservierung per E-Mail. Bezahlt wird im Restaurant.",
+    "progress": "Schritte der Reservierung",
+    "steps": {
+      "party": "Personen",
+      "date": "Datum",
+      "time": "Uhrzeit",
+      "details": "Angaben"
+    },
+    "next": "Weiter",
+    "back": "Zurück",
+    "submit": "Anfrage senden",
+    "sending": "Wird gesendet …",
+    "retry": "Erneut versuchen",
+    "summary": {
+      "title": "Ihre Reservierung",
+      "pending": "noch nicht gewählt"
+    },
+    "party": {
+      "heading": "Wie viele Personen?",
+      "groupLabel": "Anzahl der Personen",
+      "option_one": "{{count}} Person",
+      "option_other": "{{count}} Personen",
+      "more": "Mehr",
+      "moreText": "Für Gruppen mit mehr als {{max}} Personen rufen Sie uns bitte an unter",
+      "orContact": "oder schreiben Sie uns über die",
+      "contactLink": "Kontaktseite",
+      "loading": "Wird geladen …"
+    },
+    "date": {
+      "heading": "Welcher Tag?",
+      "loading": "Freie Tage werden geladen …",
+      "noDays": "In diesem Monat sind keine Tage frei. Versuchen Sie den nächsten Monat.",
+      "sameDay": "Reservierungen für denselben Tag nehmen wir nur telefonisch an:"
+    },
+    "time": {
+      "heading": "Welche Uhrzeit?",
+      "lunch": "Mittag",
+      "dinner": "Abend",
+      "full": "ausgebucht",
+      "loading": "Uhrzeiten werden geladen …",
+      "empty": "An diesem Tag sind für Ihre Gruppe keine Uhrzeiten frei. Bitte einen anderen Tag wählen."
+    },
+    "details": {
+      "heading": "Ihre Angaben",
+      "requiredHint": "Felder mit * sind Pflichtfelder.",
+      "name": "Name",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "comment": "Anmerkung",
+      "optional": "optional",
+      "privacyShort": "Datenschutz",
+      "privacyBefore": "Ich habe die",
+      "privacyLink": "Datenschutzerklärung",
+      "privacyAfter": " gelesen und akzeptiere sie.",
+      "newTab": "(öffnet in neuem Tab)"
+    },
+    "errors": {
+      "slotFull": "Diese Uhrzeit ist leider nicht mehr frei. Bitte wählen Sie eine andere.",
+      "rateLimited": "Zu viele Versuche. Bitte warten Sie einige Minuten und versuchen Sie es erneut.",
+      "network": "Keine Verbindung oder der Server antwortet nicht. Bitte erneut versuchen.",
+      "generic": "Die Anfrage konnte nicht gesendet werden. Bitte Angaben prüfen und erneut versuchen.",
+      "loadFailed": "Die Verfügbarkeit konnte nicht geladen werden."
+    },
+    "success": {
+      "title": "Anfrage erhalten",
+      "next": "Wir antworten Ihnen per E-Mail und bestätigen die Reservierung. Bitte prüfen Sie Ihr Postfach (auch den Spam-Ordner).",
+      "home": "Zur Startseite"
     }
   }
 }
