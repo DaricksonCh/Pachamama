@@ -45,12 +45,209 @@
     },
     "dashboard": {
       "welcome": "Hola, {{name}}",
-      "intro": "Pronto gestionarás aquí la carta, las reservas y más."
+      "intro": "Aquí ves el estado de la carta de un vistazo.",
+      "summaryLabel": "Resumen de la carta",
+      "visibleDishes": "Platos visibles",
+      "hiddenDishes": "{{count}} ocultos",
+      "provisionalDishes": "Provisionales",
+      "provisionalHint": "Revisar",
+      "withoutImage": "Sin foto",
+      "withoutImageHint": "Añadir foto",
+      "categories": "Categorías",
+      "quickLinks": "Accesos",
+      "newDish": "Nuevo plato",
+      "viewPdf": "Ver PDF",
+      "errors": {
+        "loadFailed": "No se pudo cargar el resumen."
+      }
     },
-    "retry": "Reintentar"
+    "retry": "Reintentar",
+    "nav": {
+      "label": "Navegación principal",
+      "home": "Inicio",
+      "menu": "Carta",
+      "categories": "Categorías",
+      "dishes": "Platos",
+      "pdf": "PDF",
+      "opensInNewTab": "(se abre en una pestaña nueva)",
+      "open": "Abrir menú",
+      "toggle": "Mostrar u ocultar el menú lateral",
+      "mobileDescription": "Muestra el menú lateral en el móvil.",
+      "skipToContent": "Saltar al contenido"
+    },
+    "menu": {
+      "categories": {
+        "title": "Categorías",
+        "new": "Nueva categoría",
+        "edit": "Editar categoría",
+        "backToList": "Volver a categorías",
+        "notFound": "La categoría no existe.",
+        "empty": "Todavía no hay categorías.",
+        "emptyArchived": "No hay categorías archivadas.",
+        "saved": "Categoría guardada.",
+        "archived": "Categoría archivada.",
+        "restored": "Categoría restaurada (oculta).",
+        "columns": {
+          "name": "Nombre",
+          "status": "Estado",
+          "dishes": "Platos",
+          "actions": "Acciones"
+        },
+        "form": {
+          "nameDe": "Nombre (alemán)",
+          "nameEs": "Nombre (español)",
+          "descriptionDe": "Descripción (alemán)",
+          "descriptionEs": "Descripción (español)",
+          "visible": "Visible en la carta"
+        },
+        "errors": {
+          "hasDishes": "No se puede archivar: la categoría aún tiene platos. Archiva o mueve primero sus platos."
+        },
+        "archivedNotice": "Esta categoría está archivada y no aparece en la carta."
+      },
+      "dishes": {
+        "title": "Platos",
+        "new": "Nuevo plato",
+        "edit": "Editar plato",
+        "backToList": "Volver a platos",
+        "notFound": "El plato no existe.",
+        "empty": "Todavía no hay platos.",
+        "emptyFiltered": "Ningún plato coincide con estos filtros.",
+        "saved": "Plato guardado.",
+        "archived": "Plato archivado.",
+        "restored": "Plato restaurado (oculto).",
+        "nowVisible": "«{{name}}» ahora es visible.",
+        "nowHidden": "«{{name}}» ahora está oculto.",
+        "archivedNotice": "Este plato está archivado y no aparece en la carta.",
+        "provisional": "Provisional",
+        "noImage": "Sin foto",
+        "noCategory": "—",
+        "hideNamed": "Ocultar {{name}}",
+        "showNamed": "Mostrar {{name}}",
+        "hide": "Ocultar",
+        "show": "Mostrar",
+        "reorderHint": "Para cambiar el orden, filtra solo por una categoría (sin más filtros).",
+        "columns": {
+          "image": "Foto",
+          "name": "Nombre",
+          "category": "Categoría",
+          "price": "Precio",
+          "status": "Estado",
+          "actions": "Acciones"
+        },
+        "filters": {
+          "label": "Filtrar platos",
+          "search": "Buscar por nombre",
+          "category": "Categoría",
+          "allCategories": "Todas las categorías",
+          "status": "Estado",
+          "statusActive": "Visibles y ocultos",
+          "provisional": "Solo provisionales",
+          "withoutImage": "Solo sin foto",
+          "reset": "Quitar filtros"
+        },
+        "form": {
+          "category": "Categoría",
+          "chooseCategory": "Elige una categoría",
+          "nameDe": "Nombre (alemán)",
+          "nameEs": "Nombre (español)",
+          "descriptionDe": "Descripción (alemán)",
+          "descriptionEs": "Descripción (español)",
+          "counter": "{{count}} de {{max}} caracteres",
+          "price": "Precio (€)",
+          "priceHint": "Con coma o punto, p. ej. 12,90.",
+          "diet": "Dieta",
+          "dietNone": "Ninguna",
+          "dietVegetarian": "Vegetariano",
+          "dietVegan": "Vegano",
+          "allergens": "Alérgenos",
+          "photo": "Foto",
+          "photoHint": "JPEG, PNG o WebP, 10 MB como máximo.",
+          "choosePhoto": "Elegir foto",
+          "changePhoto": "Cambiar foto",
+          "removePhoto": "Quitar foto",
+          "keepPhoto": "Conservar foto",
+          "photoRemoved": "La foto se quitará al guardar.",
+          "preview": "Vista previa de la foto",
+          "altDe": "Descripción de la foto (alemán)",
+          "altEs": "Descripción de la foto (español)",
+          "altHint": "Describe la foto para quien no puede verla.",
+          "visible": "Visible en la carta",
+          "provisional": "Provisional (pendiente de revisar)",
+          "provisionalNote": "Nota de revisión",
+          "requiredHint": "Los campos con * son obligatorios."
+        },
+        "errors": {
+          "imageFailed": "No se pudo guardar la foto.",
+          "createdWithoutImage": "Plato guardado, pero la foto no se pudo subir. Vuelve a intentarlo aquí.",
+          "statusFailed": "No se pudo cambiar el estado."
+        }
+      },
+      "status": {
+        "visible": "Visible",
+        "hidden": "Oculto",
+        "archived": "Archivado"
+      },
+      "edit": "Editar",
+      "view": "Ver",
+      "save": "Guardar",
+      "saving": "Guardando …",
+      "cancel": "Cancelar",
+      "restore": "Restaurar",
+      "filter": {
+        "label": "Filtrar por estado",
+        "active": "Activas",
+        "archived": "Archivadas"
+      },
+      "reorder": {
+        "up": "Subir {{name}}",
+        "down": "Bajar {{name}}",
+        "moved": "{{name}}: posición {{position}} de {{total}}."
+      },
+      "archive": {
+        "action": "Archivar",
+        "confirm": "Archivar",
+        "category": {
+          "title": "¿Archivar «{{name}}»?",
+          "description": "La categoría dejará de aparecer en la carta. Podrás restaurarla desde «Archivadas»."
+        },
+        "dish": {
+          "title": "¿Archivar «{{name}}»?",
+          "description": "El plato dejará de aparecer en la carta. Podrás restaurarlo desde «Archivados»."
+        },
+        "actionNamed": "Archivar {{name}}"
+      },
+      "unsaved": {
+        "title": "Cambios sin guardar",
+        "description": "Si sales ahora, perderás los cambios.",
+        "stay": "Seguir editando",
+        "leave": "Salir sin guardar"
+      },
+      "errors": {
+        "saveFailed": "No se pudo guardar. Inténtalo de nuevo.",
+        "loadFailed": "No se pudieron cargar los datos.",
+        "reorderFailed": "No se pudo cambiar el orden.",
+        "forbidden": "No tienes permiso para esta acción.",
+        "summary": "Revisa los campos marcados:"
+      },
+      "editNamed": "Editar {{name}}",
+      "viewNamed": "Ver {{name}}",
+      "restoreNamed": "Restaurar {{name}}"
+    }
   },
   "validation": {
     "email": "Introduce un email válido.",
-    "required": "Este campo es obligatorio."
+    "required": "Este campo es obligatorio.",
+    "tooLong": "El texto es demasiado largo.",
+    "price": "Introduce un precio válido, p. ej. 12,90.",
+    "allergen": "Código de alérgeno no válido.",
+    "invalid": "Valor no válido.",
+    "invalidCategory": "Elige una categoría activa.",
+    "noImage": "El plato no tiene foto.",
+    "imageTooLarge": "La foto es demasiado grande (máx. 10 MB, 40 megapíxeles).",
+    "imageType": "Solo fotos en formato JPEG, PNG o WebP."
+  },
+  "common": {
+    "close": "Cerrar"
   }
 }

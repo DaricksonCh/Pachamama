@@ -16,6 +16,7 @@ Todo se paga **en el local** (sin pasarela de pagos). El personal gestiona todo 
 
 - Fase en curso y siguientes: ver [`docs/roadmap.md`](docs/roadmap.md). **Actualízalo al terminar cada fase.**
 - Fase 3 hecha: Kysely + migraciones, Better Auth (login del personal en `/admin`, roles admin/staff). Diseño de la web provisional.
+- Fase 5 hecha: carta editable en `/admin` (shadcn), fotos, carta pública + PDF de/es, carga de la carta real. Datos dudosos en [`docs/pendientes.md`](docs/pendientes.md).
 - **⚠ Fecha límite 01.12.2026** (el restaurante no tiene web): plan revisado el 2026-11-21. Primero BD + login admin (fase 3) y carta editable desde el panel (fase 5), con el diseño en paralelo; después páginas públicas y publicación. Detalle en `docs/roadmap.md`.
 
 ## Forma de trabajar (obligatorio)
@@ -60,6 +61,21 @@ Para trabajo extenso, el agente principal delega en subagentes (cada uno trabaja
 
 Reglas: un subagente que **escribe** código nunca comparte archivos con otro en paralelo; los de revisión/QA solo leen y reportan; el agente principal comprueba siempre el resultado antes de darlo por hecho.
 
+### Modelos y ahorro de tokens (decidido por el usuario el 2026-11-22)
+
+- **Sesión principal:** Sonnet (lo elige el usuario en el selector de modelo). Opus solo si algo se atasca.
+- **Modelo de cada subagente** (indicarlo siempre al lanzarlo):
+  - **Haiku:** re-revisiones de correcciones pequeñas y tareas mecánicas.
+  - **Sonnet:** implementar y revisar.
+  - **Opus:** solo si una tarea falla 2 veces o es diseño difícil, y **avisando antes al usuario**.
+- **Revisión completa** solo en tareas de seguridad, BD o permisos. En UI y datos, revisión ligera; las correcciones pequeñas las verifica el agente principal leyendo el diff.
+- **Hallazgos menores:** se apuntan (ledger o `docs/pendientes.md`) y no se corrigen en el momento, salvo seguridad o accesibilidad.
+- **E2e:** una vez por línea de trabajo al final, no tras cada tarea.
+- **Informes al usuario:** cortos; solo al terminar una tarea o cuando haga falta una decisión.
+- **Si tras 3 intentos distintos no se avanza**, o el fallo no parece causado por el cambio, se para, se resume lo probado y se pregunta.
+- **Sin cambios:** `npm run check:all` en verde antes de cerrar una fase y nunca debilitar ni borrar tests.
+- **Contexto:** `/clear` (o chat nuevo) al cerrar cada fase; a mitad de fase, `/compact` si el contexto crece.
+
 ## Skills obligatorias por tipo de tarea
 
 Antes de empezar una tarea, el agente **consulta (carga) las skills que le corresponden** según esta tabla, aunque el usuario no las nombre, y al terminar indica cuáles usó. Las skills globales (`~/.claude/skills/`) y las del proyecto (`.claude/skills/`) están disponibles en todas las sesiones. Si una tarea encaja en varias filas, se usan todas.
@@ -77,6 +93,7 @@ Antes de empezar una tarea, el agente **consulta (carga) las skills que le corre
 | Escribir tests                                     | `testing-strategy`, `test-driven-development`, `vitest`, `playwright-best-practices`, `e2e-testing-patterns`                      |
 | Probar la web en el navegador                      | `webapp-testing`, `playwright-cli`                                                                                                |
 | SEO, rendimiento, auditoría antes de publicar      | `seo`, `performance`, `core-web-vitals`, `best-practices`, `web-quality-audit`                                                    |
+| PDF (carta descargable)                            | `react-pdf`                                                                                                                       |
 | Configurar Vite                                    | `vite`                                                                                                                            |
 | Un bug o un test que falla                         | `systematic-debugging`                                                                                                            |
 | Antes de decir "terminado" o hacer commit          | `verification-before-completion`                                                                                                  |
@@ -142,6 +159,7 @@ Desde la raíz del repo:
 | `npm run db:migrate`                               | Aplica las migraciones pendientes (`db:migrate:down` deshace una)            |
 | `npm run db:cleanup`                               | Borra sesiones y verificaciones caducadas (DSGVO; cron diario en producción) |
 | `npm run admin:create -- --email <e> --name "<n>"` | Crea un admin (pide la contraseña sin mostrarla)                             |
+| `npm run db:seed:menu -- [--photos <dir>]`         | Carta inicial si está vacía (+ `material/fotos`); reiniciar la API después   |
 | `npm run dev -w @pachamama/api`                    | Solo un paquete (`-w` = workspace)                                           |
 
 Versiones fijadas: Node 24, npm 11, **TypeScript 6.0** (TS 7 aún no es compatible con typescript-eslint; ver ADR 0006).

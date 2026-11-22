@@ -52,11 +52,12 @@ Criterio de selección: fuente oficial (Anthropic, el fabricante de la herramien
 | better-auth-best-practices          | [better-auth/skills](https://github.com/better-auth/skills)                             | Configurar Better Auth                                          |
 | better-auth-security-best-practices | better-auth/skills                                                                      | Endurecer la autenticación                                      |
 | email-and-password-best-practices   | better-auth/skills                                                                      | Login con email/contraseña                                      |
-| shadcn                              | [shadcn-ui/ui](https://github.com/shadcn-ui/ui)                                         | Componentes shadcn/ui (si se confirma su uso)                   |
+| shadcn                              | [shadcn-ui/ui](https://github.com/shadcn-ui/ui)                                         | Componentes shadcn/ui (ADR 0008)                                |
 | gdpr-dsgvo-expert                   | [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills)         | DSGVO: riesgos de privacidad, DPIA, derechos de los interesados |
 | gdpr-data-handling                  | wshobson/agents                                                                         | Consentimiento y privacidad desde el diseño                     |
 | tanstack-query-best-practices       | [deckardger/tanstack-agent-skills](https://github.com/deckardger/tanstack-agent-skills) | Datos con TanStack Query                                        |
 | react-hook-form                     | [pproenca/dot-skills](https://github.com/pproenca/dot-skills)                           | Formularios con react-hook-form + Zod                           |
+| react-pdf                           | [trailofbits/skills-curated](https://github.com/trailofbits/skills-curated)             | PDF de la carta con @react-pdf/renderer (ADR 0009)              |
 
 ## Subagentes de proyecto (`.claude/agents/`)
 

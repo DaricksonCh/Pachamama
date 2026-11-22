@@ -3,11 +3,12 @@ import { loginSchema } from '@pachamama/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useNavigate } from 'react-router';
+import { Navigate, useNavigate, useSearchParams } from 'react-router';
 import type { z } from 'zod';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AdminLanguageSwitcher } from '@/features/admin/admin-language';
 import { useAdminLanguage } from '@/features/admin/use-admin-language';
+import { safeNext } from '@/features/auth/safe-next';
 import { currentUserQueryKey, useCurrentUser } from '@/features/auth/use-current-user';
 import { authClient } from '@/lib/auth-client';
 
@@ -29,6 +30,7 @@ export function LoginPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const next = safeNext(useSearchParams()[0].get('next'));
   const { data: user, isPending } = useCurrentUser();
   useAdminLanguage();
 
@@ -50,7 +52,7 @@ export function LoginPage() {
       </div>
     );
   }
-  if (user) return <Navigate to="/admin" replace />;
+  if (user) return <Navigate to={next} replace />;
 
   const onSubmit = handleSubmit(async (values) => {
     try {
@@ -65,7 +67,7 @@ export function LoginPage() {
       return;
     }
     await queryClient.invalidateQueries({ queryKey: currentUserQueryKey });
-    await navigate('/admin', { replace: true });
+    await navigate(next, { replace: true });
   });
 
   const fieldError = (id: string, key?: string) =>

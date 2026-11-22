@@ -8,8 +8,10 @@ import { env } from './config/env';
 import { httpLogSerializers } from './lib/http-log';
 import { logger } from './lib/logger';
 import { normalizeClientIp } from './middlewares/client-ip';
+import { csrfProtection } from './middlewares/csrf';
 import { errorHandler } from './middlewares/error-handler';
 import { notFound } from './middlewares/not-found';
+import { apiLimiter } from './middlewares/rate-limit';
 import { apiV1Router } from './routes';
 
 export function createApp() {
@@ -38,9 +40,20 @@ export function createApp() {
   // Better Auth va ANTES de express.json(): lee el cuerpo de la petición por su cuenta.
   app.all('/api/auth/*splat', normalizeClientIp, toNodeHandler(auth));
 
+  // Fotos de la carta: URLs inmutables (UUID nuevo en cada subida) → caché de 1 año; sin listados ni dotfiles.
+  app.use(
+    '/uploads',
+    express.static(env.UPLOADS_DIR, {
+      immutable: true,
+      maxAge: '1y',
+      index: false,
+      dotfiles: 'deny',
+    }),
+  );
+
   app.use(express.json({ limit: '100kb' }));
 
-  app.use('/api/v1', apiV1Router);
+  app.use('/api/v1', apiLimiter(env.RATE_LIMIT_API_PER_MIN), csrfProtection, apiV1Router);
 
   app.use(notFound);
   app.use(errorHandler);

@@ -32,7 +32,7 @@ Cada flujo de negocio tiene un test e2e del **camino feliz** y de los **errores 
 
 - Navegación e idioma (de/es, redirecciones) ✅ ya existe.
 - Reserva (M3): rellenar, validar, enviar, confirmación; fecha pasada, fuera de horario, campos vacíos.
-- Fase 3+: login admin, pedido para recoger, compra en tienda, gestión desde el panel.
+- Fase 3+: login admin ✅, panel de la carta ✅ (`admin-shell`, `admin-categories`, `admin-dishes`: navegación, crear/editar/ordenar/archivar/restaurar, foto, permisos del staff, axe), pedido para recoger, compra en tienda.
 - Sin errores en la consola del navegador durante el flujo.
 
 ### Estados de carga (skeleton loaders)
@@ -73,6 +73,9 @@ Por endpoint: caso feliz, validación (400), no encontrado (404), permisos (401/
 - `src/db/migrations.test.ts`: todas las migraciones se aplican, se deshacen (down) y se vuelven a aplicar; convención snake_case, `utf8mb4`, `DATETIME(3)` y claves foráneas en cascada.
 - Los **e2e levantan su propia API (3100) y web (5174)** contra `pachamama_test` (nunca reutilizan `npm run dev`) y cargan usuarios de prueba con `e2e:seed`.
 - En la CI, un contenedor MySQL 8.4 desechable (`TEST_DATABASE_URL`).
+- `e2e:seed` vacía también la carta: cada ejecución de e2e empieza limpia.
+- Carta (fase 5): reglas y permisos (`menu.rules.test.ts`, `menu.admin.test.ts`), fotos con sharp (`images.test.ts`: formatos, límites, EXIF, path traversal), carta pública y PDF (`public-menu*.test.ts`: ETag, idiomas, glifos), seed (`menu-seed.test.ts`).
+- En Windows con Node 24.15 había un cierre aleatorio de los workers por conexiones TCP (nodejs/node#62991): `src/test/supertest-keep-alive.ts` reutiliza conexiones. Usar Node ≥ 24.16.
 
 ### Frontend
 

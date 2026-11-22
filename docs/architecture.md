@@ -46,17 +46,17 @@ Navegador ──► apps/web (React + Vite, SPA)
 
 ### Módulos
 
-| Módulo          | Público                | Admin                                        |
-| --------------- | ---------------------- | -------------------------------------------- |
-| `opening-hours` | Ver horario y cierres  | Editar                                       |
-| `menu`          | Ver carta              | CRUD categorías y platos                     |
-| `news`          | Ver noticias/avisos    | CRUD                                         |
-| `reservations`  | Crear reserva          | Listar, confirmar, rechazar, cerrar          |
-| `food-orders`   | Crear pedido           | Listar y cambiar estado                      |
-| `shop`          | Ver productos, comprar | CRUD productos, stock, pedidos               |
-| `media`         | Ver galería            | Subir/borrar                                 |
-| `auth`          | — (login)              | Better Auth                                  |
-| `staff`         | —                      | Alta/baja de usuarios y roles (solo `admin`) |
+| Módulo          | Público                                    | Admin                                                                                                              |
+| --------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| `opening-hours` | Ver horario y cierres                      | Editar                                                                                                             |
+| `menu`          | Ver carta + PDF (de/es, `no-cache` + ETag) | Categorías y platos (archivar en vez de borrar), orden, fotos (`UPLOADS_DIR`, sharp → WebP sin metadatos), resumen |
+| `news`          | Ver noticias/avisos                        | CRUD                                                                                                               |
+| `reservations`  | Crear reserva                              | Listar, confirmar, rechazar, cerrar                                                                                |
+| `food-orders`   | Crear pedido                               | Listar y cambiar estado                                                                                            |
+| `shop`          | Ver productos, comprar                     | CRUD productos, stock, pedidos                                                                                     |
+| `media`         | Ver galería                                | Subir/borrar                                                                                                       |
+| `auth`          | — (login)                                  | Better Auth                                                                                                        |
+| `staff`         | —                                          | Alta/baja de usuarios y roles (solo `admin`)                                                                       |
 
 ## Autenticación (Better Auth)
 

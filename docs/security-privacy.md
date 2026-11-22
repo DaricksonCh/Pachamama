@@ -23,15 +23,17 @@ El sitio está dirigido a público de habla alemana y trata datos personales (no
 
 ## Autenticación del personal (fase 3)
 
-| Tema             | Medida                                                                                                            |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Alta de usuarios | Solo un admin (`npm run admin:create` o el panel). Sin registro público                                           |
-| Roles            | `admin` (gestiona usuarios, **sin** permiso de suplantar a otros) y `staff`. Rol desconocido o vacío → sin acceso |
-| Sesión           | 7 días, se renueva una vez al día con actividad; acciones sensibles exigen login de menos de 1 hora               |
-| Fuerza bruta     | 5 intentos de login por minuto e IP → 429. Contador en memoria (válido con un solo proceso de la API)             |
-| CSRF             | Comprobación de origen y Fetch Metadata de Better Auth, activas también en los tests                              |
-| Bloqueo          | Un usuario bloqueado pierde el acceso al momento, también con la sesión abierta                                   |
-| Caché            | Todas las respuestas de `/api` llevan `Cache-Control: no-store` (equipos compartidos del local)                   |
+| Tema                 | Medida                                                                                                                                                                                                                                                                                                                  |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Alta de usuarios     | Solo un admin (`npm run admin:create` o el panel). Sin registro público                                                                                                                                                                                                                                                 |
+| Roles                | `admin` (gestiona usuarios, **sin** permiso de suplantar a otros) y `staff`. Rol desconocido o vacío → sin acceso                                                                                                                                                                                                       |
+| Sesión               | 7 días, se renueva una vez al día con actividad; acciones sensibles exigen login de menos de 1 hora                                                                                                                                                                                                                     |
+| Fuerza bruta         | 5 intentos de login por minuto e IP → 429. Contador en memoria (válido con un solo proceso de la API)                                                                                                                                                                                                                   |
+| CSRF                 | Better Auth: comprobación de origen y Fetch Metadata. `/api/v1`: middleware `csrf` (Origin = `WEB_ORIGIN`, o `Sec-Fetch-Site: same-origin`; cuerpo solo JSON/multipart) en POST/PUT/PATCH/DELETE                                                                                                                        |
+| Bloqueo              | Un usuario bloqueado pierde el acceso al momento, también con la sesión abierta                                                                                                                                                                                                                                         |
+| Caché                | Todas las respuestas de `/api` llevan `Cache-Control: no-store` (equipos compartidos del local). Excepción: `/api/v1/menu` y `/api/v1/menu/pdf` (sin datos personales) usan `no-cache` + ETag                                                                                                                           |
+| Límite de peticiones | `/api/v1`: 300/min por IP; `PUT /admin/menu/dishes/:id/image`: 30 por 10 min; `GET /menu/pdf`: 30/min (429 `RATE_LIMITED`, cabeceras `RateLimit`). Configurable con `RATE_LIMIT_API_PER_MIN`, `RATE_LIMIT_IMAGE_PER_10MIN`, `RATE_LIMIT_PDF_PER_MIN`; contador en memoria (un solo proceso) y IP real vía `TRUST_PROXY` |
+| `/uploads`           | Fotos de la carta con `X-Content-Type-Options: nosniff`. En producción deben servirse **desde el mismo origen que la web** (nginx hace de proxy de `/uploads`): helmet pone `Cross-Origin-Resource-Policy: same-origin` y un origen distinto no podría cargarlas                                                        |
 
 ### Despliegue: IP real del cliente (obligatorio)
 

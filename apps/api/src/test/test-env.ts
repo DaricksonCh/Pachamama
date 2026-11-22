@@ -1,5 +1,6 @@
-import { existsSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { existsSync, mkdtempSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
 import { parseEnv } from 'node:util';
 
 /** Lanza si la base no es de tests. Es el seguro que impide vaciar la BD real. */
@@ -53,4 +54,14 @@ export function applyTestEnv() {
   process.env.BETTER_AUTH_URL = 'http://localhost:3000';
   process.env.WEB_ORIGIN = 'http://localhost:5173';
   process.env.TRUST_PROXY = 'loopback';
+  // Los tests y los e2e (escritorio + móvil desde una sola IP) no deben chocar con los límites.
+  for (const key of [
+    'RATE_LIMIT_API_PER_MIN',
+    'RATE_LIMIT_IMAGE_PER_10MIN',
+    'RATE_LIMIT_PDF_PER_MIN',
+  ]) {
+    process.env[key] ??= '100000';
+  }
+  // Cada proceso escribe sus fotos en un directorio temporal propio (nunca en el repo).
+  process.env.UPLOADS_DIR = mkdtempSync(join(tmpdir(), 'pachamama-uploads-'));
 }

@@ -1,5 +1,6 @@
 import type { Migration } from 'kysely/migration';
 import * as authTables from './2026_11_22_001_auth_tables';
+import * as menu from './2026_11_24_001_menu';
 
 /**
  * Registro explícito de migraciones (en orden). Se importan en lugar de leer la carpeta
@@ -8,4 +9,5 @@ import * as authTables from './2026_11_22_001_auth_tables';
  */
 export const migrations: Record<string, Migration> = {
   '2026_11_22_001_auth_tables': authTables,
+  '2026_11_24_001_menu': menu,
 };
