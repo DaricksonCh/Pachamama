@@ -113,6 +113,18 @@ describe('GET /api/v1/menu', () => {
     expect(json).not.toContain('Preis prüfen');
   });
 
+  it('omite las categorías visibles sin platos visibles', async () => {
+    const empty = await makeCategory({ nameDe: 'Fleisch', nameEs: 'Carnes' });
+    const onlyHidden = await makeCategory({ nameDe: 'Fisch', nameEs: 'Pescado' });
+    await makeDish(onlyHidden, { nameDe: 'Versteckt 2', nameEs: 'Oculto 2', status: 'hidden' });
+
+    const res = await request(app).get('/api/v1/menu');
+    const ids = res.body.data.categories.map((c: { id: number }) => c.id);
+    expect(ids).toEqual([visibleCat]);
+    expect(ids).not.toContain(empty);
+    expect(ids).not.toContain(onlyHidden);
+  });
+
   it('Cache-Control: no-cache + ETag; If-None-Match igual → 304', async () => {
     const res = await request(app).get('/api/v1/menu');
     expect(res.headers['cache-control']).toBe('no-cache');
