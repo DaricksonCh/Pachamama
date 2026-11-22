@@ -23,7 +23,7 @@ export type CreatedReservation = {
 
 type MailOptions = { notifyEmail: string; webOrigin: string };
 
-const addDays = (date: string, n: number) => {
+export const addDays = (date: string, n: number) => {
   const [y = 0, m = 1, d = 1] = date.split('-').map(Number);
   return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10);
 };

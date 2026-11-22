@@ -3,6 +3,7 @@ import {
   DECISION_STATUSES,
   RESERVATION_STATUSES,
   canTransition,
+  reservationStatusChangeSchema,
   type ReservationStatus,
 } from './reservation-status';
 
@@ -27,5 +28,22 @@ describe('canTransition', () => {
 
   it('exposes the decision statuses', () => {
     expect(DECISION_STATUSES).toEqual(['confirmed', 'rejected', 'cancelled']);
+  });
+});
+
+describe('reservationStatusChangeSchema', () => {
+  it('defaults notify to true and trims text', () => {
+    const r = reservationStatusChangeSchema.parse({ status: 'confirmed', message: '  hi  ' });
+    expect(r).toEqual({ status: 'confirmed', message: 'hi', notify: true });
+  });
+  it('rejects empty, oversized or unknown values', () => {
+    for (const bad of [
+      { status: 'nope' },
+      { status: 'confirmed', message: '   ' },
+      { status: 'confirmed', message: 'x'.repeat(2001) },
+      { status: 'confirmed', subject: 'x'.repeat(151) },
+    ]) {
+      expect(reservationStatusChangeSchema.safeParse(bad).success).toBe(false);
+    }
   });
 });
