@@ -66,6 +66,8 @@ export const envSchema = z
     MAIL_FROM: unsetIfEmpty(z.string().min(1).default('Pachamama <reservierung@localhost>')),
     /** Dirección del personal que recibe el aviso de cada solicitud de reserva. */
     RESERVATIONS_NOTIFY_EMAIL: unsetIfEmpty(z.string().min(1).default('reservierung@localhost')),
+    /** Días tras la fecha de la reserva antes de anonimizarla (DSGVO; lo aplica `npm run db:cleanup`). */
+    RESERVATIONS_RETENTION_DAYS: unsetIfEmpty(z.coerce.number().int().min(30).default(90)),
   })
   .superRefine((env, ctx) => {
     if (Boolean(env.SMTP_USER) !== Boolean(env.SMTP_PASS)) {

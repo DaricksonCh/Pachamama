@@ -17,6 +17,7 @@ const ready: PublishInput = {
   translations: ['Willkommen', 'Speisekarte'],
   dishes: [{ nameDe: 'Ceviche', isProvisional: false, imageKey: 'abc' }],
   imageExists: () => true,
+  reservations: { hoursConfirmed: true, notifyEmail: 'reservas@pachamama-bremen.de' },
 };
 
 describe('collectPublishIssues', () => {
@@ -52,6 +53,27 @@ describe('collectPublishIssues', () => {
       'Dish photos missing on disk (1): Tamal',
     ]);
   });
+});
+
+describe('collectPublishIssues: reservations', () => {
+  it('flags opening hours not yet saved from the admin panel', () => {
+    const issues = collectPublishIssues({
+      ...ready,
+      reservations: { ...ready.reservations, hoursConfirmed: false },
+    });
+    expect(issues).toEqual([expect.stringMatching(/opening hours.*\/admin/i)]);
+  });
+
+  it.each(['reservierung@localhost', 'info@example.com'])(
+    'flags the example notification address %s',
+    (notifyEmail) => {
+      const issues = collectPublishIssues({
+        ...ready,
+        reservations: { ...ready.reservations, notifyEmail },
+      });
+      expect(issues).toEqual([expect.stringMatching(/RESERVATIONS_NOTIFY_EMAIL/)]);
+    },
+  );
 });
 
 describe('flattenTranslations', () => {

@@ -17,6 +17,12 @@ export interface PublishInput {
   dishes: PublishDish[];
   /** Returns true when the photo files of an image key exist on disk. */
   imageExists: (key: string) => boolean;
+  reservations: {
+    /** `reservation_settings.hours_confirmed`: true once the hours were saved from /admin. */
+    hoursConfirmed: boolean;
+    /** `RESERVATIONS_NOTIFY_EMAIL`. */
+    notifyEmail: string;
+  };
 }
 
 const PLACEHOLDER_PATTERNS: [RegExp, string][] = [
@@ -55,6 +61,15 @@ export function collectPublishIssues(input: PublishInput): string[] {
     .map((d) => d.nameDe);
   if (missing.length > 0) {
     issues.push(`Dish photos missing on disk (${missing.length}): ${missing.join(', ')}`);
+  }
+
+  if (!input.reservations.hoursConfirmed) {
+    issues.push(
+      'Reservation opening hours are still the seeded ones: save the real hours in /admin',
+    );
+  }
+  if (/localhost|example/i.test(input.reservations.notifyEmail)) {
+    issues.push('RESERVATIONS_NOTIFY_EMAIL is still an example address');
   }
 
   return issues;

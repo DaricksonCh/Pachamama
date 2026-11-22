@@ -28,7 +28,17 @@ try {
     .where('menuCategories.status', '=', 'visible')
     .execute();
 
+  const settings = await db
+    .selectFrom('reservationSettings')
+    .select('hoursConfirmed')
+    .where('id', '=', 1)
+    .executeTakeFirst();
+
   const issues = collectPublishIssues({
+    reservations: {
+      hoursConfirmed: Boolean(settings?.hoursConfirmed),
+      notifyEmail: env.RESERVATIONS_NOTIFY_EMAIL,
+    },
     ...restaurantPublishInfo(),
     translations,
     dishes: dishes.map((d) => ({ ...d, isProvisional: Boolean(d.isProvisional) })),
