@@ -1,7 +1,12 @@
 import '@testing-library/jest-dom/vitest';
-import { cleanup } from '@testing-library/react';
+import { cleanup, configure } from '@testing-library/react';
 import { afterEach, vi } from 'vitest';
 import '../i18n';
+
+// findBy*/waitFor: 1 s por defecto se queda corto en el primer render de una página
+// cuando `npm run check:all` corre todas las suites en paralelo. Solo alarga la espera,
+// no cambia ninguna aserción.
+configure({ asyncUtilTimeout: 3000 });
 
 afterEach(() => {
   cleanup();
