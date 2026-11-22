@@ -2,7 +2,7 @@
 
 Datos que **faltan o son provisionales**. Aquí se van anotando a medida que aparecen; cuando el restaurante confirme un dato, se cambia en la web (o en el panel `/admin`) y se marca como hecho.
 
-Regla: **no se publica** la web con datos marcados como provisionales sin que el usuario lo apruebe (un test lo comprobará en la fase de publicación).
+Regla: **no se publica** la web con datos marcados como provisionales sin que el usuario lo apruebe. `npm run check:publish` lo comprueba (datos del restaurante y legales, teléfono/email de relleno, lorem ipsum, platos provisionales visibles y fotos que faltan en disco) y debe estar en verde antes de publicar (M4).
 
 Leyenda: ⏳ pendiente · ✅ confirmado
 
@@ -14,11 +14,18 @@ Leyenda: ⏳ pendiente · ✅ confirmado
 | Dirección | Am Gaswerk 1, 28197 Bremen                           | ✅     |
 | Teléfono  | PENDIENTE (en la web: `0421 000 000 0` de relleno)   | ⏳     |
 | Email     | PENDIENTE (en la web: `info@example.com` de relleno) | ⏳     |
+| Reservas  | Email que recibe las reservas: PENDIENTE             | ⏳     |
+| Dominio   | Se compra uno nuevo al publicar (el anterior caducó) | ⏳     |
 | Logo SVG  | Solo hay PNG de 600 px; falta el vectorial original  | ⏳     |
 
-> **Técnico (revisión de M1):** M2 debe añadir el e2e de «el skeleton no anima con `prefers-reduced-motion`» en la Carta, `<title>`/description por página y fotos de 1280 px para la quinua y la causa si existen originales mayores.
-> | Reservas | Email que recibe las reservas: PENDIENTE | ⏳ |
-> | Dominio | Se compra uno nuevo al publicar (el anterior caducó) | ⏳ |
+## Técnico antes de publicar
+
+| Tema                    | Situación                                                                                                                                                                                                                                | Estado |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| Fotos de platos         | 5 platos visibles apuntan a fotos que no están en `apps/api/uploads` (Tamal de Pollo, Causa veggie, Solterito, Empanadas, Jalea Mixta). Volver a subirlas desde el panel o recargar la carta con `--photos` en el servidor.              | ⏳     |
+| Mapa de Contacto        | `apps/web/public/images/map/kontakt-karte.webp`: 9 teselas de tile.openstreetmap.org (zoom 16, descarga única autorizada el 2026-11-22, coordenadas de Nominatim 53.07536, 8.78354), unidas en local. © OpenStreetMap-Mitwirkende, ODbL. | ✅     |
+| Logs del servidor (IPs) | Cuadrar la Datenschutzerklärung con la configuración real de nginx (qué se guarda y cuánto tiempo)                                                                                                                                       | ⏳     |
+| Fotos más grandes       | Causa y quinua solo tienen versión de 640 px (se ven algo blandas en pantallas retina)                                                                                                                                                   | ⏳     |
 
 ## Impressum (obligatorio en Alemania)
 
@@ -63,3 +70,10 @@ Dudas encontradas al pasar la carta a la base de datos (`npm run db:seed:menu`).
 | Alérgenos que faltan según la descripción | Leche de Tigre (apio → I), Ceviche entrante (apio, calamar, pulpo, mejillones → I, N), Arroz Chaufa (sésamo → K; el vegetariano lleva huevo → C), Ají de Gallina (huevo → C), Causa veggie y Huevo frito (huevo → C) | ⏳     |
 | Arroz Chaufa Vegano                       | Lleva salsa de ostión (N): no es vegano. Mientras tanto va SIN etiqueta vegana. ¿Se cambia la salsa (y se pone la etiqueta) o se renombra el plato?                                                                  | ⏳     |
 | Chicharrón de Calamar                     | En el PDF está en la página de sopas y ensaladas; se ha dejado ahí (se mueve desde el panel)                                                                                                                         | ⏳     |
+
+## Diseño y PDF (anotado por el usuario el 2026-11-22)
+
+| Tarea                          | Detalle                                                                                                                                                                                                                                                                                                                                                                   | Estado |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| PDF de la carta sin fotos      | No cargar las fotos de los platos en el PDF: rompen el diseño (se montan unas sobre otras) y suponen un gasto innecesario de generación y peso.                                                                                                                                                                                                                           | ⏳     |
+| Revisar diseño en dispositivos | Revisar la web en distintos dispositivos; el diseño actual no resulta muy agradable y puede cambiar. Idea de referencia: [muchosmas.eu/la-historia](https://www.muchosmas.eu/la-historia): bloques alternos en bucle (texto a la izquierda y foto a la derecha; debajo, foto a la izquierda y texto a la derecha), con texto principal (lorem por ahora) y foto de fondo. | ⏳     |
