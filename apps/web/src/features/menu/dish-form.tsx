@@ -128,7 +128,8 @@ function toDefaults(dish?: AdminDish, categoryId?: number): DishFormValues {
     nameEs: dish?.nameEs ?? '',
     descriptionDe: dish?.descriptionDe ?? '',
     descriptionEs: dish?.descriptionEs ?? '',
-    price: dish ? String(dish.price) : '',
+    // Con coma decimal, como se escribe en alemán y en español ("9,50").
+    price: dish ? dish.price.toFixed(2).replace('.', ',') : '',
     diet: dish?.diet ?? '',
     allergens: dish?.allergens ?? [],
     status: dish?.status === 'hidden' ? 'hidden' : 'visible',

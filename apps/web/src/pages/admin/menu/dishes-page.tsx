@@ -2,7 +2,7 @@ import type { AdminDish } from '@pachamama/shared';
 import { Eye, EyeOff, ImageOff } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,7 +19,7 @@ import { DishFilters } from '@/features/menu/dish-filters';
 import { LoadError, LoadingBlock } from '@/features/menu/load-states';
 import { ReorderButtons } from '@/features/menu/reorder-buttons';
 import { StatusBadge } from '@/features/menu/status-badge';
-import { useDishFilters } from '@/features/menu/use-dish-filters';
+import { type DishListState, useDishFilters } from '@/features/menu/use-dish-filters';
 import { useDishStatus } from '@/features/menu/use-dish-status';
 import { useReorderList } from '@/features/menu/use-reorder-list';
 
@@ -27,6 +27,7 @@ export function DishesPage() {
   const { t, i18n } = useTranslation();
   const { data: user } = useCurrentUser();
   const isAdmin = user?.role === 'admin';
+  const location = useLocation();
   const { filters, update, reset } = useDishFilters();
   const { data, isPending, isError, refetch } = useDishes(filters);
   const categories = useCategories();
@@ -48,6 +49,8 @@ export function DishesPage() {
     [es],
   );
   const hasFilters = Object.keys(filters).length > 0;
+  // La ficha vuelve al listado con los mismos filtros (ver DishFormPage).
+  const backState: DishListState = { listSearch: location.search };
 
   let content;
   if (isPending) {
@@ -119,6 +122,7 @@ export function DishesPage() {
                     <Button asChild variant="outline" size="sm">
                       <Link
                         to={`/admin/menu/dishes/${dish.id}`}
+                        state={backState}
                         aria-label={t(isAdmin ? 'admin.menu.editNamed' : 'admin.menu.viewNamed', {
                           name,
                         })}
@@ -204,6 +208,7 @@ export function DishesPage() {
                   ? `/admin/menu/dishes/new?categoryId=${filters.categoryId}`
                   : '/admin/menu/dishes/new'
               }
+              state={backState}
             >
               {t('admin.menu.dishes.new')}
             </Link>

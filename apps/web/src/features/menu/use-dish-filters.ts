@@ -5,6 +5,22 @@ import type { DishFilters } from './api';
 
 export type DishFilterKey = keyof DishFilters;
 
+/** Estado de navegación del listado a la ficha: los filtros (`?…`) para volver con ellos. */
+export interface DishListState {
+  listSearch: string;
+}
+
+/** Ruta del listado con los filtros que traía la navegación (si los hay y son válidos). */
+export function dishListPath(state: unknown) {
+  const search =
+    typeof state === 'object' && state !== null && 'listSearch' in state
+      ? state.listSearch
+      : undefined;
+  return typeof search === 'string' && search.startsWith('?')
+    ? `/admin/menu/dishes${search}`
+    : '/admin/menu/dishes';
+}
+
 /**
  * Filtros del listado de platos guardados en la URL (`?categoryId&status&q&provisional&withoutImage`):
  * se pueden enlazar (p. ej. desde el inicio del panel) y sobreviven a recargar la página.

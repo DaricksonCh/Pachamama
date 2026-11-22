@@ -301,6 +301,7 @@ describe('DishForm', () => {
       'src',
       '/uploads/a-400.webp',
     );
+    expect(screen.getByLabelText(/^Precio/)).toHaveValue('14,50');
     const altEs = screen.getByLabelText(/^Descripción de la foto \(español\)/);
     await userEvent.clear(altEs);
     await userEvent.type(altEs, 'Ceviche fresco');

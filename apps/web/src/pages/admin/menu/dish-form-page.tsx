@@ -2,13 +2,14 @@ import type { AdminDish } from '@pachamama/shared';
 import { Archive, ArrowLeft, RotateCcw } from 'lucide-react';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { useCurrentUser } from '@/features/auth/use-current-user';
 import { useCategories, useDish } from '@/features/menu/api';
 import { DishForm } from '@/features/menu/dish-form';
 import { LoadError, LoadingBlock } from '@/features/menu/load-states';
 import { StatusBadge } from '@/features/menu/status-badge';
+import { dishListPath } from '@/features/menu/use-dish-filters';
 import { useDishStatus } from '@/features/menu/use-dish-status';
 import { ApiError } from '@/lib/api';
 
@@ -19,6 +20,7 @@ export function DishFormPage() {
   const navigate = useNavigate();
   const params = useParams();
   const [search] = useSearchParams();
+  const location = useLocation();
   const { data: user } = useCurrentUser();
   const isNew = params.id === undefined;
   const id = isNew ? undefined : Number(params.id);
@@ -28,11 +30,17 @@ export function DishFormPage() {
   const defaultCategoryId = Number(search.get('categoryId')) || undefined;
 
   const readOnly = user?.role !== 'admin';
-  const goBack = useCallback(() => void navigate('/admin/menu/dishes'), [navigate]);
+  // Se vuelve al listado con los filtros que tenía (si se llegó desde él).
+  const listPath = dishListPath(location.state);
+  const goBack = useCallback(() => void navigate(listPath), [navigate, listPath]);
   // Alta con foto fallida: el plato ya existe, se sigue en su ficha para reintentar la foto.
   const editCreated = useCallback(
-    (created: AdminDish) => void navigate(`/admin/menu/dishes/${created.id}`, { replace: true }),
-    [navigate],
+    (created: AdminDish) =>
+      void navigate(`/admin/menu/dishes/${created.id}`, {
+        replace: true,
+        state: location.state as unknown,
+      }),
+    [navigate, location.state],
   );
   const nameOf = (d: AdminDish) => (i18n.language === 'es' ? d.nameEs : d.nameDe);
   const dishStatus = useDishStatus(nameOf, goBack);
@@ -112,7 +120,7 @@ export function DishFormPage() {
     <section className="space-y-6">
       <div className="space-y-2">
         <Link
-          to="/admin/menu/dishes"
+          to={listPath}
           className="inline-flex items-center gap-1 text-sm text-muted-foreground underline-offset-4 hover:underline"
         >
           <ArrowLeft className="size-4" aria-hidden="true" />

@@ -69,8 +69,9 @@ test.describe('panel /admin: platos de la carta', () => {
     await page.getByLabel(/^Bildbeschreibung \(Spanisch\)/).fill('Lomo saltado en el plato');
     await page.getByRole('button', { name: 'Speichern' }).click();
 
-    await expect(page).toHaveURL(/\/admin\/menu\/dishes$/);
-    await openList(page, name);
+    // Vuelve al listado con el mismo filtro de categoría.
+    await expect(page).toHaveURL(new RegExp(`/admin/menu/dishes\\?categoryId=${categoryId}$`));
+    await expect(row(page, name)).toBeVisible();
     const thumbnail = row(page, name).locator('img');
     await expect(thumbnail).toHaveAttribute('src', /^\/uploads\//);
     await expect
@@ -85,11 +86,16 @@ test.describe('panel /admin: platos de la carta', () => {
     const categoryId = await createCategory(page, uniqueName('Cat precio'));
     const id = await createDish(page, categoryId, name);
 
-    await page.goto(`/admin/menu/dishes/${id}`);
-    await expect(page.getByLabel(/^Preis/)).toHaveValue('9.5');
+    await openList(page, name);
+    await row(page, name)
+      .getByRole('link', { name: /bearbeiten/ })
+      .click();
+    await expect(page).toHaveURL(new RegExp(`/admin/menu/dishes/${id}$`));
+    await expect(page.getByLabel(/^Preis/)).toHaveValue('9,50');
     await page.getByLabel(/^Preis/).fill('12,90');
     await page.getByRole('button', { name: 'Speichern' }).click();
-    await expect(page).toHaveURL(/\/admin\/menu\/dishes$/);
+    await expect(page).toHaveURL(/\/admin\/menu\/dishes\?q=/);
+    await expect(row(page, name)).toContainText('12,90');
 
     const res = await page.request.get('/api/v1/menu');
     expect(res.ok()).toBe(true);
@@ -185,14 +191,16 @@ test.describe('panel /admin: platos de la carta', () => {
 
   test('avisa al salir con cambios sin guardar', async ({ page }) => {
     await signIn(page);
-    await page.goto('/admin/menu/dishes/new');
+    const categoryId = await createCategory(page, uniqueName('Cat salir'));
+    await page.goto(`/admin/menu/dishes?categoryId=${categoryId}`);
+    await page.getByRole('link', { name: 'Neues Gericht' }).click();
     await page.getByLabel(/^Name \(Deutsch\)/).fill('Algo');
 
     await page.getByRole('link', { name: 'Zurück zu den Gerichten' }).click();
     const dialog = page.getByRole('alertdialog');
     await expect(dialog).toContainText('Ungespeicherte Änderungen');
     await dialog.getByRole('button', { name: 'Weiter bearbeiten' }).click();
-    await expect(page).toHaveURL(/\/admin\/menu\/dishes\/new$/);
+    await expect(page).toHaveURL(/\/admin\/menu\/dishes\/new\?categoryId=\d+$/);
     await expect(page.getByLabel(/^Name \(Deutsch\)/)).toHaveValue('Algo');
 
     await page.getByRole('link', { name: 'Zurück zu den Gerichten' }).click();
@@ -200,7 +208,7 @@ test.describe('panel /admin: platos de la carta', () => {
       .getByRole('alertdialog')
       .getByRole('button', { name: 'Ohne Speichern verlassen' })
       .click();
-    await expect(page).toHaveURL(/\/admin\/menu\/dishes$/);
+    await expect(page).toHaveURL(new RegExp(`/admin/menu/dishes\\?categoryId=${categoryId}$`));
   });
 
   test('listado y formulario cumplen WCAG 2.2 AA (de y es)', async ({ page }) => {
