@@ -1,3 +1,4 @@
+import { dishInputSchema } from '@pachamama/shared';
 import request from 'supertest';
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { createApp } from '../../app';
@@ -154,7 +155,7 @@ describe('altas concurrentes', () => {
       isProvisional: false,
     });
     const created = await Promise.all(
-      Array.from({ length: 10 }, (_, n) => service.createDish(input(n))),
+      Array.from({ length: 10 }, (_, n) => service.createDish(dishInputSchema.parse(input(n)))),
     );
     expect(created).toHaveLength(10);
     expect(new Set(created.map((d) => d.sortOrder)).size).toBe(10);
