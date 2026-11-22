@@ -128,7 +128,7 @@ function CategoryNav({ categories, lang }: { categories: Category[]; lang: Langu
   return (
     <nav
       aria-label={t('menu.categoriesNav')}
-      className="sticky top-0 z-20 border-b border-tierra/15 bg-papel"
+      className="sticky top-(--site-header-h,0px) z-20 border-b border-tierra/15 bg-papel"
     >
       <ul className="mx-auto flex max-w-6xl gap-6 overflow-x-auto px-4 py-1 sm:px-6">
         {categories.map((category) => (

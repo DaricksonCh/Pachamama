@@ -110,6 +110,11 @@
     @apply border-border outline-ring/50;
   }
 
+  /* Anchor jumps and focus scrolling stop below the sticky site header (height set by SiteHeader). */
+  html {
+    scroll-padding-top: var(--site-header-h, 0px);
+  }
+
   body {
     @apply bg-background font-sans text-foreground antialiased;
   }

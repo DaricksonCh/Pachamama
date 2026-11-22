@@ -67,6 +67,30 @@ test.describe('public menu page', () => {
       .toBe(true);
   });
 
+  test('the site header stays fixed on scroll and the category bar sticks right below it', async ({
+    page,
+  }) => {
+    await seedMenu(page);
+    await page.goto('/de/speisekarte');
+    const header = page.getByRole('banner');
+    const nav = page.getByRole('navigation', { name: 'Kategorien der Speisekarte' });
+    await expect(nav).toBeVisible();
+
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+
+    await expect
+      .poll(async () => {
+        const headerBox = await header.boundingBox();
+        const navBox = await nav.boundingBox();
+        return {
+          headerTop: Math.round(headerBox!.y),
+          gap: Math.round(navBox!.y - (headerBox!.y + headerBox!.height)),
+        };
+      })
+      .toEqual({ headerTop: 0, gap: 0 });
+  });
+
   test('the PDF link points to the PDF of the current language', async ({ page }) => {
     await page.goto('/de/speisekarte');
     const de = page.getByRole('link', { name: /Speisekarte als PDF/ });

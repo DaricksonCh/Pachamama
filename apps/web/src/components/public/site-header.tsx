@@ -1,6 +1,6 @@
 import { publicPath, type PublicPage } from '@pachamama/shared';
 import { Menu } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink, useLocation } from 'react-router';
 import { LanguageSwitcher } from '@/components/language-switcher';
@@ -26,6 +26,22 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
   const [lastPath, setLastPath] = useState(pathname);
+  const headerRef = useRef<HTMLElement>(null);
+
+  // Publish the header height so other sticky elements (menu category bar) and anchor jumps sit below it.
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const root = document.documentElement;
+    const update = () => root.style.setProperty('--site-header-h', `${header.offsetHeight}px`);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(header);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty('--site-header-h');
+    };
+  }, []);
 
   // Close the mobile menu after any navigation (page links, language switch, logo).
   if (pathname !== lastPath) {
@@ -34,7 +50,7 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="bg-papel text-tierra">
+    <header ref={headerRef} className="sticky top-0 z-30 bg-papel text-tierra">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-selva focus:px-4 focus:py-2 focus:text-papel"
