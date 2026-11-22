@@ -180,7 +180,11 @@
       "open": "Abrir menú",
       "toggle": "Mostrar u ocultar el menú lateral",
       "mobileDescription": "Muestra el menú lateral en el móvil.",
-      "skipToContent": "Saltar al contenido"
+      "skipToContent": "Saltar al contenido",
+      "reservationsGroup": "Reservas",
+      "reservations": "Reservas",
+      "pending_one": "{{count}} pendiente",
+      "pending_other": "{{count}} pendientes"
     },
     "menu": {
       "categories": {
@@ -340,6 +344,134 @@
       "editNamed": "Editar {{name}}",
       "viewNamed": "Ver {{name}}",
       "restoreNamed": "Restaurar {{name}}"
+    },
+    "reservations": {
+      "title": "Reservas",
+      "date": "Fecha",
+      "prevDay": "Día anterior",
+      "nextDay": "Día siguiente",
+      "today": "Hoy",
+      "statusFilter": "Estado",
+      "allStatuses": "Todos los estados",
+      "empty": "No hay reservas para este día.",
+      "emptyFiltered": "No hay reservas con ese estado en este día.",
+      "emailFailed": "Error al enviar el correo",
+      "open": "Ver",
+      "openNamed": "Ver reserva de {{name}}",
+      "columns": {
+        "time": "Hora",
+        "name": "Nombre",
+        "party": "Personas",
+        "status": "Estado",
+        "actions": "Acciones"
+      },
+      "status": {
+        "pending": "Pendiente",
+        "confirmed": "Confirmada",
+        "rejected": "Rechazada",
+        "cancelled": "Cancelada",
+        "completed": "Completada",
+        "no_show": "No presentada"
+      },
+      "languages": {
+        "de": "alemán",
+        "es": "español"
+      },
+      "errors": {
+        "loadFailed": "No se pudieron cargar las reservas.",
+        "conflict": "La reserva ya había cambiado de estado. Se ha recargado.",
+        "saveFailed": "No se pudo guardar el cambio. Inténtalo de nuevo."
+      },
+      "actions": {
+        "confirmed": "Confirmar",
+        "rejected": "Rechazar",
+        "cancelled": "Cancelar reserva",
+        "completed": "Marcar como completada",
+        "no_show": "Marcar como no presentada"
+      },
+      "detail": {
+        "back": "Volver a la lista",
+        "title": "Reserva de {{name}}",
+        "notFound": "No se encontró la reserva.",
+        "when": "Fecha y hora",
+        "party": "Personas",
+        "phone": "Teléfono",
+        "email": "Correo",
+        "language": "Idioma del cliente",
+        "comment": "Comentario",
+        "noComment": "Sin comentario",
+        "actions": "Acciones"
+      },
+      "history": {
+        "title": "Historial",
+        "online": "Reserva online",
+        "created": "Solicitud recibida",
+        "change": "{{from}} → {{to}}",
+        "email": {
+          "sent": "Correo enviado",
+          "failed": "Correo fallido",
+          "skipped": "Sin correo"
+        }
+      },
+      "resend": {
+        "banner": "No se pudo enviar el correo",
+        "action": "Reenviar correo",
+        "sent": "Correo enviado.",
+        "failedAgain": "El correo sigue sin poder enviarse.",
+        "nothing": "No hay nada que reenviar.",
+        "failed": "No se pudo reenviar el correo."
+      },
+      "simple": {
+        "completed": {
+          "title": "Marcar como completada",
+          "description": "La reserva de {{name}} pasará a completada. No se envía ningún correo."
+        },
+        "no_show": {
+          "title": "Marcar como no presentada",
+          "description": "La reserva de {{name}} pasará a no presentada. No se envía ningún correo."
+        }
+      },
+      "decision": {
+        "description": "Reserva de {{name}}. El cliente recibirá un correo; puedes cambiar el texto o añadir algo antes de enviarlo.",
+        "loading": "Cargando el texto del correo …",
+        "previewFailed": "No se pudo cargar el texto predeterminado.",
+        "notify": "Enviar correo al cliente",
+        "language": "Idioma del cliente: {{language}}",
+        "subject": "Asunto",
+        "body": "Mensaje al cliente",
+        "counter": "{{count}} / {{max}}",
+        "remaining_one": "Queda {{count}} carácter",
+        "remaining_other": "Quedan {{count}} caracteres",
+        "restore": "Restaurar texto predeterminado",
+        "required": "El asunto y el mensaje no pueden estar vacíos.",
+        "preview": "Vista previa del correo",
+        "noEmail": "No se enviará ningún correo al cliente.",
+        "cancel": "Cancelar",
+        "saved": "Cambio guardado.",
+        "savedSent": "Cambio guardado y correo enviado.",
+        "savedEmailFailed": "Cambio guardado, pero no se pudo enviar el correo.",
+        "discard": {
+          "title": "Cambios sin guardar",
+          "description": "Has editado el texto del correo. Si cierras, se perderán los cambios.",
+          "stay": "Seguir editando",
+          "confirm": "Descartar cambios"
+        },
+        "confirmed": {
+          "title": "Confirmar reserva",
+          "submit": "Enviar y confirmar",
+          "submitNoMail": "Confirmar sin correo"
+        },
+        "rejected": {
+          "title": "Rechazar reserva",
+          "submit": "Enviar y rechazar",
+          "submitNoMail": "Rechazar sin correo"
+        },
+        "cancelled": {
+          "title": "Cancelar reserva",
+          "submit": "Enviar y cancelar",
+          "submitNoMail": "Cancelar sin correo"
+        }
+      }
     }
   },
   "validation": {

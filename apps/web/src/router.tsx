@@ -8,6 +8,8 @@ import { CategoriesPage } from '@/pages/admin/menu/categories-page';
 import { CategoryFormPage } from '@/pages/admin/menu/category-form-page';
 import { DishFormPage } from '@/pages/admin/menu/dish-form-page';
 import { DishesPage } from '@/pages/admin/menu/dishes-page';
+import { ReservationDetailPage } from '@/pages/admin/reservations/reservation-detail-page';
+import { ReservationsPage } from '@/pages/admin/reservations/reservations-page';
 import { HomePage } from '@/pages/home-page';
 import { PublicPageRoute } from '@/pages/public-page-route';
 
@@ -26,6 +28,8 @@ export const routes: RouteObject[] = [
       { path: 'menu/dishes', element: <DishesPage /> },
       { path: 'menu/dishes/new', element: <DishFormPage /> },
       { path: 'menu/dishes/:id', element: <DishFormPage /> },
+      { path: 'reservations', element: <ReservationsPage /> },
+      { path: 'reservations/:id', element: <ReservationDetailPage /> },
     ],
   },
   {

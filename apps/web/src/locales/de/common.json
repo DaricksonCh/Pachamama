@@ -180,7 +180,11 @@
       "open": "Menü öffnen",
       "toggle": "Seitenmenü ein-/ausklappen",
       "mobileDescription": "Zeigt das Seitenmenü auf dem Handy.",
-      "skipToContent": "Zum Inhalt springen"
+      "skipToContent": "Zum Inhalt springen",
+      "reservationsGroup": "Reservierungen",
+      "reservations": "Reservierungen",
+      "pending_one": "{{count}} offen",
+      "pending_other": "{{count}} offen"
     },
     "menu": {
       "categories": {
@@ -340,6 +344,134 @@
       "editNamed": "{{name}} bearbeiten",
       "viewNamed": "{{name}} ansehen",
       "restoreNamed": "{{name}} wiederherstellen"
+    },
+    "reservations": {
+      "title": "Reservierungen",
+      "date": "Datum",
+      "prevDay": "Vorheriger Tag",
+      "nextDay": "Nächster Tag",
+      "today": "Heute",
+      "statusFilter": "Status",
+      "allStatuses": "Alle Status",
+      "empty": "Für diesen Tag gibt es keine Reservierungen.",
+      "emptyFiltered": "Für diesen Tag gibt es keine Reservierungen mit diesem Status.",
+      "emailFailed": "E-Mail konnte nicht gesendet werden",
+      "open": "Ansehen",
+      "openNamed": "Reservierung von {{name}} ansehen",
+      "columns": {
+        "time": "Uhrzeit",
+        "name": "Name",
+        "party": "Personen",
+        "status": "Status",
+        "actions": "Aktionen"
+      },
+      "status": {
+        "pending": "Offen",
+        "confirmed": "Bestätigt",
+        "rejected": "Abgelehnt",
+        "cancelled": "Storniert",
+        "completed": "Abgeschlossen",
+        "no_show": "Nicht erschienen"
+      },
+      "languages": {
+        "de": "Deutsch",
+        "es": "Spanisch"
+      },
+      "errors": {
+        "loadFailed": "Die Reservierungen konnten nicht geladen werden.",
+        "conflict": "Der Status der Reservierung hatte sich bereits geändert. Sie wurde neu geladen.",
+        "saveFailed": "Die Änderung konnte nicht gespeichert werden. Bitte erneut versuchen."
+      },
+      "actions": {
+        "confirmed": "Bestätigen",
+        "rejected": "Ablehnen",
+        "cancelled": "Reservierung stornieren",
+        "completed": "Als abgeschlossen markieren",
+        "no_show": "Als nicht erschienen markieren"
+      },
+      "detail": {
+        "back": "Zurück zur Liste",
+        "title": "Reservierung von {{name}}",
+        "notFound": "Reservierung nicht gefunden.",
+        "when": "Datum und Uhrzeit",
+        "party": "Personen",
+        "phone": "Telefon",
+        "email": "E-Mail",
+        "language": "Sprache des Gastes",
+        "comment": "Kommentar",
+        "noComment": "Kein Kommentar",
+        "actions": "Aktionen"
+      },
+      "history": {
+        "title": "Verlauf",
+        "online": "Online-Reservierung",
+        "created": "Anfrage eingegangen",
+        "change": "{{from}} → {{to}}",
+        "email": {
+          "sent": "E-Mail gesendet",
+          "failed": "E-Mail fehlgeschlagen",
+          "skipped": "Ohne E-Mail"
+        }
+      },
+      "resend": {
+        "banner": "Die E-Mail konnte nicht gesendet werden",
+        "action": "E-Mail erneut senden",
+        "sent": "E-Mail gesendet.",
+        "failedAgain": "Die E-Mail konnte weiterhin nicht gesendet werden.",
+        "nothing": "Es gibt nichts erneut zu senden.",
+        "failed": "Die E-Mail konnte nicht erneut gesendet werden."
+      },
+      "simple": {
+        "completed": {
+          "title": "Als abgeschlossen markieren",
+          "description": "Die Reservierung von {{name}} wird als abgeschlossen markiert. Es wird keine E-Mail gesendet."
+        },
+        "no_show": {
+          "title": "Als nicht erschienen markieren",
+          "description": "Die Reservierung von {{name}} wird als nicht erschienen markiert. Es wird keine E-Mail gesendet."
+        }
+      },
+      "decision": {
+        "description": "Reservierung von {{name}}. Der Gast erhält eine E-Mail; Sie können den Text vor dem Senden ändern oder ergänzen.",
+        "loading": "E-Mail-Text wird geladen …",
+        "previewFailed": "Der Standardtext konnte nicht geladen werden.",
+        "notify": "E-Mail an den Gast senden",
+        "language": "Sprache des Gastes: {{language}}",
+        "subject": "Betreff",
+        "body": "Nachricht an den Gast",
+        "counter": "{{count}} / {{max}}",
+        "remaining_one": "Noch {{count}} Zeichen",
+        "remaining_other": "Noch {{count}} Zeichen",
+        "restore": "Standardtext wiederherstellen",
+        "required": "Betreff und Nachricht dürfen nicht leer sein.",
+        "preview": "Vorschau der E-Mail",
+        "noEmail": "Es wird keine E-Mail an den Gast gesendet.",
+        "cancel": "Abbrechen",
+        "saved": "Änderung gespeichert.",
+        "savedSent": "Änderung gespeichert und E-Mail gesendet.",
+        "savedEmailFailed": "Änderung gespeichert, aber die E-Mail konnte nicht gesendet werden.",
+        "discard": {
+          "title": "Ungespeicherte Änderungen",
+          "description": "Sie haben den E-Mail-Text bearbeitet. Wenn Sie schließen, gehen die Änderungen verloren.",
+          "stay": "Weiter bearbeiten",
+          "confirm": "Änderungen verwerfen"
+        },
+        "confirmed": {
+          "title": "Reservierung bestätigen",
+          "submit": "Senden und bestätigen",
+          "submitNoMail": "Ohne E-Mail bestätigen"
+        },
+        "rejected": {
+          "title": "Reservierung ablehnen",
+          "submit": "Senden und ablehnen",
+          "submitNoMail": "Ohne E-Mail ablehnen"
+        },
+        "cancelled": {
+          "title": "Reservierung stornieren",
+          "submit": "Senden und stornieren",
+          "submitNoMail": "Ohne E-Mail stornieren"
+        }
+      }
     }
   },
   "validation": {
