@@ -162,5 +162,7 @@ describe('migraciones', () => {
     const e = await columns('reservation_events');
     expect(e.email_status?.type).toBe("enum('sent','failed','skipped')");
     expect(e.email_status?.nullable).toBe('YES');
+    expect(e.subject?.type).toBe('varchar(150)');
+    expect(e.subject?.nullable).toBe('YES');
   });
 });

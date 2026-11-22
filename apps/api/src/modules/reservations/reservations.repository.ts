@@ -27,6 +27,7 @@ export type NewEvent = {
   toStatus: ReservationStatus;
   actorId: string;
   message: string | null;
+  subject: string | null;
   emailStatus: EmailStatus | null;
 };
 
@@ -70,6 +71,19 @@ export function createReservationTx(trx: Transaction<Database>) {
         .select(['subject', 'body'])
         .where('kind', '=', kind)
         .where('lang', '=', lang)
+        .executeTakeFirst();
+    },
+
+    /** Newest event that moved to a decision status and carries a message. */
+    async latestDecisionEvent(reservationId: number) {
+      return trx
+        .selectFrom('reservationEvents')
+        .select(['toStatus', 'message', 'subject'])
+        .where('reservationId', '=', reservationId)
+        .where('toStatus', 'in', [...DECISION_STATUSES])
+        .where('message', 'is not', null)
+        .orderBy('id', 'desc')
+        .limit(1)
         .executeTakeFirst();
     },
 
@@ -183,27 +197,6 @@ export function createReservationsRepository(db: Kysely<Database>) {
         .orderBy('e.createdAt')
         .orderBy('e.id')
         .execute();
-    },
-
-    /** Newest event that moved to a decision status and carries a message. */
-    async latestDecisionEvent(reservationId: number) {
-      return db
-        .selectFrom('reservationEvents')
-        .select(['toStatus', 'message'])
-        .where('reservationId', '=', reservationId)
-        .where('toStatus', 'in', [...DECISION_STATUSES])
-        .where('message', 'is not', null)
-        .orderBy('id', 'desc')
-        .limit(1)
-        .executeTakeFirst();
-    },
-
-    async insertEvent(e: NewEvent): Promise<number> {
-      const { insertId } = await db
-        .insertInto('reservationEvents')
-        .values(e)
-        .executeTakeFirstOrThrow();
-      return Number(insertId);
     },
 
     transaction<T>(fn: (tx: ReservationTx) => Promise<T>): Promise<T> {

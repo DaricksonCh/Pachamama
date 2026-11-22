@@ -171,6 +171,8 @@ export interface ReservationEventsTable {
   toStatus: ReservationStatus;
   actorId: string | null;
   message: string | null;
+  /** Asunto enviado (null en eventos sin correo de decisión o anteriores a este campo). */
+  subject: string | null;
   emailStatus: 'sent' | 'failed' | 'skipped' | null;
   createdAt: DefaultDate;
 }

@@ -309,3 +309,121 @@ describe('POST /:id/resend-email', () => {
     expect((await resend(999999)).status).toBe(404);
   });
 });
+
+describe('fix round: subject storage, validation, fallbacks', () => {
+  it('edited subject and body survive an SMTP failure and are reused by resend', async () => {
+    const id = await seed();
+    testMailer.failNext();
+    await patchStatus(id, {
+      status: 'confirmed',
+      subject: 'Asunto editado',
+      message: 'Cuerpo editado',
+    });
+    const [ev] = await events(id);
+    expect(ev).toMatchObject({
+      subject: 'Asunto editado',
+      message: 'Cuerpo editado',
+      emailStatus: 'failed',
+    });
+    expect((await resend(id)).body.data.emailStatus).toBe('sent');
+    expect(testMailer.sent[0]?.subject).toBe('Asunto editado');
+    expect(testMailer.sent[0]?.text).toContain('Cuerpo editado');
+  });
+
+  it('resend of an old event without subject falls back to the template subject', async () => {
+    const id = await seed({ status: 'confirmed' });
+    await db
+      .insertInto('reservationEvents')
+      .values({
+        reservationId: id,
+        fromStatus: 'pending',
+        toStatus: 'confirmed',
+        message: 'Viejo',
+        emailStatus: 'failed',
+      })
+      .execute();
+    expect((await resend(id)).status).toBe(200);
+    expect(testMailer.sent[0]?.subject).toBe(await templateSubject('confirmed', 'es'));
+  });
+
+  it('cancelled is a decision: mail in the customer language', async () => {
+    const id = await seed({ lang: 'de', status: 'confirmed' });
+    const res = await patchStatus(id, { status: 'cancelled' });
+    expect(res.body.data.emailStatus).toBe('sent');
+    expect(testMailer.sent).toHaveLength(1);
+    const de = await db
+      .selectFrom('reservationMessageTemplates')
+      .select('subject')
+      .where('kind', '=', 'cancelled')
+      .where('lang', '=', 'de')
+      .executeTakeFirstOrThrow();
+    expect(testMailer.sent[0]?.subject).toBe(de.subject.replace('{name}', 'Ana Pérez'));
+  });
+
+  it('message without subject → template subject; subject without message → template body', async () => {
+    const a = await seed();
+    await patchStatus(a, { status: 'confirmed', message: 'Solo texto' });
+    expect(testMailer.sent[0]?.subject).toBe(await templateSubject('confirmed', 'es'));
+    expect(testMailer.sent[0]?.text).toContain('Solo texto');
+    const b = await seed();
+    await patchStatus(b, { status: 'confirmed', subject: 'Solo asunto' });
+    expect(testMailer.sent[1]?.subject).toBe('Solo asunto');
+    expect(testMailer.sent[1]?.text).toContain('Ana Pérez');
+  });
+
+  it('message or subject with notify=false → 400', async () => {
+    const id = await seed();
+    expect(
+      (await patchStatus(id, { status: 'confirmed', notify: false, message: 'x' })).status,
+    ).toBe(400);
+    expect(
+      (await patchStatus(id, { status: 'confirmed', notify: false, subject: 'x' })).status,
+    ).toBe(400);
+  });
+
+  describe('missing template', () => {
+    const removeTemplate = () =>
+      db
+        .deleteFrom('reservationMessageTemplates')
+        .where('kind', '=', 'confirmed')
+        .where('lang', '=', 'es')
+        .execute();
+    const saveTemplate = async () =>
+      db
+        .selectFrom('reservationMessageTemplates')
+        .selectAll()
+        .where('kind', '=', 'confirmed')
+        .where('lang', '=', 'es')
+        .executeTakeFirstOrThrow();
+
+    it('subject and message supplied → sent; only message → fixed fallback subject', async () => {
+      const saved = await saveTemplate();
+      await removeTemplate();
+      try {
+        const a = await seed();
+        expect(
+          (await patchStatus(a, { status: 'confirmed', subject: 'S', message: 'M' })).body.data
+            .emailStatus,
+        ).toBe('sent');
+        expect(testMailer.sent[0]?.subject).toBe('S');
+        const b = await seed();
+        await patchStatus(b, { status: 'confirmed', message: 'M2' });
+        expect(testMailer.sent[1]?.subject).toBe('Su reserva en Pachamama');
+        const c = await seed();
+        const res = await patchStatus(c, { status: 'confirmed' });
+        expect(res.body.data.emailStatus).toBe('failed');
+      } finally {
+        await db.insertInto('reservationMessageTemplates').values(saved).execute();
+      }
+    });
+  });
+
+  it('nothing is mailed on 404 or 409', async () => {
+    const id = await seed();
+    await patchStatus(999999, { status: 'confirmed' });
+    await patchStatus(id, { status: 'completed' });
+    await resend(999999);
+    await resend(id);
+    expect(testMailer.sent).toHaveLength(0);
+  });
+});

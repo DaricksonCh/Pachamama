@@ -44,50 +44,39 @@ function variables(r: Row) {
   return { name: r.name, date, time, party: r.partySize };
 }
 
+const FALLBACK_SUBJECT = {
+  de: 'Ihre Reservierung im Pachamama',
+  es: 'Su reserva en Pachamama',
+} as const;
+
+type DecisionKind = MessageTemplateKind & ReservationStatus;
+
 export function createAdminReservationsService(repo: ReservationsRepository, mailer: Mailer) {
-  /** Sends the decision mail to the guest. Never throws; returns the delivery result. */
-  async function deliver(
-    r: Row,
-    kind: MessageTemplateKind & ReservationStatus,
-    subject: string | undefined,
-    body: string | null,
-  ): Promise<EmailStatus> {
+  /** Sends the (already final) decision mail to the guest. Never throws. */
+  async function deliver(r: Row, kind: DecisionKind, subject: string, body: string) {
     try {
-      let finalSubject = subject;
-      let finalBody = body;
-      if (finalSubject === undefined || finalBody === null) {
-        const template = await repo.getTemplate(kind, r.lang);
-        if (!template) {
-          logger.warn(
-            { reservationId: r.id, kind: 'missing-template', lang: r.lang },
-            'Template missing',
-          );
-          return 'failed';
-        }
-        finalSubject ??= renderTemplate(template.subject, variables(r));
-        finalBody ??= renderTemplate(template.body, variables(r));
-      }
       const mail = buildDecisionEmail({
         kind,
         lang: r.lang,
-        subject: finalSubject,
-        body: finalBody,
+        subject,
+        body,
         reservation: { startsAt: r.startsAt, partySize: r.partySize, name: r.name },
       });
       await mailer.send({ to: r.email, ...mail });
-      return 'sent';
+      return 'sent' as const;
     } catch (err) {
       logger.warn(
         { code: safeErrorCode(err), reservationId: r.id, kind: 'decision-email' },
         'Reservation email failed',
       );
-      return 'failed';
+      return 'failed' as const;
     }
   }
 
-  async function recordEmailStatus(reservationId: number, eventId: number, status: EmailStatus) {
+  /** The event was stored as 'failed' before sending; flip it once delivery worked. */
+  async function markSent(reservationId: number, eventId: number) {
     try {
-      await repo.setEventEmailStatus(eventId, status);
+      await repo.setEventEmailStatus(eventId, 'sent');
     } catch (err) {
       logger.warn(
         { code: safeErrorCode(err), reservationId, kind: 'email-status' },
@@ -138,27 +127,35 @@ export function createAdminReservationsService(repo: ReservationsRepository, mai
       const { status, message, subject } = input;
       const notify = input.notify ?? true;
       const decision = isDecision(status);
-      if (!decision && (message !== undefined || subject !== undefined)) {
+      if ((!decision || !notify) && (message !== undefined || subject !== undefined)) {
         throw new AppError(400, 'VALIDATION_ERROR', 'Invalid input', {
           message: ['validation.notDecision'],
         });
       }
       const send = decision && notify;
 
-      const { row, eventId, sentBody } = await withDeadlockRetry(() =>
+      const result = await withDeadlockRetry(() =>
         repo.transaction(async (tx) => {
           const locked = await tx.lockById(id);
           if (!locked) throw notFound();
           if (!canTransition(locked.status as ReservationStatus, status)) {
             throw new AppError(409, 'INVALID_TRANSITION', 'Status change not allowed');
           }
-          let body: string | null = null;
+          // Staff text is final (the preview already filled the variables); else the template.
+          let finalSubject: string | null = null;
+          let finalBody: string | null = null;
           if (send) {
-            // Staff text is final (the preview already filled the variables); else the template.
-            body = message ?? null;
-            if (body === null) {
-              const template = await tx.getTemplate(status as MessageTemplateKind, locked.lang);
-              body = template ? renderTemplate(template.body, variables(locked)) : null;
+            finalSubject = subject ?? null;
+            finalBody = message ?? null;
+            if (finalSubject === null || finalBody === null) {
+              const template = await tx.getTemplate(status, locked.lang);
+              const vars = variables(locked);
+              finalSubject ??= template
+                ? renderTemplate(template.subject, vars)
+                : message !== undefined
+                  ? FALLBACK_SUBJECT[locked.lang]
+                  : null;
+              finalBody ??= template ? renderTemplate(template.body, vars) : null;
             }
           }
           await tx.applyStatus(id, status, decision ? actorId : null);
@@ -167,52 +164,67 @@ export function createAdminReservationsService(repo: ReservationsRepository, mai
             fromStatus: locked.status as ReservationStatus,
             toStatus: status,
             actorId,
-            message: body,
-            emailStatus: decision && !notify ? 'skipped' : null,
+            message: finalBody,
+            subject: finalSubject,
+            // Pessimistic: a crash before the mail leaves 'failed', never null.
+            emailStatus: send ? 'failed' : decision ? 'skipped' : null,
           });
-          return { row: { ...locked, status } as Row, eventId, sentBody: body };
+          return { row: { ...locked, status } as Row, eventId, finalSubject, finalBody };
         }),
       );
 
       let emailStatus: EmailStatus | null = decision && !notify ? 'skipped' : null;
       if (send) {
-        emailStatus = await deliver(
-          row,
-          status as MessageTemplateKind & ReservationStatus,
-          subject,
-          sentBody,
-        );
-        await recordEmailStatus(id, eventId, emailStatus);
+        const { finalSubject, finalBody } = result;
+        emailStatus =
+          finalSubject !== null && finalBody !== null
+            ? await deliver(result.row, status, finalSubject, finalBody)
+            : 'failed';
+        if (emailStatus === 'sent') await markSent(id, result.eventId);
+        else logger.warn({ reservationId: id, kind: 'decision-email' }, 'Decision email not sent');
       }
-      const fresh = (await repo.getById(id)) ?? row;
+      const fresh = (await repo.getById(id)) ?? result.row;
       return { reservation: present(fresh), emailStatus };
     },
 
     async resendEmail(id: number, actorId: string) {
-      const row = await repo.getById(id);
-      if (!row) throw notFound();
-      const last = await repo.latestDecisionEvent(id);
-      if (!last || last.message === null || last.toStatus !== row.status) {
-        throw new AppError(409, 'NOTHING_TO_RESEND', 'No decision email to resend');
-      }
-      const status = row.status as MessageTemplateKind & ReservationStatus;
-      const emailStatus = await deliver(row, status, undefined, last.message);
-      try {
-        await repo.insertEvent({
-          reservationId: id,
-          fromStatus: status,
-          toStatus: status,
-          actorId,
-          message: null,
-          emailStatus,
-        });
-      } catch (err) {
-        logger.warn(
-          { code: safeErrorCode(err), reservationId: id, kind: 'email-status' },
-          'Could not record email status',
-        );
-      }
-      return { reservation: present(row), emailStatus };
+      const prepared = await withDeadlockRetry(() =>
+        repo.transaction(async (tx) => {
+          const row = await tx.lockById(id);
+          if (!row) throw notFound();
+          const last = await tx.latestDecisionEvent(id);
+          if (!last || last.message === null || last.toStatus !== row.status) {
+            throw new AppError(409, 'NOTHING_TO_RESEND', 'No decision email to resend');
+          }
+          const status = row.status as DecisionKind;
+          // Old events (before the subject column) fall back to the template subject.
+          let subject = last.subject;
+          if (subject === null) {
+            const template = await tx.getTemplate(status, row.lang);
+            subject = template
+              ? renderTemplate(template.subject, variables(row))
+              : FALLBACK_SUBJECT[row.lang];
+          }
+          const eventId = await tx.insertEvent({
+            reservationId: id,
+            fromStatus: status,
+            toStatus: status,
+            actorId,
+            message: null,
+            subject: null,
+            emailStatus: 'failed',
+          });
+          return { row, status, subject, message: last.message, eventId };
+        }),
+      );
+      const emailStatus = await deliver(
+        prepared.row,
+        prepared.status,
+        prepared.subject,
+        prepared.message,
+      );
+      if (emailStatus === 'sent') await markSent(id, prepared.eventId);
+      return { reservation: present(prepared.row), emailStatus };
     },
   };
 }
