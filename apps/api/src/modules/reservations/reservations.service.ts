@@ -28,7 +28,18 @@ const addDays = (date: string, n: number) => {
   return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10);
 };
 
-const errMessage = (err: unknown) => (err instanceof Error ? err.message : 'unknown');
+/** Safe to log: error code or class name only. Never the message (may quote an email address). */
+export function safeErrorCode(err: unknown): string {
+  if (typeof err === 'object' && err !== null) {
+    const { code, responseCode } = err as { code?: unknown; responseCode?: unknown };
+    if (typeof code === 'string' || typeof code === 'number') return String(code);
+    if (typeof responseCode === 'string' || typeof responseCode === 'number') {
+      return String(responseCode);
+    }
+    if (err.constructor?.name) return err.constructor.name;
+  }
+  return 'UNKNOWN';
+}
 
 export function createReservationsService(
   repo: ReservationsRepository,
@@ -81,10 +92,18 @@ export function createReservationsService(
         });
         await mailer.send({ to: reservation.email, ...mail });
         customerStatus = 'sent';
+      } else {
+        logger.warn(
+          { reservationId: id, kind: 'missing-template', lang },
+          'Received template missing',
+        );
       }
     } catch (err) {
       customerStatus = 'failed';
-      logger.warn({ err: errMessage(err), reservationId: id }, 'Customer reservation email failed');
+      logger.warn(
+        { code: safeErrorCode(err), reservationId: id, kind: 'customer-email' },
+        'Reservation email failed',
+      );
     }
     try {
       const mail = buildStaffNotification(
@@ -101,7 +120,10 @@ export function createReservationsService(
       );
       await mailer.send({ to: notifyEmail, ...mail });
     } catch (err) {
-      logger.warn({ err: errMessage(err), reservationId: id }, 'Staff reservation notice failed');
+      logger.warn(
+        { code: safeErrorCode(err), reservationId: id, kind: 'staff-notice' },
+        'Reservation email failed',
+      );
     }
     return customerStatus;
   }
@@ -158,7 +180,10 @@ export function createReservationsService(
       try {
         await repo.setEventEmailStatus(eventId, emailStatus);
       } catch (err) {
-        logger.warn({ err: errMessage(err), reservationId: id }, 'Could not record email status');
+        logger.warn(
+          { code: safeErrorCode(err), reservationId: id, kind: 'email-status' },
+          'Could not record email status',
+        );
       }
       return {
         publicId,

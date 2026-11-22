@@ -44,18 +44,22 @@ export function createSmtpMailer(config: SmtpConfig): Mailer {
 }
 
 /** In-memory mailer for tests. */
-export function createMemoryMailer(): Mailer & { sent: MailMessage[]; failNext(): void } {
-  let fail = false;
+export function createMemoryMailer(): Mailer & {
+  sent: MailMessage[];
+  failNext(error?: Error): void;
+} {
+  let fail: Error | null = null;
   const sent: MailMessage[] = [];
   return {
     sent,
-    failNext() {
-      fail = true;
+    failNext(error) {
+      fail = error ?? new Error('Simulated mail failure');
     },
     async send(msg) {
       if (fail) {
-        fail = false;
-        throw new Error('Simulated mail failure');
+        const error = fail;
+        fail = null;
+        throw error;
       }
       sent.push(msg);
     },

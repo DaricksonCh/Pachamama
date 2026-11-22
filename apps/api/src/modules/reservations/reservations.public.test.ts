@@ -1,8 +1,10 @@
 import { toRestaurantLocal, toUtc } from '@pachamama/shared';
+import { inspect } from 'node:util';
 import request from 'supertest';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createApp } from '../../app';
 import { db } from '../../db/database';
+import { logger } from '../../lib/logger';
 import { testMailer } from '../../lib/mail';
 import { ORIGIN } from '../../test/auth-helpers';
 import {
@@ -19,13 +21,18 @@ const addDays = (date: string, n: number) => {
   const [y = 0, m = 1, d = 1] = date.split('-').map(Number);
   return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10);
 };
-/** A date 7+ days ahead that is not a Monday (the seeded closing day). */
-function openDate() {
-  let date = addDays(toRestaurantLocal(new Date()).date, 7);
-  if (new Date(`${date}T00:00:00Z`).getUTCDay() === 1) date = addDays(date, 1);
-  return date;
+/** First date 7+ days ahead whose availability endpoint reports at least one free slot. */
+async function openDate() {
+  const start = addDays(toRestaurantLocal(new Date()).date, 7);
+  for (let i = 0; i < 30; i++) {
+    const date = addDays(start, i);
+    const res = await request(app).get(`${BASE}/availability?date=${date}&party=2`);
+    const slots = (res.body.data?.slots ?? []) as { available: boolean }[];
+    if (slots.some((s) => s.available)) return date;
+  }
+  throw new Error('No open date found for tests');
 }
-const DATE = openDate();
+const DATE = await openDate();
 const SLOT = '19:00';
 
 const body = (over: Record<string, unknown> = {}) => ({
@@ -175,6 +182,21 @@ describe('POST /reservations', () => {
     const event = await db.selectFrom('reservationEvents').selectAll().executeTakeFirstOrThrow();
     expect(event.emailStatus).toBe('failed');
     expect(testMailer.sent).toHaveLength(1); // the staff notice still goes out
+  });
+
+  it('mail failure logs never include personal data (DSGVO)', async () => {
+    const spies = (['warn', 'error', 'info'] as const).map((l) => vi.spyOn(logger, l));
+    testMailer.failNext(new Error('Recipient address rejected: <ana@example.com>'));
+    const res = await post(body());
+    expect(res.status).toBe(201);
+    // Only the service's own log calls (pino-http request logs are serialized elsewhere).
+    const calls = spies
+      .flatMap((s) => s.mock.calls)
+      .filter(([obj]) => typeof obj === 'object' && obj !== null && 'reservationId' in obj);
+    expect(calls.length).toBeGreaterThan(0);
+    expect(inspect(calls, { depth: 8 })).not.toContain('ana@example.com');
+    expect(inspect(calls, { depth: 8 })).not.toContain('Ana');
+    spies.forEach((s) => s.mockRestore());
   });
 
   it('honeypot filled → fake 201, nothing saved, nothing sent', async () => {
