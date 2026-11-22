@@ -1,3 +1,4 @@
+import { switchLanguage } from './language-helpers';
 import { expect, test } from '@playwright/test';
 
 const TITLE_DE = 'Peruanische Küche mitten in Bremen';
@@ -16,17 +17,20 @@ test.describe('flujo de usuario: idioma y navegación', () => {
     await page.goto('/de');
     if (isMobile) await page.getByRole('button', { name: 'Menü öffnen' }).click();
 
-    await page.getByRole('link', { name: 'Español' }).click();
+    await switchLanguage(page, 'Español');
     await expect(page).toHaveURL(/\/es$/);
     await expect(page.locator('html')).toHaveAttribute('lang', 'es');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(TITLE_ES);
 
     if (isMobile) await page.getByRole('button', { name: 'Abrir menú' }).click();
-    await expect(page.getByRole('link', { name: 'Español' })).toHaveAttribute(
+    const trigger = page.getByRole('button', { name: 'Idioma: ES' }).filter({ visible: true });
+    await expect(trigger.locator('[data-flag="es"]')).toBeVisible();
+    await trigger.click();
+    await expect(page.getByRole('menuitem', { name: 'Español' })).toHaveAttribute(
       'aria-current',
       'true',
     );
-    await page.getByRole('link', { name: 'Deutsch' }).click();
+    await page.getByRole('menuitem', { name: 'Deutsch' }).click();
     await expect(page).toHaveURL(/\/de$/);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(TITLE_DE);
   });
@@ -35,13 +39,17 @@ test.describe('flujo de usuario: idioma y navegación', () => {
     test.skip(isMobile, 'Navegación con teclado: solo escritorio');
     await page.goto('/de');
 
-    // Tabular hasta el enlace "Español" (tras el salto al contenido, logo y menú) y activarlo.
-    for (let i = 0; i < 10; i++) {
+    // Tabular hasta el selector de idioma (tras el salto al contenido, logo, menú e Instagram).
+    const trigger = page.getByRole('button', { name: 'Sprache: DE' });
+    for (let i = 0; i < 12; i++) {
       await page.keyboard.press('Tab');
-      const focused = await page.evaluate(() => document.activeElement?.textContent);
-      if (focused === 'Español') break;
+      if (await trigger.evaluate((el) => el === document.activeElement)) break;
     }
-    await expect(page.getByRole('link', { name: 'Español' })).toBeFocused();
+    await expect(trigger).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page.getByRole('menuitem', { name: 'Deutsch' })).toBeVisible();
+    await page.keyboard.press('ArrowDown');
+    await expect(page.getByRole('menuitem', { name: 'Español' })).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(page).toHaveURL(/\/es$/);
   });

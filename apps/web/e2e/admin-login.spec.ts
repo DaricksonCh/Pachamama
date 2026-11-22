@@ -1,3 +1,4 @@
+import { switchLanguage } from './language-helpers';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, type Page, test } from '@playwright/test';
 import { E2E_ADMIN, E2E_STAFF } from './fixtures';
@@ -70,7 +71,7 @@ test.describe('panel /admin: login y acceso', () => {
 
   test('el panel se puede usar en español y recuerda el idioma', async ({ page }) => {
     await page.goto('/admin/login');
-    await page.getByRole('button', { name: 'Español' }).click();
+    await switchLanguage(page, 'Español');
 
     await expect(page.locator('html')).toHaveAttribute('lang', 'es');
     await expect(page.getByRole('heading', { name: 'Iniciar sesión' })).toBeVisible();

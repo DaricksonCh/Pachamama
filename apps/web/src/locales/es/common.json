@@ -108,6 +108,10 @@
     "de": "Deutsch",
     "es": "Español"
   },
+  "social": {
+    "instagram": "Pachamama en Instagram",
+    "newTab": "(se abre en una pestaña nueva)"
+  },
   "admin": {
     "title": "Administración",
     "loading": "Cargando …",

@@ -1,11 +1,13 @@
-import { SUPPORTED_LANGUAGES } from '@pachamama/shared';
+import { isSupportedLanguage, type Language } from '@pachamama/shared';
 import { useTranslation } from 'react-i18next';
+import { LanguageMenu } from '@/components/language-menu';
 import { STORAGE_KEY } from './use-admin-language';
 
 export function AdminLanguageSwitcher() {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
+  const current = isSupportedLanguage(i18n.language) ? i18n.language : 'de';
 
-  const select = (lang: string) => {
+  const select = (lang: Language) => {
     void i18n.changeLanguage(lang);
     try {
       localStorage.setItem(STORAGE_KEY, lang);
@@ -15,19 +17,6 @@ export function AdminLanguageSwitcher() {
   };
 
   return (
-    <nav aria-label={t('language.label')} className="flex gap-2 text-sm">
-      {SUPPORTED_LANGUAGES.map((lang) => (
-        <button
-          key={lang}
-          type="button"
-          lang={lang}
-          aria-pressed={i18n.language === lang}
-          onClick={() => select(lang)}
-          className="rounded px-1.5 py-0.5 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring aria-pressed:font-semibold"
-        >
-          {t(`language.${lang}`)}
-        </button>
-      ))}
-    </nav>
+    <LanguageMenu current={current} targetFor={(lang) => ({ onSelect: () => select(lang) })} />
   );
 }

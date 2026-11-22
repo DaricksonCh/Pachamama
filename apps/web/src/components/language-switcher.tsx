@@ -1,33 +1,28 @@
-import {
-  SUPPORTED_LANGUAGES,
-  isSupportedLanguage,
-  pageFromSlug,
-  publicPath,
-} from '@pachamama/shared';
+import { isSupportedLanguage, pageFromSlug, publicPath } from '@pachamama/shared';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router';
-import { cn } from '@/lib/utils';
+import { useLocation } from 'react-router';
+import { LanguageMenu } from './language-menu';
 
-/** Links to the same page in the other languages (falls back to the home page). */
-export function LanguageSwitcher({ className }: { className?: string }) {
-  const { t, i18n } = useTranslation();
+/** Language dropdown that links to the same page in the other language (falls back to home). */
+export function LanguageSwitcher({
+  className,
+  align,
+}: {
+  className?: string;
+  align?: 'start' | 'end';
+}) {
+  const { i18n } = useTranslation();
   const { pathname, hash } = useLocation();
   const [, currentLang = '', slug = ''] = pathname.split('/');
   const page = isSupportedLanguage(currentLang) ? pageFromSlug(slug, currentLang) : undefined;
+  const current = isSupportedLanguage(i18n.language) ? i18n.language : 'de';
 
   return (
-    <nav aria-label={t('language.label')} className={cn('flex gap-3 text-sm', className)}>
-      {SUPPORTED_LANGUAGES.map((lang) => (
-        <Link
-          key={lang}
-          to={`${publicPath(page ?? 'home', lang)}${page ? hash : ''}`}
-          lang={lang}
-          aria-current={i18n.language === lang ? 'true' : undefined}
-          className="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 aria-[current=true]:font-semibold"
-        >
-          {t(`language.${lang}`)}
-        </Link>
-      ))}
-    </nav>
+    <LanguageMenu
+      current={current}
+      className={className}
+      align={align}
+      targetFor={(lang) => ({ href: `${publicPath(page ?? 'home', lang)}${page ? hash : ''}` })}
+    />
   );
 }

@@ -1,3 +1,4 @@
+import { switchLanguage } from './language-helpers';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { test as base, expect, type Page } from '@playwright/test';
@@ -224,7 +225,7 @@ test.describe('panel /admin: platos de la carta', () => {
     await openList(page, name);
     expect(await axeViolations(page)).toEqual([]);
 
-    await page.getByRole('button', { name: 'Español' }).click();
+    await switchLanguage(page, 'Español');
     await expect(page.getByRole('heading', { name: 'Platos' })).toBeVisible();
     expect(await axeViolations(page)).toEqual([]);
 
