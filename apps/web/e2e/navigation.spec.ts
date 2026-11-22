@@ -94,7 +94,16 @@ test.describe('flujo de usuario: idioma y navegación', () => {
     await page.goto('/es');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(TITLE_ES);
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await page.waitForLoadState('networkidle');
+    await expect
+      .poll(() =>
+        page.evaluate(() =>
+          [...document.images]
+            // Lazy images below the fold are not requested yet, only the visible ones matter.
+            .filter((img) => img.getBoundingClientRect().top < window.innerHeight)
+            .every((img) => img.complete && img.naturalWidth > 0),
+        ),
+      )
+      .toBe(true);
 
     expect(errors).toEqual([]);
     expect(external).toEqual([]);

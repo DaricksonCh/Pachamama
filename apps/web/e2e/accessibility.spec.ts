@@ -16,6 +16,42 @@ for (const lang of ['de', 'es'] as const) {
   });
 }
 
+for (const path of ['/de/speisekarte', '/es/carta']) {
+  test(`${path} no tiene infracciones de accesibilidad WCAG 2.2 AA`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(path);
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    // Esperar a los datos (o al estado vacío): sin el skeleton de carga.
+    await expect(page.getByTestId('menu-loading')).toHaveCount(0);
+
+    const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
+
+    expect(results.violations.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+  });
+}
+
+for (const path of [
+  '/de/geschichte',
+  '/es/historia',
+  '/de/kontakt',
+  '/es/contacto',
+  '/de/impressum',
+  '/es/aviso-legal',
+  '/de/datenschutz',
+  '/es/privacidad',
+]) {
+  test(`${path} no tiene infracciones de accesibilidad WCAG 2.2 AA`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(path);
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    await page.waitForLoadState('networkidle');
+
+    const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
+
+    expect(results.violations.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+  });
+}
+
 test('el menú móvil abierto también es accesible', async ({ page, isMobile }) => {
   test.skip(!isMobile, 'Menú hamburguesa: solo móvil');
   await page.emulateMedia({ reducedMotion: 'reduce' });

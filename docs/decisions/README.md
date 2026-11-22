@@ -18,3 +18,4 @@ Cada decisión técnica importante se registra aquí: qué se decidió, por qué
 | 0008 | [Componentes de interfaz: shadcn/ui](0008-shadcn-ui.md)              | Aceptada |
 | 0009 | [PDF de la carta y fotos de los platos](0009-menu-pdf-and-images.md) | Aceptada |
 | 0010 | [Sistema de diseño de la web pública](0010-public-design-system.md)  | Aceptada |
+| 0011 | [Mapa de Contacto sin terceros](0011-map-without-third-parties.md)   | Aceptada |

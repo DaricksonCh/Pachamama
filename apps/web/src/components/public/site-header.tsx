@@ -1,4 +1,4 @@
-import { publicPath, type Language, type PublicPage } from '@pachamama/shared';
+import { publicPath, type PublicPage } from '@pachamama/shared';
 import { Menu } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/sheet';
 import { ReserveButton } from './reserve-button';
 import { WovenStripe } from './woven-stripe';
+import { useLang } from './use-lang';
 
 const NAV_PAGES = ['menu', 'story', 'contact'] as const satisfies readonly PublicPage[];
 
@@ -20,8 +21,8 @@ const navLinkClass =
   'rounded-sm px-1 py-2 underline-offset-[6px] decoration-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 aria-[current=page]:underline aria-[current=page]:decoration-maiz';
 
 export function SiteHeader() {
-  const { t, i18n } = useTranslation();
-  const lang = i18n.language as Language;
+  const { t } = useTranslation();
+  const lang = useLang();
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
   const [lastPath, setLastPath] = useState(pathname);

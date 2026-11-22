@@ -2,13 +2,13 @@ import {
   RESERVATIONS_MODE,
   RESTAURANT_INFO,
   publicPath,
-  type Language,
   type ReservationsMode,
 } from '@pachamama/shared';
 import { Phone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { cn } from '@/lib/utils';
+import { useLang } from './use-lang';
 
 type Tone = 'onDark' | 'onLight';
 
@@ -35,8 +35,8 @@ export function ReserveButton({
   className,
   mode = RESERVATIONS_MODE,
 }: ReserveButtonProps) {
-  const { t, i18n } = useTranslation();
-  const lang = i18n.language as Language;
+  const { t } = useTranslation();
+  const lang = useLang();
   const classes = cn(
     'inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 py-2.5 font-semibold transition-colors focus-visible:outline-2',
     toneClasses[tone],

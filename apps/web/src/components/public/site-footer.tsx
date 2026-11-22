@@ -1,14 +1,16 @@
-import { RESTAURANT_INFO, publicPath, type Language } from '@pachamama/shared';
+import { RESTAURANT_INFO, publicPath } from '@pachamama/shared';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import { ProvisionalMark } from './provisional-mark';
+import { useLang } from './use-lang';
 import { WovenStripe } from './woven-stripe';
 
 const footerLink =
   'rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maiz';
 
 export function SiteFooter() {
-  const { t, i18n } = useTranslation();
-  const lang = i18n.language as Language;
+  const { t } = useTranslation();
+  const lang = useLang();
   const { address, phone, email, openingHours } = RESTAURANT_INFO;
 
   return (
@@ -35,11 +37,13 @@ export function SiteFooter() {
             <a href={`tel:${phone.e164}`} className={footerLink}>
               {phone.display}
             </a>
+            <ProvisionalMark />
           </p>
           <p>
             <a href={`mailto:${email}`} className={footerLink}>
               {email}
             </a>
+            <ProvisionalMark />
           </p>
         </div>
       </div>

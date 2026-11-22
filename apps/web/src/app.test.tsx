@@ -48,6 +48,29 @@ describe('home page', () => {
     expect(router.state.location.pathname).toBe('/es');
   });
 
+  it.each([
+    ['/de/speisekarte', 'Speisekarte'],
+    ['/es/carta', 'Carta'],
+    ['/de/geschichte', 'Unsere Geschichte'],
+    ['/es/contacto', 'Contacto y cómo llegar'],
+    ['/de/impressum', 'Impressum'],
+    ['/es/privacidad', 'Política de privacidad'],
+  ])('routes %s to its page with a localized title', async (path, title) => {
+    renderAt(path);
+
+    expect(await screen.findByRole('heading', { level: 1, name: title })).toBeInTheDocument();
+    expect(document.title).toBe(`${title} – Pachamama`);
+  });
+
+  it('sends a slug from the other language to the home page', async () => {
+    const router = renderAt('/es/speisekarte');
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Cocina peruana en pleno Bremen' }),
+    ).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe('/es');
+  });
+
   it('links imprint and privacy from the footer', async () => {
     renderAt('/de');
 
