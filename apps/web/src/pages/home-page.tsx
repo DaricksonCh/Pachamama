@@ -1,6 +1,7 @@
 import { RESTAURANT_INFO, publicPath } from '@pachamama/shared';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import { KitchenSection } from '@/components/public/kitchen-section';
 import { Photo } from '@/components/public/photo';
 import { ProvisionalMark } from '@/components/public/provisional-mark';
 import { ReserveButton } from '@/components/public/reserve-button';
@@ -49,73 +50,33 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* From our kitchen: three dishes in an uneven, editorial arrangement. */}
+      {/* Story teaser */}
       <section
-        aria-labelledby="kitchen-title"
+        aria-labelledby="story-title"
         className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24"
       >
-        <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-          <h2
-            id="kitchen-title"
-            className="font-display text-4xl font-medium tracking-tight text-selva md:text-5xl"
-          >
-            {t('home.kitchen.title')}
-          </h2>
-          <Link to={publicPath('menu', lang)} className={textLinkClass}>
-            {t('home.kitchen.link')}
-          </Link>
+        <div className="grid items-center gap-10 md:grid-cols-[1fr_1.3fr]">
+          <Photo
+            photo="cocinera"
+            alt={t('home.photos.cocinera')}
+            sizes="(min-width: 768px) 40vw, 100vw"
+            className="aspect-[4/5] rounded-md md:max-w-sm"
+          />
+          <div className="max-w-prose space-y-5">
+            <h2
+              id="story-title"
+              className="font-display text-4xl font-medium tracking-tight text-selva"
+            >
+              {t('home.story.title')}
+            </h2>
+            <p className="text-lg leading-relaxed">{t('home.story.text')}</p>
+            <Link to={publicPath('story', lang)} className={textLinkClass}>
+              {t('home.story.link')}
+            </Link>
+          </div>
         </div>
-        <ul className="grid gap-x-6 gap-y-10 md:grid-cols-12">
-          <li className="md:col-span-7">
-            <figure>
-              <Photo
-                photo="causa"
-                alt=""
-                sizes="(min-width: 768px) 55vw, 100vw"
-                className="aspect-[16/10] rounded-md object-[50%_85%]"
-              />
-              <figcaption className="mt-3">
-                <span className="font-display text-2xl text-selva">
-                  {t('home.kitchen.causaName')}
-                </span>
-                <span className="block text-muted-foreground">{t('home.kitchen.causa')}</span>
-              </figcaption>
-            </figure>
-          </li>
-          <li className="md:col-span-5 md:mt-24">
-            <figure>
-              <Photo
-                photo="quinua"
-                alt=""
-                sizes="(min-width: 768px) 40vw, 100vw"
-                className="aspect-[4/5] rounded-md"
-              />
-              <figcaption className="mt-3">
-                <span className="font-display text-2xl text-selva">
-                  {t('home.kitchen.quinuaName')}
-                </span>
-                <span className="block text-muted-foreground">{t('home.kitchen.quinua')}</span>
-              </figcaption>
-            </figure>
-          </li>
-          <li className="md:col-span-6 md:col-start-3 md:-mt-10">
-            <figure>
-              <Photo
-                photo="tamal"
-                alt=""
-                sizes="(min-width: 768px) 50vw, 100vw"
-                className="aspect-[2/1] rounded-md object-[60%_85%]"
-              />
-              <figcaption className="mt-3">
-                <span className="font-display text-2xl text-selva">
-                  {t('home.kitchen.tamalName')}
-                </span>
-                <span className="block text-muted-foreground">{t('home.kitchen.tamal')}</span>
-              </figcaption>
-            </figure>
-          </li>
-        </ul>
       </section>
+      <KitchenSection />
 
       {/* Visit us: address, hours and the reserve action next to the dining room. */}
       <section aria-labelledby="visit-title" className="bg-secondary">
@@ -154,33 +115,6 @@ export function HomePage() {
                 {t('home.visit.link')}
               </Link>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Story teaser */}
-      <section
-        aria-labelledby="story-title"
-        className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24"
-      >
-        <div className="grid items-center gap-10 md:grid-cols-[1fr_1.3fr]">
-          <Photo
-            photo="cocinera"
-            alt={t('home.photos.cocinera')}
-            sizes="(min-width: 768px) 40vw, 100vw"
-            className="aspect-[4/5] rounded-md md:max-w-sm"
-          />
-          <div className="max-w-prose space-y-5">
-            <h2
-              id="story-title"
-              className="font-display text-4xl font-medium tracking-tight text-selva"
-            >
-              {t('home.story.title')}
-            </h2>
-            <p className="text-lg leading-relaxed">{t('home.story.text')}</p>
-            <Link to={publicPath('story', lang)} className={textLinkClass}>
-              {t('home.story.link')}
-            </Link>
           </div>
         </div>
       </section>

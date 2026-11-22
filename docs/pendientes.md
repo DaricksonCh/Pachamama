@@ -26,6 +26,8 @@ Leyenda: ⏳ pendiente · ✅ confirmado
 | Mapa de Contacto        | `apps/web/public/images/map/kontakt-karte.webp`: 9 teselas de tile.openstreetmap.org (zoom 16, descarga única autorizada el 2026-11-22, coordenadas de Nominatim 53.07536, 8.78354), unidas en local. © OpenStreetMap-Mitwirkende, ODbL. | ✅     |
 | Logs del servidor (IPs) | Cuadrar la Datenschutzerklärung con la configuración real de nginx (qué se guarda y cuánto tiempo)                                                                                                                                       | ⏳     |
 | Fotos más grandes       | Causa y quinua solo tienen versión de 640 px (se ven algo blandas en pantallas retina)                                                                                                                                                   | ⏳     |
+| Fotos de la portada     | «Aus unserer Küche» (Ceviche Clásico, Lomo Saltado, Causa Limeña): ceviche y lomo usan un recorte provisional de `mesa-surtida`. Sustituir por fotos profesionales en `kitchen-section.tsx` cuando lleguen.                              | ⏳     |
+| Precios de la portada   | Los 3 platos de la portada toman el precio de la carta buscando su nombre en alemán. Si se renombra uno en `/admin`, su tarjeta sale sin precio: actualizar `FEATURED` en `kitchen-section.tsx`.                                         | ⏳     |
 
 ## Impressum (obligatorio en Alemania)
 

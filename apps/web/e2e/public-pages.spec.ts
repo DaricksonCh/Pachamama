@@ -129,3 +129,18 @@ test.describe('páginas legales: Impressum y Datenschutz', () => {
     });
   }
 });
+
+test('la portada muestra las secciones en orden: historia, cocina y visita', async ({ page }) => {
+  await page.goto('/de');
+  const titles = page.locator('main h2');
+  await expect(titles).toHaveText([
+    'Pachamama heißt Mutter Erde',
+    'Aus unserer Küche',
+    'Besuchen Sie uns',
+  ]);
+  await expect(page.getByRole('heading', { level: 3 })).toHaveText([
+    'Ceviche Clásico',
+    'Lomo Saltado',
+    'Causa Limeña',
+  ]);
+});
