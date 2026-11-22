@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { env } from '../../config/env';
 import { db } from '../../db/database';
+import { imageUploadLimiter } from '../../middlewares/rate-limit';
 import { requireAuth, requireRole } from '../../middlewares/require-auth';
 import { createMenuController } from './menu.controller';
 import { createDiskImageStorage } from './images/image-storage';
@@ -37,5 +38,11 @@ adminMenuRouter.put('/dishes/order', adminOnly, c.reorderDishes);
 adminMenuRouter.get('/dishes/:id', any, c.getDish);
 // staff puede llamar, pero el service limita lo que puede cambiar (solo visible/hidden).
 adminMenuRouter.patch('/dishes/:id', any, c.updateDish);
-adminMenuRouter.put('/dishes/:id/image', adminOnly, imageUpload, c.setDishImage);
+adminMenuRouter.put(
+  '/dishes/:id/image',
+  imageUploadLimiter(env.RATE_LIMIT_IMAGE_PER_10MIN),
+  adminOnly,
+  imageUpload,
+  c.setDishImage,
+);
 adminMenuRouter.delete('/dishes/:id/image', adminOnly, c.removeDishImage);

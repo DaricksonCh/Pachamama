@@ -1,6 +1,7 @@
 import { DEFAULT_LANGUAGE, isSupportedLanguage, type Language } from '@pachamama/shared';
 import { type Request, type Response, Router } from 'express';
 import { env } from '../../config/env';
+import { pdfLimiter } from '../../middlewares/rate-limit';
 import { menuEvents } from './menu-events';
 import { menuService } from './menu.routes';
 import type { MenuService } from './menu.service';
@@ -32,7 +33,7 @@ export function createPublicMenuRouter(service: MenuService, pdfCache: PdfCache)
     res.json({ data: await service.publicMenu() });
   });
 
-  router.get('/pdf', async (req, res) => {
+  router.get('/pdf', pdfLimiter(env.RATE_LIMIT_PDF_PER_MIN), async (req, res) => {
     const lang: Language = isSupportedLanguage(req.query.lang) ? req.query.lang : DEFAULT_LANGUAGE;
     if (notModified(req, res, `"${pdfCache.version}-${lang}"`)) return;
     const pdf = await pdfCache.get(lang);

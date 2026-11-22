@@ -2,6 +2,8 @@
 
 Base: `/api/v1` (negocio) y `/api/auth` (Better Auth). Respuestas de error siempre con el formato `{ "error": { "code", "message", "details?" } }`.
 
+**Límite de peticiones** (por IP, 429 `RATE_LIMITED`, cabeceras `RateLimit`/`RateLimit-Policy`): `/api/v1` 300/min; `PUT /api/v1/admin/menu/dishes/:id/image` 30 por 10 min; `GET /api/v1/menu/pdf` 30/min. Configurable por entorno (`RATE_LIMIT_*`, ver `.env.example`).
+
 ## Autenticación (`/api/auth`, Better Auth)
 
 Solo para el personal del restaurante. **No hay registro público**: los usuarios los crea un admin (`npm run admin:create` o, más adelante, el panel).
