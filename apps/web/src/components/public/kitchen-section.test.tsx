@@ -70,6 +70,10 @@ describe('home kitchen section', () => {
     expect(within(card('lomo')).getByText('21,00 €')).toBeInTheDocument();
     // Causa is not in this menu: its card stays, without a price.
     expect(within(card('causa')).queryByText(/€/)).not.toBeInTheDocument();
+    // Each card opens the menu; its link is named after the dish.
+    for (const name of ['Ceviche Clásico', 'Lomo Saltado', 'Causa Limeña']) {
+      expect(screen.getByRole('link', { name })).toHaveAttribute('href', '/de/speisekarte');
+    }
     expect(screen.getByRole('link', { name: 'Zur ganzen Speisekarte' })).toHaveAttribute(
       'href',
       '/de/speisekarte',

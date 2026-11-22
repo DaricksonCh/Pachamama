@@ -69,19 +69,32 @@ export function KitchenSection() {
           {FEATURED.map(({ key, menuName, photo, crop }) => {
             const price = findPrice(menu, menuName);
             return (
-              <li key={key} data-testid={`kitchen-dish-${key}`}>
+              // The whole card is clickable (stretched link from the heading), so the pointer cursor
+              // and the photo zoom on hover/focus point at a real action: opening the menu.
+              <li
+                key={key}
+                data-testid={`kitchen-dish-${key}`}
+                className="group relative rounded-md has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-8 has-[a:focus-visible]:outline-maiz"
+              >
                 <article>
                   <div className="aspect-[3/2] overflow-hidden rounded-md bg-tierra md:aspect-[4/5]">
-                    <Photo
-                      photo={photo}
-                      alt=""
-                      sizes="(min-width: 768px) 30vw, 100vw"
-                      className={crop}
-                    />
+                    <div className="h-full w-full motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:group-focus-within:scale-[1.04] motion-safe:group-hover:scale-[1.04]">
+                      <Photo
+                        photo={photo}
+                        alt=""
+                        sizes="(min-width: 768px) 30vw, 100vw"
+                        className={crop}
+                      />
+                    </div>
                   </div>
                   <div className="mt-4 flex items-baseline justify-between gap-3">
                     <h3 className="font-display text-2xl font-medium md:text-[1.75rem]">
-                      {t(`home.kitchen.dishes.${key}.name`)}
+                      <Link
+                        to={publicPath('menu', lang)}
+                        className="decoration-maiz decoration-2 underline-offset-[6px] group-hover:underline after:absolute after:inset-0 after:content-[''] focus-visible:outline-none"
+                      >
+                        {t(`home.kitchen.dishes.${key}.name`)}
+                      </Link>
                     </h3>
                     {price !== undefined && (
                       <p className="shrink-0 font-semibold text-maiz tabular-nums">
