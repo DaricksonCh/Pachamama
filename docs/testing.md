@@ -43,7 +43,8 @@ Toda vista que cargue datos prueba sus **cuatro estados**: cargando, con datos, 
 - Se respeta `prefers-reduced-motion` (sin animación).
 - Error: mensaje comprensible y traducido, nunca un error técnico.
 - Datos inválidos de la API: se rechazan (Zod) y se muestra el estado de error.
-- En e2e, la latencia se simula con `page.route()` (ver `e2e/loading-states.spec.ts`).
+- En e2e, la latencia se simula con `page.route()` (ejemplo en `e2e/admin-login.spec.ts`; la Carta pública de M2 tendrá los suyos).
+- Web pública: cada página nueva entra en `e2e/accessibility.spec.ts` (axe, de y es) y `e2e/navigation.spec.ts` comprueba que no hay peticiones a dominios externos.
 
 ### Seguridad de formularios
 

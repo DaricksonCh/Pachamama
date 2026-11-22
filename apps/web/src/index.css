@@ -1,36 +1,43 @@
 @import 'tailwindcss';
+@import '@fontsource-variable/fraunces/opsz.css';
+@import '@fontsource-variable/work-sans/index.css';
 
 /*
- * Tokens de diseño PROVISIONALES (paleta del logo). El diseño definitivo aún no existe:
- * cuando se defina (frontend-design + referencias, o Figma), se reemplazan aquí.
- * Los tokens `--background`, `--primary`… los usa shadcn/ui; `brand-*` sigue disponible.
+ * Design tokens (M1, ADR 0010). Brand palette from the logo and the Andean textile in the photos:
+ *   selva  #2f4a2b  logo green: hero, footer, primary buttons
+ *   maiz   #e3b23c  alternate logo mustard: main CTA, focus on dark surfaces
+ *   papel  #f7f5ee  reading background
+ *   tierra #1f2a1d  text
+ *   aji    #c8402a  / chicha #6b2d5c: only inside the woven stripe and tiny details
+ * Fonts are self-hosted (@fontsource): no requests to third parties (DSGVO).
+ * shadcn/ui reads the semantic variables below (--background, --primary…).
  */
 :root {
-  --radius: 0.5rem;
-  --background: #fbf6ec; /* crema */
+  --radius: 0.375rem;
+  --background: #f7f5ee;
   --foreground: #1f2a1d;
   --card: #ffffff;
   --card-foreground: #1f2a1d;
   --popover: #ffffff;
   --popover-foreground: #1f2a1d;
-  --primary: #2f4a2b; /* verde */
-  --primary-foreground: #fbf6ec;
-  --secondary: #efe6d2;
+  --primary: #2f4a2b;
+  --primary-foreground: #f7f5ee;
+  --secondary: #ebe8dc;
   --secondary-foreground: #1f2a1d;
-  --muted: #f1ead9;
-  --muted-foreground: #55604f;
-  --accent: #e3b23c; /* mostaza */
+  --muted: #efede3;
+  --muted-foreground: #52604c;
+  --accent: #e3b23c;
   --accent-foreground: #1f2a1d;
   --destructive: #b42318;
-  --border: #d9cfb8;
-  --input: #8a8f80;
+  --border: #d6d3c4;
+  --input: #858c7d;
   --ring: #2f4a2b;
   --sidebar: #2f4a2b;
-  --sidebar-foreground: #fbf6ec;
+  --sidebar-foreground: #f7f5ee;
   --sidebar-primary: #e3b23c;
   --sidebar-primary-foreground: #1f2a1d;
   --sidebar-accent: #3d5c38;
-  --sidebar-accent-foreground: #fbf6ec;
+  --sidebar-accent-foreground: #f7f5ee;
   --sidebar-border: #4a6b45;
   --sidebar-ring: #e3b23c;
 }
@@ -62,21 +69,55 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 6px);
 }
 
 @theme {
-  --color-brand-50: #fff7ed;
-  --color-brand-600: #b45309;
-  --color-brand-700: #92400e;
-  --font-display: Georgia, 'Times New Roman', serif;
+  --color-selva: #2f4a2b;
+  --color-selva-deep: #233a20;
+  --color-maiz: #e3b23c;
+  --color-papel: #f7f5ee;
+  --color-tierra: #1f2a1d;
+  --color-aji: #c8402a;
+  --color-chicha: #6b2d5c;
+
+  --font-display: 'Fraunces Variable', Georgia, serif;
+  --font-sans: 'Work Sans Variable', system-ui, sans-serif;
+
+  /* Type scale 1.25 (major third) on a 1rem base */
+  --text-display: clamp(2.75rem, 1.6rem + 4.6vw, 5.5rem);
+  --text-display--line-height: 1;
+
+  --animate-hero-in: hero-in 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+
+  @keyframes hero-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-optical-sizing: auto;
+    text-wrap: balance;
   }
 }

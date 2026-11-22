@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { routes } from './router';
 
 function renderAt(path: string) {
@@ -12,55 +12,63 @@ function renderAt(path: string) {
       <RouterProvider router={router} />
     </QueryClientProvider>,
   );
-}
-
-function mockHealth(ok: boolean) {
-  vi.spyOn(globalThis, 'fetch').mockResolvedValue(
-    ok
-      ? Response.json({
-          status: 'ok',
-          service: 'pachamama-api',
-          version: '0.0.0',
-          timestamp: new Date().toISOString(),
-        })
-      : new Response(null, { status: 503 }),
-  );
+  return router;
 }
 
 describe('home page', () => {
-  it('redirects / to German and shows the API as connected', async () => {
-    mockHealth(true);
-    renderAt('/');
+  it('redirects / to German', async () => {
+    const router = renderAt('/');
 
     expect(
-      await screen.findByRole('heading', { name: 'Willkommen bei Pachamama' }),
+      await screen.findByRole('heading', { level: 1, name: 'Peruanische Küche mitten in Bremen' }),
     ).toBeInTheDocument();
-    expect(await screen.findByText(/Verbunden/)).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe('/de');
   });
 
-  it('renders Spanish under /es', async () => {
-    mockHealth(true);
+  it('renders Spanish under /es with localized navigation', async () => {
     renderAt('/es');
 
     expect(
-      await screen.findByRole('heading', { name: 'Bienvenidos a Pachamama' }),
+      await screen.findByRole('heading', { level: 1, name: 'Cocina peruana en pleno Bremen' }),
     ).toBeInTheDocument();
+    const nav = screen.getAllByRole('navigation', { name: 'Navegación principal' })[0]!;
+    expect(within(nav).getByRole('link', { name: 'Carta' })).toHaveAttribute('href', '/es/carta');
+    expect(within(nav).getByRole('link', { name: 'Contacto' })).toHaveAttribute(
+      'href',
+      '/es/contacto',
+    );
   });
 
-  it('shows a skeleton loader while the API status is loading', async () => {
-    vi.spyOn(globalThis, 'fetch').mockReturnValue(new Promise<Response>(() => {}));
-    renderAt('/de');
+  it('sends unknown public pages to the home page of the same language', async () => {
+    const router = renderAt('/es/no-existe/para-nada');
 
-    const status = await screen.findByRole('status');
-    expect(status).toHaveAttribute('aria-busy', 'true');
-    expect(screen.getAllByTestId('skeleton')).toHaveLength(2);
-    expect(status).toHaveTextContent('Wird geprüft');
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Cocina peruana en pleno Bremen' }),
+    ).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe('/es');
   });
 
-  it('shows an error state when the API is down', async () => {
-    mockHealth(false);
+  it('links imprint and privacy from the footer', async () => {
     renderAt('/de');
 
-    expect(await screen.findByText(/Nicht erreichbar/)).toBeInTheDocument();
+    const footer = await screen.findByRole('contentinfo');
+    expect(within(footer).getByRole('link', { name: 'Impressum' })).toHaveAttribute(
+      'href',
+      '/de/impressum',
+    );
+    expect(within(footer).getByRole('link', { name: 'Datenschutz' })).toHaveAttribute(
+      'href',
+      '/de/datenschutz',
+    );
+  });
+
+  it('offers a skip link to the main content', async () => {
+    renderAt('/de');
+
+    expect(await screen.findByRole('link', { name: 'Zum Inhalt springen' })).toHaveAttribute(
+      'href',
+      '#main',
+    );
+    expect(document.getElementById('main')).toBeInTheDocument();
   });
 });

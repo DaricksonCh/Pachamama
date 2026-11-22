@@ -23,7 +23,7 @@ export function AdminLanguageSwitcher() {
           lang={lang}
           aria-pressed={i18n.language === lang}
           onClick={() => select(lang)}
-          className="rounded px-1.5 py-0.5 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-brand-700 aria-pressed:font-semibold"
+          className="rounded px-1.5 py-0.5 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring aria-pressed:font-semibold"
         >
           {t(`language.${lang}`)}
         </button>

@@ -24,7 +24,7 @@ function loginErrorKey(error: { status?: number; code?: string }) {
 }
 
 const inputClass =
-  'w-full rounded-md border border-gray-400 px-3 py-2 focus-visible:outline-2 focus-visible:outline-brand-700';
+  'w-full rounded-md border border-input px-3 py-2 focus-visible:outline-2 focus-visible:outline-ring';
 
 export function LoginPage() {
   const { t } = useTranslation();
@@ -78,7 +78,7 @@ export function LoginPage() {
     ) : null;
 
   return (
-    <main className="grid min-h-dvh place-items-center bg-brand-50 px-4">
+    <main className="grid min-h-dvh place-items-center bg-background px-4">
       <div className="w-full max-w-sm space-y-3">
         <div className="flex justify-end">
           <AdminLanguageSwitcher />
@@ -90,7 +90,7 @@ export function LoginPage() {
           aria-labelledby="login-title"
         >
           <div className="space-y-1">
-            <p className="text-sm font-semibold text-brand-700">{t('app.name')}</p>
+            <p className="text-sm font-semibold text-primary">{t('app.name')}</p>
             <h1 id="login-title" className="font-display text-2xl font-bold">
               {t('admin.login.title')}
             </h1>
@@ -137,7 +137,7 @@ export function LoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-md bg-brand-700 px-4 py-2 font-semibold text-white hover:bg-brand-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700 disabled:opacity-60"
+            className="w-full rounded-md bg-primary px-4 py-2 font-semibold text-primary-foreground hover:bg-selva-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:opacity-60"
           >
             {isSubmitting ? t('admin.login.submitting') : t('admin.login.submit')}
           </button>

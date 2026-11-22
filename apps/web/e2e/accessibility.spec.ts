@@ -6,8 +6,9 @@ const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
 for (const lang of ['de', 'es'] as const) {
   test(`/${lang} no tiene infracciones de accesibilidad WCAG 2.2 AA`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto(`/${lang}`);
-    await expect(page.getByRole('status')).toHaveAttribute('aria-busy', 'false');
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 
     const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
 
@@ -15,10 +16,12 @@ for (const lang of ['de', 'es'] as const) {
   });
 }
 
-test('el estado de carga también es accesible', async ({ page }) => {
-  await page.route('**/api/v1/health', () => new Promise(() => {}));
+test('el menú móvil abierto también es accesible', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'Menú hamburguesa: solo móvil');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/de');
-  await expect(page.getByRole('status')).toHaveAttribute('aria-busy', 'true');
+  await page.getByRole('button', { name: 'Menü öffnen' }).click();
+  await expect(page.getByRole('dialog')).toBeVisible();
 
   const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
 

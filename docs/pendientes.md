@@ -12,10 +12,13 @@ Leyenda: ⏳ pendiente · ✅ confirmado
 | --------- | ---------------------------------------------------- | ------ |
 | Horario   | Martes a domingo, 13:00–22:00 · Lunes cerrado        | ⏳     |
 | Dirección | Am Gaswerk 1, 28197 Bremen                           | ✅     |
-| Teléfono  | PENDIENTE                                            | ⏳     |
-| Email     | PENDIENTE                                            | ⏳     |
-| Reservas  | Email que recibe las reservas: PENDIENTE             | ⏳     |
-| Dominio   | Se compra uno nuevo al publicar (el anterior caducó) | ⏳     |
+| Teléfono  | PENDIENTE (en la web: `0421 000 000 0` de relleno)   | ⏳     |
+| Email     | PENDIENTE (en la web: `info@example.com` de relleno) | ⏳     |
+| Logo SVG  | Solo hay PNG de 600 px; falta el vectorial original  | ⏳     |
+
+> **Técnico (revisión de M1):** Carta, Historia, Contacto, Impressum y Datenschutz aún no tienen ruta (llegan en M2; hasta entonces sus enlaces vuelven a la Inicio). M2 debe añadir el e2e de «el skeleton no anima con `prefers-reduced-motion`» en la Carta, `<title>`/description por página y fotos de 1280 px para la quinua y la causa si existen originales mayores.
+> | Reservas | Email que recibe las reservas: PENDIENTE | ⏳ |
+> | Dominio | Se compra uno nuevo al publicar (el anterior caducó) | ⏳ |
 
 ## Impressum (obligatorio en Alemania)
 
