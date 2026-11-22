@@ -27,7 +27,7 @@ export function escapeHtml(value: string): string {
 
 const toHtml = (value: string) => escapeHtml(value).replace(/\r?\n/g, '<br>');
 
-function formatDateTime(startsAt: Date, lang: Language) {
+export function formatDateTime(startsAt: Date, lang: Language) {
   const locale = LOCALES[lang];
   const date = new Intl.DateTimeFormat(locale, {
     timeZone: RESTAURANT_TIME_ZONE,

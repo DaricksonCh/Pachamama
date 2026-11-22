@@ -46,6 +46,7 @@ export const envSchema = z
     RATE_LIMIT_API_PER_MIN: z.coerce.number().int().positive().default(300),
     RATE_LIMIT_IMAGE_PER_10MIN: z.coerce.number().int().positive().default(30),
     RATE_LIMIT_PDF_PER_MIN: z.coerce.number().int().positive().default(30),
+    RATE_LIMIT_RESERVATION_PER_10MIN: z.coerce.number().int().positive().default(5),
     /** Correo (SMTP). En desarrollo: Mailpit en localhost:1025 (ver docs/tooling.md). */
     SMTP_HOST: z.string().min(1).default('localhost'),
     SMTP_PORT: z.coerce.number().int().positive().default(1025),

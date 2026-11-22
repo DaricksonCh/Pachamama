@@ -2,7 +2,7 @@
 
 Base: `/api/v1` (negocio) y `/api/auth` (Better Auth). Respuestas de error siempre con el formato `{ "error": { "code", "message", "details?" } }`.
 
-**Límite de peticiones** (por IP, 429 `RATE_LIMITED`, cabeceras `RateLimit`/`RateLimit-Policy`): `/api/v1` 300/min; `PUT /api/v1/admin/menu/dishes/:id/image` 30 por 10 min; `GET /api/v1/menu/pdf` 30/min. Configurable por entorno (`RATE_LIMIT_*`, ver `.env.example`).
+**Límite de peticiones** (por IP, 429 `RATE_LIMITED`, cabeceras `RateLimit`/`RateLimit-Policy`): `/api/v1` 300/min; `PUT /api/v1/admin/menu/dishes/:id/image` 30 por 10 min; `GET /api/v1/menu/pdf` 30/min; `POST /api/v1/reservations` 5 por 10 min. Configurable por entorno (`RATE_LIMIT_*`, ver `.env.example`).
 
 ## Autenticación (`/api/auth`, Better Auth)
 
@@ -58,6 +58,18 @@ Requieren sesión. Las escrituras exigen `Origin` de la web y `Content-Type: app
 | PUT    | `/admin/menu/dishes/:id/image`                                         | admin                                           | multipart: `image` (JPEG/PNG/WebP, ≤10 MB) + `altDe` + `altEs`; WebP 400/800/1600 sin EXIF; 415 `UNSUPPORTED_IMAGE`, 413 `IMAGE_TOO_LARGE` |
 | DELETE | `/admin/menu/dishes/:id/image`                                         | admin                                           | Quita la foto y borra los archivos; las fotos se sirven en `/uploads/dishes/<key>-<w>.webp` (`UPLOADS_DIR`)                                |
 
+## Reservas — público (`/api/v1/reservations`)
+
+Sin sesión. Respuestas `{ data }`. Fechas `YYYY-MM-DD` y horas `HH:mm` en la zona del restaurante (Europe/Berlin); `startsAt` en ISO UTC. La respuesta nunca incluye email, teléfono, nombre ni comentario.
+
+| Método | Ruta                                        | Notas                                                                                                                                                                                                                                                                                                 |
+| ------ | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/reservations/availability?month=YYYY-MM`  | `{ days: string[], partyMin, partyMax, sameDayOnline }`: días del mes con al menos una franja futura (el aforo no cuenta)                                                                                                                                                                             |
+| GET    | `/reservations/availability?date=…&party=N` | `{ slots: { time, startsAt, available }[] }` con el aforo aplicado para ese tamaño de grupo; `party` fuera de `partyMin..partyMax`, ambas formas a la vez o ninguna → 400 `VALIDATION_ERROR`                                                                                                          |
+| POST   | `/reservations`                             | Cuerpo `reservationRequestSchema` (`website` es el honeypot: relleno → 201 falso sin guardar ni enviar nada) → 201 `{ publicId, startsAt, partySize, status: 'pending' }`. Envía correo `received` al cliente y aviso al personal (un fallo de correo no anula la reserva). Límite: 5 por 10 min e IP |
+
+Errores de `POST`: `partySize` fuera de rango o cuerpo inválido → 400 `VALIDATION_ERROR`; franja inexistente, pasada, cerrada o fuera de plazo → 400 `SLOT_UNAVAILABLE`; sin aforo (también bajo concurrencia: la comprobación se serializa con un bloqueo de `reservation_settings`) → 409 `SLOT_FULL`; demasiadas solicitudes → 429 `RATE_LIMITED`.
+
 ## Reservas — configuración (`/api/v1/admin/reservation-settings`)
 
 Requieren sesión; lectura para admin y staff, escritura solo admin. Las escrituras exigen `Origin` de la web y `Content-Type: application/json`. Respuestas `{ data }`. Días 0 = domingo; horas `HH:mm` en rejilla :00/:30; fechas `YYYY-MM-DD` (Europe/Berlin).
@@ -83,6 +95,9 @@ Requieren sesión; lectura para admin y staff, escritura solo admin. Las escritu
 | `NOT_FOUND`           | 404  | Ruta inexistente                                 |
 | `INVALID_JSON`        | 400  | Cuerpo JSON mal formado                          |
 | `VALIDATION_ERROR`    | 400  | Entrada inválida; `details` = errores por campo  |
+| `SLOT_UNAVAILABLE`    | 400  | Franja de reserva inexistente, pasada o cerrada  |
+| `SLOT_FULL`           | 409  | La franja ya no tiene aforo para el grupo        |
+| `RATE_LIMITED`        | 429  | Demasiadas peticiones desde la misma IP          |
 | `INVALID_CATEGORY`    | 400  | El plato apunta a una categoría inexistente      |
 | `INVALID_ORDER`       | 400  | La lista de orden incluye ids desconocidos       |
 | `NO_IMAGE`            | 400  | Texto alternativo de un plato sin foto           |

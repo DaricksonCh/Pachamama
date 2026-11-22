@@ -36,3 +36,6 @@ export const imageUploadLimiter = (limit: number) =>
   createRateLimiter({ windowMs: 10 * MINUTE, limit });
 /** PDF de la carta (render costoso). */
 export const pdfLimiter = (limit: number) => createRateLimiter({ windowMs: MINUTE, limit });
+/** Solicitudes de reserva (público, escribe en BD y envía correos). */
+export const reservationLimiter = (limit: number) =>
+  createRateLimiter({ windowMs: 10 * MINUTE, limit });
