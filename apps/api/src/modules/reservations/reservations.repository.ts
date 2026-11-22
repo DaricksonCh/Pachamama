@@ -190,6 +190,7 @@ export function createReservationsRepository(db: Kysely<Database>) {
           'e.toStatus',
           'u.name as actorName',
           'e.message',
+          'e.subject',
           'e.emailStatus',
           'e.createdAt',
         ])

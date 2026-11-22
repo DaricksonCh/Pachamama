@@ -411,7 +411,8 @@
           "sent": "E-Mail gesendet",
           "failed": "E-Mail fehlgeschlagen",
           "skipped": "Ohne E-Mail"
-        }
+        },
+        "subject": "Betreff"
       },
       "resend": {
         "banner": "Die E-Mail konnte nicht gesendet werden",
@@ -440,8 +441,6 @@
         "subject": "Betreff",
         "body": "Nachricht an den Gast",
         "counter": "{{count}} / {{max}}",
-        "remaining_one": "Noch {{count}} Zeichen",
-        "remaining_other": "Noch {{count}} Zeichen",
         "restore": "Standardtext wiederherstellen",
         "required": "Betreff und Nachricht dürfen nicht leer sein.",
         "preview": "Vorschau der E-Mail",
@@ -470,7 +469,9 @@
           "title": "Reservierung stornieren",
           "submit": "Senden und stornieren",
           "submitNoMail": "Ohne E-Mail stornieren"
-        }
+        },
+        "remaining": "Noch höchstens {{count}} Zeichen",
+        "limit": "Zeichenlimit erreicht"
       }
     }
   },

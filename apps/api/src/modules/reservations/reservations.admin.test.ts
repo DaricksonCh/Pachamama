@@ -134,6 +134,13 @@ describe('GET /:id', () => {
     expect(evs.map((e) => e.toStatus)).toEqual(['confirmed']);
     expect(evs[0]?.actorName).toBe(ADMIN.name);
   });
+  it('includes the subject of the sent email in the events', async () => {
+    const id = await seed();
+    await patchStatus(id, { status: 'confirmed', subject: 'Custom subject' });
+    const res = await get(`/${id}`);
+    const evs = res.body.data.events as { subject: string | null }[];
+    expect(evs[0]?.subject).toBe('Custom subject');
+  });
   it('404 NOT_FOUND', async () => {
     const res = await get('/999999');
     expect(res.status).toBe(404);

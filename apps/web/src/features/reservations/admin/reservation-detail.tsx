@@ -285,6 +285,11 @@ function History({ reservation }: { reservation: AdminReservationDetail }) {
                 </Badge>
               ) : null}
             </div>
+            {event.subject ? (
+              <p className="text-sm font-medium">
+                {t('admin.reservations.history.subject')}: {event.subject}
+              </p>
+            ) : null}
             {event.message ? (
               <p className="line-clamp-3 text-sm whitespace-pre-wrap text-muted-foreground">
                 {event.message}

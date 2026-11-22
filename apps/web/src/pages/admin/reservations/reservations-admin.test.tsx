@@ -160,6 +160,7 @@ describe('ReservationDetailPage', () => {
           toStatus: 'confirmed',
           actorName: 'Ana Admin',
           message: 'Hasta pronto',
+          subject: 'Asunto enviado',
           emailStatus: 'sent',
         }),
       ]),
@@ -176,6 +177,7 @@ describe('ReservationDetailPage', () => {
     expect(screen.getByText('Cumpleaños')).toBeInTheDocument();
     expect(screen.getByText('Ana Admin')).toBeInTheDocument();
     expect(screen.getByText('Hasta pronto')).toBeInTheDocument();
+    expect(screen.getByText(/Asunto enviado/)).toBeInTheDocument();
     expect(screen.getByText('Correo enviado')).toBeInTheDocument();
   });
 

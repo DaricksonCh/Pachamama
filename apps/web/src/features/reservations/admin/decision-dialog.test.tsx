@@ -30,6 +30,8 @@ interface Options {
   onDone?: () => void;
 }
 
+let currentPreview: typeof PREVIEW = PREVIEW;
+
 function setup({ status = 'confirmed', patchStatus = 200, onOpenChange, onDone }: Options = {}) {
   const writes: { method: string; path: string; body: Record<string, unknown> }[] = [];
   vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
@@ -46,12 +48,14 @@ function setup({ status = 'confirmed', patchStatus = 200, onOpenChange, onDone }
       return Response.json({ data: { reservation: {}, emailStatus: 'sent' } });
     }
     if (url.pathname === '/api/v1/admin/reservations/7/message-preview') {
-      return Response.json({ data: PREVIEW });
+      return Response.json({ data: currentPreview });
     }
     return new Response(null, { status: 404 });
   });
+  currentPreview = PREVIEW;
+  const client = createQueryClient();
   render(
-    <QueryClientProvider client={createQueryClient()}>
+    <QueryClientProvider client={client}>
       <DecisionDialog
         reservation={RESERVATION}
         status={status}
@@ -61,7 +65,7 @@ function setup({ status = 'confirmed', patchStatus = 200, onOpenChange, onDone }
       />
     </QueryClientProvider>,
   );
-  return { writes };
+  return { writes, client };
 }
 
 beforeEach(async () => {
@@ -129,6 +133,18 @@ describe('DecisionDialog', () => {
     expect(writes[0]?.body).toEqual({ status: 'confirmed', notify: true });
     await waitFor(() => expect(toastSuccess).toHaveBeenCalled());
     expect(onDone).toHaveBeenCalled();
+  });
+
+  it('keeps the baseline when the preview is refetched after mount', async () => {
+    const { writes, client } = setup();
+    await body();
+    currentPreview = { ...PREVIEW, subject: 'Neuer Betreff', body: 'Neuer Text' };
+    await client.refetchQueries({ queryKey: ['admin', 'reservations', 'preview'] });
+
+    expect(await body()).toHaveValue(PREVIEW.body);
+    await userEvent.click(screen.getByRole('button', { name: 'Enviar y confirmar' }));
+    await waitFor(() => expect(writes).toHaveLength(1));
+    expect(writes[0]?.body).toEqual({ status: 'confirmed', notify: true });
   });
 
   it('restores the default text and subject', async () => {

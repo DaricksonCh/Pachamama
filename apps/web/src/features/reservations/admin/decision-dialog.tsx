@@ -163,7 +163,7 @@ function DecisionBody(props: BodyProps) {
 function DecisionForm({
   reservation,
   status,
-  preview,
+  preview: initialPreview,
   onDirtyChange,
   onBusyChange,
   onCancel,
@@ -172,6 +172,8 @@ function DecisionForm({
 }: BodyProps & { preview: MessagePreview }) {
   const { t } = useTranslation();
   const ids = useId();
+  // Línea base fija: si la consulta se refresca, lo "editado" no cambia.
+  const [preview] = useState(initialPreview);
   const [notify, setNotify] = useState(true);
   const [subject, setSubject] = useState(preview.subject);
   const [message, setMessage] = useState(preview.body);
@@ -183,6 +185,14 @@ function DecisionForm({
 
   const emptyField = notify && (subject.trim() === '' || message.trim() === '');
   const remaining = MAX_BODY - message.length;
+  // Solo se anuncia al cruzar 100/50/10/0, no en cada tecla.
+  const threshold = [0, 10, 50, 100].find((limit) => remaining <= limit);
+  const limitAnnouncement =
+    threshold === undefined
+      ? ''
+      : threshold === 0
+        ? t('admin.reservations.decision.limit')
+        : t('admin.reservations.decision.remaining', { count: threshold });
   const languageName = t(`admin.reservations.languages.${preview.lang}`);
 
   const restore = () => {
@@ -282,9 +292,7 @@ function DecisionForm({
             </Button>
           </div>
           <p role="status" className="sr-only">
-            {remaining <= 100
-              ? t('admin.reservations.decision.remaining', { count: remaining })
-              : ''}
+            {limitAnnouncement}
           </p>
           {emptyField ? (
             <p role="alert" className="text-sm text-destructive">

@@ -1,5 +1,6 @@
 import { RESERVATION_STATUSES, type ReservationStatus } from '@pachamama/shared';
 import { ChevronLeft, ChevronRight, TriangleAlert } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router';
 import { Button } from '@/components/ui/button';
@@ -27,7 +28,17 @@ export function ReservationsList() {
   const { t, i18n } = useTranslation();
   const [params, setParams] = useSearchParams();
 
-  const today = localIsoDate(new Date());
+  // "Hoy" se recalcula al volver a la pestaña: si pasó la medianoche de Berlín, no se queda viejo.
+  const [today, setToday] = useState(() => localIsoDate(new Date()));
+  useEffect(() => {
+    const refresh = () => setToday(localIsoDate(new Date()));
+    window.addEventListener('focus', refresh);
+    document.addEventListener('visibilitychange', refresh);
+    return () => {
+      window.removeEventListener('focus', refresh);
+      document.removeEventListener('visibilitychange', refresh);
+    };
+  }, []);
   const dateParam = params.get('date');
   const date = dateParam && ISO_DATE.test(dateParam) ? dateParam : today;
   const statusParam = params.get('status');

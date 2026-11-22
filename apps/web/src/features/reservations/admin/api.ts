@@ -115,6 +115,8 @@ export function useMessagePreview(id: number, status: string) {
     queryKey: reservationKeys.preview(id, status),
     staleTime: 0,
     gcTime: 0,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
     queryFn: async ({ signal }) =>
       (
         await apiGet(

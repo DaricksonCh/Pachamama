@@ -411,7 +411,8 @@
           "sent": "Correo enviado",
           "failed": "Correo fallido",
           "skipped": "Sin correo"
-        }
+        },
+        "subject": "Asunto"
       },
       "resend": {
         "banner": "No se pudo enviar el correo",
@@ -440,8 +441,6 @@
         "subject": "Asunto",
         "body": "Mensaje al cliente",
         "counter": "{{count}} / {{max}}",
-        "remaining_one": "Queda {{count}} carácter",
-        "remaining_other": "Quedan {{count}} caracteres",
         "restore": "Restaurar texto predeterminado",
         "required": "El asunto y el mensaje no pueden estar vacíos.",
         "preview": "Vista previa del correo",
@@ -470,7 +469,9 @@
           "title": "Cancelar reserva",
           "submit": "Enviar y cancelar",
           "submitNoMail": "Cancelar sin correo"
-        }
+        },
+        "remaining": "Quedan {{count}} caracteres o menos",
+        "limit": "Límite de caracteres alcanzado"
       }
     }
   },
