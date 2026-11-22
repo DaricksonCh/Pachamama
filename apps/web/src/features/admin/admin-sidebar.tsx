@@ -1,4 +1,12 @@
-import { CalendarDays, ExternalLink, FileText, House, Tags, UtensilsCrossed } from 'lucide-react';
+import {
+  CalendarDays,
+  ExternalLink,
+  FileText,
+  House,
+  Settings,
+  Tags,
+  UtensilsCrossed,
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router';
 import {
@@ -12,6 +20,7 @@ import {
   SidebarRail,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { useCurrentUser } from '@/features/auth/use-current-user';
 import { usePendingCount } from '@/features/reservations/admin/api';
 import { menuPdfUrl } from '@/features/menu/pdf-url';
 
@@ -20,6 +29,7 @@ export function AdminSidebar() {
   const { t, i18n } = useTranslation();
   const { isMobile, setOpenMobile } = useSidebar();
   const pending = usePendingCount().data ?? 0;
+  const isAdmin = useCurrentUser().data?.role === 'admin';
   // En móvil el menú es un Sheet: se cierra al elegir una sección.
   const closeOnMobile = () => {
     if (isMobile) setOpenMobile(false);
@@ -95,6 +105,16 @@ export function AdminSidebar() {
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+              {isAdmin ? (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <NavLink to="/admin/reservations/settings" onClick={closeOnMobile}>
+                      <Settings aria-hidden="true" />
+                      <span>{t('admin.nav.reservationSettings')}</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ) : null}
             </SidebarMenu>
           </SidebarGroup>
         </nav>

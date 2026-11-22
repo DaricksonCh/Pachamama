@@ -10,6 +10,7 @@ import { DishFormPage } from '@/pages/admin/menu/dish-form-page';
 import { DishesPage } from '@/pages/admin/menu/dishes-page';
 import { ReservationDetailPage } from '@/pages/admin/reservations/reservation-detail-page';
 import { ReservationsPage } from '@/pages/admin/reservations/reservations-page';
+import { ReservationSettingsPage } from '@/pages/admin/reservations/settings-page';
 import { HomePage } from '@/pages/home-page';
 import { PublicPageRoute } from '@/pages/public-page-route';
 
@@ -29,6 +30,8 @@ export const routes: RouteObject[] = [
       { path: 'menu/dishes/new', element: <DishFormPage /> },
       { path: 'menu/dishes/:id', element: <DishFormPage /> },
       { path: 'reservations', element: <ReservationsPage /> },
+      // Antes de `:id`, para que "settings" no se tome como un id.
+      { path: 'reservations/settings', element: <ReservationSettingsPage /> },
       { path: 'reservations/:id', element: <ReservationDetailPage /> },
     ],
   },

@@ -184,7 +184,8 @@
       "reservationsGroup": "Reservierungen",
       "reservations": "Reservierungen",
       "pending_one": "{{count}} offen",
-      "pending_other": "{{count}} offen"
+      "pending_other": "{{count}} offen",
+      "reservationSettings": "Reservierungseinstellungen"
     },
     "menu": {
       "categories": {
@@ -472,6 +473,122 @@
         },
         "remaining": "Noch höchstens {{count}} Zeichen",
         "limit": "Zeichenlimit erreicht"
+      }
+    },
+    "reservationSettings": {
+      "title": "Reservierungseinstellungen",
+      "intro": "Öffnungszeiten, Schließzeiten, Limits und E-Mail-Texte der Reservierungen.",
+      "noPermission": "Sie haben keine Berechtigung für diese Seite.",
+      "noPermissionHint": "Nur Administratoren können die Reservierungseinstellungen ändern.",
+      "loadFailed": "Die Einstellungen konnten nicht geladen werden.",
+      "saveFailed": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
+      "forbidden": "Sie haben keine Berechtigung für diese Aktion.",
+      "saving": "Wird gespeichert …",
+      "tabsLabel": "Bereiche der Einstellungen",
+      "tabs": {
+        "hours": "Öffnungszeiten",
+        "closures": "Schließzeiten",
+        "settings": "Reservierungen",
+        "templates": "E-Mail-Texte"
+      },
+      "weekdays": {
+        "0": "Sonntag",
+        "1": "Montag",
+        "2": "Dienstag",
+        "3": "Mittwoch",
+        "4": "Donnerstag",
+        "5": "Freitag",
+        "6": "Samstag"
+      },
+      "hours": {
+        "title": "Öffnungszeiten",
+        "intro": "Gäste können nur innerhalb dieser Zeiträume reservieren. Es wird immer die ganze Woche gespeichert.",
+        "provisional": "Vorläufige Öffnungszeiten: Speichern Sie die echten Zeiten, um die Seite veröffentlichen zu können.",
+        "closed": "Geschlossen",
+        "addRange": "Zeitraum hinzufügen",
+        "addRangeNamed": "Zeitraum am {{day}} hinzufügen",
+        "removeNamed": "Zeitraum {{n}} am {{day}} entfernen",
+        "opens": "{{day}}, Öffnung Zeitraum {{n}}",
+        "closes": "{{day}}, Schließung Zeitraum {{n}}",
+        "opensShort": "Öffnung",
+        "closesShort": "Schließung",
+        "save": "Öffnungszeiten speichern",
+        "saved": "Öffnungszeiten gespeichert.",
+        "summaryItem": "{{day}}, Zeitraum {{n}}"
+      },
+      "closures": {
+        "title": "Geplante Schließzeiten",
+        "intro": "Tage, an denen keine Reservierungen angenommen werden (Urlaub, private Feiern).",
+        "empty": "Keine bevorstehenden Schließzeiten.",
+        "period": "Vom {{from}} bis {{to}}",
+        "periodSingle": "{{from}}",
+        "noReason": "Ohne Grund",
+        "deleteNamed": "Schließzeit vom {{from}} bis {{to}} löschen",
+        "confirmTitle": "Diese Schließzeit löschen?",
+        "confirmDescription": "Vom {{from}} bis {{to}} werden wieder Reservierungen angenommen. Das kann nicht rückgängig gemacht werden.",
+        "confirm": "Löschen",
+        "cancel": "Abbrechen",
+        "deleted": "Schließzeit gelöscht.",
+        "deleteFailed": "Die Schließzeit konnte nicht gelöscht werden.",
+        "newTitle": "Schließzeit hinzufügen",
+        "from": "Von",
+        "to": "Bis",
+        "reasonDe": "Grund (Deutsch, optional)",
+        "reasonEs": "Grund (Spanisch, optional)",
+        "add": "Schließzeit hinzufügen",
+        "added": "Schließzeit hinzugefügt."
+      },
+      "settings": {
+        "title": "Reservierungsregeln",
+        "intro": "Limits für Reservierungen über die Website.",
+        "slotMinutes": "Dauer eines Zeitfensters",
+        "slotMinutesValue": "30 Min.",
+        "slotMinutesHelp": "Reservierungen gibt es alle 30 Minuten (nicht änderbar).",
+        "lastSlot": "Letzte Zeit vor Schließung (Minuten)",
+        "lastSlotHelp": "Wie viele Minuten vor Schließung zuletzt reserviert werden kann.",
+        "partyMin": "Mindestanzahl Personen",
+        "partyMax": "Höchstanzahl Personen",
+        "partyHelp": "Personen pro Online-Reservierung.",
+        "capacity": "Kapazität pro Zeitfenster (Personen)",
+        "capacityHelp": "Höchstzahl an Personen in einem 30-Minuten-Zeitfenster.",
+        "minLead": "Mindestvorlauf (Minuten)",
+        "minLeadHelp": "Kurzfristiger kann nicht online reserviert werden.",
+        "maxAdvance": "Maximaler Vorlauf (Tage)",
+        "maxAdvanceHelp": "Wie viele Tage im Voraus reserviert werden kann.",
+        "sameDay": "Online-Reservierungen für denselben Tag erlauben",
+        "save": "Einstellungen speichern",
+        "saved": "Einstellungen gespeichert."
+      },
+      "templates": {
+        "title": "E-Mail-Texte",
+        "intro": "Die Texte, die Gäste erhalten. Jeder Text wird einzeln gespeichert, auf Deutsch und auf Spanisch.",
+        "receivedNote": "Der Text „Anfrage erhalten“ wird automatisch beim Eingang einer Reservierung gesendet. Die anderen sind Standardtexte: Das Personal kann sie vor dem Senden der Entscheidung bearbeiten.",
+        "variablesTitle": "Verfügbare Variablen",
+        "variablesHint": "Sie werden beim Versand ersetzt:",
+        "variables": {
+          "name": "Name des Gastes",
+          "date": "Datum der Reservierung",
+          "time": "Uhrzeit der Reservierung",
+          "party": "Anzahl der Personen"
+        },
+        "kinds": {
+          "received": "Anfrage erhalten (automatisch)",
+          "confirmed": "Reservierung bestätigt",
+          "rejected": "Reservierung abgelehnt",
+          "cancelled": "Reservierung storniert"
+        },
+        "languages": {
+          "de": "Deutsch",
+          "es": "Spanisch"
+        },
+        "subject": "Betreff",
+        "body": "Nachricht",
+        "counter": "{{count}} von {{max}} Zeichen",
+        "preview": "Vorschau (mit Beispieldaten)",
+        "previewSubject": "Betreff:",
+        "save": "Text speichern",
+        "saveNamed": "Text {{kind}} ({{lang}}) speichern",
+        "saved": "Text gespeichert."
       }
     }
   },
