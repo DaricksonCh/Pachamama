@@ -1,4 +1,5 @@
 import { sql, type Kysely, type Selectable } from 'kysely';
+import { withDeadlockRetry } from '../../db/retry-deadlock';
 import type { Database, DishesTable, MenuCategoriesTable, MenuStatus } from '../../db/types';
 
 export type CategoryRow = Selectable<MenuCategoriesTable>;
@@ -90,18 +91,20 @@ export function createMenuRepository(db: Kysely<Database>) {
 
     /** Alta al final del orden (MAX+1 dentro de la misma transacción). Devuelve el id. */
     async insertCategory(values: CategoryValues): Promise<number> {
-      return db.transaction().execute(async (trx) => {
-        const row = await trx
-          .selectFrom('menuCategories')
-          .select(sql<number>`COALESCE(MAX(sort_order), 0)`.as('max'))
-          .forUpdate()
-          .executeTakeFirstOrThrow();
-        const result = await trx
-          .insertInto('menuCategories')
-          .values({ ...values, sortOrder: Number(row.max) + 1 })
-          .executeTakeFirstOrThrow();
-        return Number(result.insertId);
-      });
+      return withDeadlockRetry(() =>
+        db.transaction().execute(async (trx) => {
+          const row = await trx
+            .selectFrom('menuCategories')
+            .select(sql<number>`COALESCE(MAX(sort_order), 0)`.as('max'))
+            .forUpdate()
+            .executeTakeFirstOrThrow();
+          const result = await trx
+            .insertInto('menuCategories')
+            .values({ ...values, sortOrder: Number(row.max) + 1 })
+            .executeTakeFirstOrThrow();
+          return Number(result.insertId);
+        }),
+      );
     },
 
     async updateCategory(id: number, patch: Partial<CategoryValues>) {
@@ -164,19 +167,21 @@ export function createMenuRepository(db: Kysely<Database>) {
 
     /** Alta al final del orden de su categoría. Devuelve el id. */
     async insertDish(values: Omit<DishValues, 'imageAltDe' | 'imageAltEs'>): Promise<number> {
-      return db.transaction().execute(async (trx) => {
-        const row = await trx
-          .selectFrom('dishes')
-          .select(sql<number>`COALESCE(MAX(sort_order), 0)`.as('max'))
-          .where('categoryId', '=', values.categoryId)
-          .forUpdate()
-          .executeTakeFirstOrThrow();
-        const result = await trx
-          .insertInto('dishes')
-          .values({ ...values, sortOrder: Number(row.max) + 1 })
-          .executeTakeFirstOrThrow();
-        return Number(result.insertId);
-      });
+      return withDeadlockRetry(() =>
+        db.transaction().execute(async (trx) => {
+          const row = await trx
+            .selectFrom('dishes')
+            .select(sql<number>`COALESCE(MAX(sort_order), 0)`.as('max'))
+            .where('categoryId', '=', values.categoryId)
+            .forUpdate()
+            .executeTakeFirstOrThrow();
+          const result = await trx
+            .insertInto('dishes')
+            .values({ ...values, sortOrder: Number(row.max) + 1 })
+            .executeTakeFirstOrThrow();
+          return Number(result.insertId);
+        }),
+      );
     },
 
     async setDishImage(id: number, image: { key: string; altDe: string; altEs: string } | null) {
