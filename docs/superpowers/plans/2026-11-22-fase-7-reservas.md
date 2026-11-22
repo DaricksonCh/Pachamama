@@ -32,7 +32,7 @@
 
 ---
 
-### Tarea 1: Dominio compartido (schemas, estados, franjas, plantillas)
+### Task 1: Dominio compartido (schemas, estados, franjas, plantillas)
 
 **Archivos:**
 
@@ -57,7 +57,7 @@
 - [ ] Ejecutar `npm test -w @pachamama/shared` → FAIL; implementar; → PASS. `npm run typecheck`.
 - [ ] Commit `feat(shared): add reservation domain, slot engine and templates`.
 
-### Tarea 2: Migración y tipos de BD
+### Task 2: Migración y tipos de BD
 
 **Archivos:**
 
@@ -77,7 +77,7 @@
 - [ ] Implementar; `npm run db:migrate` y `npm run db:migrate:down` + `db:migrate` en local; `npm run db:check`.
 - [ ] Commit `feat(api): add reservations schema migration`.
 
-### Tarea 3: Correo (infraestructura)
+### Task 3: Correo (infraestructura)
 
 **Archivos:**
 
@@ -94,7 +94,7 @@
 - [ ] Implementar; tests en verde. Documentar Mailpit en `docs/tooling.md` (instalación local, puerto 1025/8025).
 - [ ] Commit `feat(api): add mailer and reservation email builders`.
 
-### Tarea 4: API horario, cierres, ajustes y plantillas (admin)
+### Task 4: API horario, cierres, ajustes y plantillas (admin)
 
 **Archivos:** crear `apps/api/src/modules/reservations/settings.{repository,service,controller,routes}.ts` + `settings.admin.test.ts`; registrar en `routes.ts` como `/admin/reservation-settings`.
 
@@ -107,7 +107,7 @@
 - [ ] Implementar siguiendo `menu.*` (`parse()` de controller, `AppError`). Verde.
 - [ ] Commit `feat(api): add admin opening hours, closures, settings and templates`.
 
-### Tarea 5: API pública de reservas
+### Task 5: API pública de reservas
 
 **Archivos:** crear `modules/reservations/reservations.{repository,service,controller}.ts`, `public-reservations.routes.ts`, `reservations.public.test.ts`; modificar `routes.ts` (`/reservations`), `middlewares/rate-limit.ts` (`reservationLimiter`), `env.ts` (`RATE_LIMIT_RESERVATION_PER_10MIN`).
 
@@ -120,7 +120,7 @@
 - [ ] Tests: días de un mes (lunes fuera); franjas con aforo; POST válido → 201 + 2 correos en `memoryMailer`; honeypot → 201 y 0 filas; `party=11` → 400; mismo día → 400; **dos POST simultáneos** por las últimas 3 plazas → uno 201, otro 409; 6º POST desde la misma IP en 10 min → 429; la respuesta no incluye email/teléfono.
 - [ ] Implementar; verde. Commit `feat(api): add public reservation availability and requests`.
 
-### Tarea 6: API admin de reservas (decisión + mensaje)
+### Task 6: API admin de reservas (decisión + mensaje)
 
 **Archivos:** crear `reservations.routes.ts` (admin) + `reservations.admin.test.ts`; registrar `/admin/reservations`.
 
@@ -134,7 +134,7 @@
 - [ ] Tests: confirmar sin `message` → correo con plantilla de/es según `lang` del cliente; con `message` editado → ese texto exacto; `pending→completed` → 409; SMTP falla (`failNext`) → 200, estado cambiado, evento `failed`, y `resend-email` lo envía; staff puede decidir; anónimo 401; `pending-count` cuenta solo futuras pendientes.
 - [ ] Implementar; verde. Commit `feat(api): let staff decide reservations with an editable customer message`.
 
-### Tarea 7: Retención DSGVO y comprobación de publicación
+### Task 7: Retención DSGVO y comprobación de publicación
 
 **Archivos:** modificar `apps/api/scripts/cleanup.ts` (+ test del service de limpieza), `scripts/publish-check.ts`, `env.ts` (`RESERVATIONS_RETENTION_DAYS`).
 
@@ -142,7 +142,7 @@
 - [ ] `publish-check` falla si el horario en BD sigue siendo el provisional sembrado (marca en `reservation_settings.hours_confirmed=false`) o `RESERVATIONS_NOTIFY_EMAIL` es de ejemplo.
 - [ ] Commit `feat(api): anonymize past reservations and guard publishing`.
 
-### Tarea 8: Web pública — asistente de reserva (propuesta A)
+### Task 8: Web pública — asistente de reserva (propuesta A)
 
 **Archivos:**
 
@@ -155,7 +155,7 @@
 - [ ] Revisar con skills `frontend-design`/`accessibility` y captura en navegador (escritorio y móvil).
 - [ ] Commit `feat(web): add public reservation wizard`.
 
-### Tarea 9: Admin — lista, detalle y "Mensaje al cliente"
+### Task 9: Admin — lista, detalle y "Mensaje al cliente"
 
 **Archivos:** crear `apps/web/src/features/reservations/admin/{api.ts, reservations-list.tsx, reservation-detail.tsx, decision-dialog.tsx, status-badge.tsx}` + tests; `pages/admin/reservations/{reservations-page,reservation-detail-page}.tsx`; modificar `router.tsx`, `admin-sidebar.tsx` (grupo "Reservas" con contador de `pending-count`), locales `admin.reservations.*`.
 
@@ -164,14 +164,14 @@
 - [ ] Tests: el diálogo muestra el texto predeterminado; editar + enviar manda `message` editado; restaurar vuelve al original; botones no permitidos no aparecen; aviso de fallo y reenvío.
 - [ ] Commit `feat(web): add admin reservation management with editable customer message`.
 
-### Tarea 10: Admin — ajustes de reservas
+### Task 10: Admin — ajustes de reservas
 
 **Archivos:** crear `features/reservations/admin/{hours-form.tsx, closures-list.tsx, settings-form.tsx, templates-form.tsx}` + tests; `pages/admin/reservations/settings-page.tsx` (pestañas: Horario · Cierres · Reservas · Textos de correo); ruta y entrada de menú solo para `admin`.
 
 - [ ] Tests: semana con solape muestra error; plantillas de/es con lista de variables y vista previa con datos de ejemplo; staff no ve el enlace.
 - [ ] Commit `feat(web): add admin reservation settings, hours and email templates`.
 
-### Tarea 11: Cierre — e2e, legal, docs y activación
+### Task 11: Cierre — e2e, legal, docs y activación
 
 - [ ] E2e `apps/web/e2e/reservations.spec.ts` (escritorio + móvil): reservar en de y en es; axe WCAG 2.2 AA en cada paso; solo teclado; admin confirma con mensaje editado y la reserva aparece confirmada. Correos con el `memoryMailer` de la API en modo test.
 - [ ] Datenschutz de/es: tratamiento "Reservas" (art. 6.1.b DSGVO, datos, plazo 90 días, proveedor SMTP pendiente).
