@@ -10,8 +10,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { ApiError } from '@/lib/api';
 import { useSaveCategory } from './api';
+import { FieldError, FormErrorSummary } from './form-error-summary';
+import { applyServerErrors, errorKey } from './form-errors';
 import { UnsavedChangesDialog } from './unsaved-changes-dialog';
 import { useUnsavedChanges } from './use-unsaved-changes';
 
@@ -58,6 +59,7 @@ export function CategoryForm({
     setFocus,
     formState: { errors, isDirty, isSubmitting, submitCount },
   } = useForm<FormInput, unknown, FormOutput>({
+    shouldFocusError: false,
     resolver: zodResolver(categoryInputSchema),
     defaultValues: toDefaults(category),
   });
@@ -78,17 +80,7 @@ export function CategoryForm({
       toast.success(t('admin.menu.categories.saved'));
       setSaved(result);
     } catch (err) {
-      if (err instanceof ApiError && err.code === 'VALIDATION_ERROR' && err.details) {
-        let any = false;
-        for (const field of FIELDS) {
-          const message = err.details[field]?.[0];
-          if (message) {
-            setError(field, { message }, { shouldFocus: !any });
-            any = true;
-          }
-        }
-        if (any) return;
-      }
+      if (applyServerErrors(err, FIELDS, setError)) return;
       toast.error(t('admin.menu.errors.saveFailed'));
     }
   });
@@ -96,7 +88,7 @@ export function CategoryForm({
   const invalidFields = FIELDS.filter((field) => errors[field]?.message);
 
   const text = (name: FieldName, labelKey: string, multiline = false) => {
-    const error = errors[name]?.message;
+    const error = errorKey(errors[name]?.message);
     const required = name === 'nameDe' || name === 'nameEs';
     const common = {
       id: `category-${name}`,
@@ -113,41 +105,23 @@ export function CategoryForm({
           {required && !readOnly ? <span aria-hidden="true"> *</span> : null}
         </Label>
         {multiline ? <Textarea rows={3} {...common} /> : <Input {...common} />}
-        {error ? (
-          <p id={`category-${name}-error`} className="text-sm text-destructive">
-            {t(error)}
-          </p>
-        ) : null}
+        <FieldError id={`category-${name}-error`} message={error} />
       </div>
     );
   };
 
   return (
     <form onSubmit={onSubmit} noValidate className="max-w-2xl space-y-5">
-      {submitCount > 0 && invalidFields.length > 0 ? (
-        <div
-          role="alert"
-          className="rounded-md border border-destructive/40 bg-red-50 p-4 text-sm text-red-900"
-        >
-          <p className="font-medium">{t('admin.menu.errors.summary')}</p>
-          <ul className="mt-2 list-disc space-y-1 ps-5">
-            {invalidFields.map((field) => (
-              <li key={field}>
-                <a
-                  href={`#category-${field}`}
-                  className="underline underline-offset-2"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    setFocus(field);
-                  }}
-                >
-                  {t(LABEL_KEYS[field])}
-                </a>
-                : {t(errors[field]?.message ?? '')}
-              </li>
-            ))}
-          </ul>
-        </div>
+      {submitCount > 0 ? (
+        <FormErrorSummary
+          attempt={submitCount}
+          items={invalidFields.map((field) => ({
+            id: `category-${field}`,
+            label: t(LABEL_KEYS[field]),
+            message: errorKey(errors[field]?.message) ?? '',
+            focus: () => setFocus(field),
+          }))}
+        />
       ) : null}
       {text('nameDe', LABEL_KEYS.nameDe)}
       {text('nameEs', LABEL_KEYS.nameEs)}

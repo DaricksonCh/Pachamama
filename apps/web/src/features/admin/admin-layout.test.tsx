@@ -7,6 +7,11 @@ import i18n from '@/i18n';
 import { createQueryClient } from '@/lib/query-client';
 import { routes } from '@/router';
 
+const { signOut } = vi.hoisted(() => ({ signOut: vi.fn() }));
+vi.mock('@/lib/auth-client', () => ({
+  authClient: { signOut, signIn: { email: vi.fn() } },
+}));
+
 const USER = { id: 'u1', name: 'Ana Admin', email: 'ana@pachamama.test', role: 'admin' };
 const SUMMARY = {
   visibleDishes: 48,
@@ -121,16 +126,17 @@ describe('AdminLayout', () => {
   });
 
   it('tells the user when sign-out fails and keeps them in the panel', async () => {
+    signOut.mockResolvedValue({ data: null, error: { status: 500, message: 'fail' } });
     mockApi({
       '/api/v1/me': () => Response.json({ data: USER }),
       '/api/v1/admin/menu/summary': () => Response.json({ data: SUMMARY }),
-      '/api/auth/sign-out': () => new Response('{}', { status: 500 }),
     });
     const router = renderAt('/admin');
 
     await userEvent.click(await screen.findByRole('button', { name: 'Cerrar sesión' }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent('No se pudo cerrar la sesión');
+    expect(signOut).toHaveBeenCalledTimes(1);
     expect(router.state.location.pathname).toBe('/admin');
   });
 });

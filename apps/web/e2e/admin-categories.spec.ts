@@ -1,54 +1,14 @@
-import { expect, type Page, test } from '@playwright/test';
-import { axeViolations, signIn, useOwnIp } from './admin-helpers';
+import { expect, test } from '@playwright/test';
+import {
+  axeViolations,
+  createCategory,
+  createDish,
+  row,
+  signIn,
+  uniqueName,
+  useOwnIp,
+} from './admin-helpers';
 import { E2E_STAFF } from './fixtures';
-
-/** Nombre único por test y proyecto: escritorio y móvil comparten la BD de pruebas. */
-function uniqueName(label: string) {
-  const info = test.info();
-  return `${label} ${info.project.name} ${Date.now() % 1_000_000}${info.retry}`;
-}
-
-/** Llama a la API con la sesión del navegador (el navegador añade el Origin que exige el CSRF). */
-async function api(page: Page, method: string, path: string, body: unknown) {
-  return page.evaluate(
-    async ({ method, path, body }) => {
-      const res = await fetch(path, {
-        method,
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      const json = (await res.json()) as { data: { id: number } };
-      if (!res.ok) throw new Error(`${method} ${path} -> ${res.status} ${JSON.stringify(json)}`);
-      return json;
-    },
-    { method, path, body },
-  );
-}
-
-async function createCategory(page: Page, name: string) {
-  const { data } = await api(page, 'POST', '/api/v1/admin/menu/categories', {
-    nameDe: name,
-    nameEs: name,
-    status: 'visible',
-  });
-  return data.id;
-}
-
-async function createDish(page: Page, categoryId: number, name: string) {
-  await api(page, 'POST', '/api/v1/admin/menu/dishes', {
-    categoryId,
-    nameDe: name,
-    nameEs: name,
-    price: 9.5,
-    diet: null,
-    allergens: [],
-    status: 'visible',
-    isProvisional: false,
-  });
-}
-
-const row = (page: Page, name: string) => page.getByRole('row').filter({ hasText: name });
 
 test.describe('panel /admin: categorías de la carta', () => {
   test.beforeEach(async ({ page }) => {
