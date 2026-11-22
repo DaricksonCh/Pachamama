@@ -53,6 +53,28 @@ describe('env mail settings', () => {
     expect(r.SMTP_USER).toBeUndefined();
   });
 
+  it('treats empty mail variables as unset (defaults apply)', () => {
+    const r = envSchema.parse({
+      ...base,
+      SMTP_HOST: '',
+      SMTP_PORT: '',
+      SMTP_SECURE: '',
+      MAIL_FROM: '',
+      RESERVATIONS_NOTIFY_EMAIL: '',
+    });
+    expect(r).toMatchObject({
+      SMTP_HOST: 'localhost',
+      SMTP_PORT: 1025,
+      SMTP_SECURE: false,
+      MAIL_FROM: 'Pachamama <reservierung@localhost>',
+      RESERVATIONS_NOTIFY_EMAIL: 'reservierung@localhost',
+    });
+  });
+
+  it('rejects an empty SMTP_HOST in production (falls back to localhost)', () => {
+    expect(issuePaths({ ...prod, SMTP_HOST: '' })).toContain('SMTP_HOST');
+  });
+
   it('parses SMTP_SECURE from a string', () => {
     expect(envSchema.parse({ ...base, SMTP_SECURE: 'true' }).SMTP_SECURE).toBe(true);
   });

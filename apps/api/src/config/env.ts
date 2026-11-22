@@ -14,6 +14,10 @@ if (!process.env.VITEST) {
   }
 }
 
+/** Un valor vacío en .env (`CLAVE=`) equivale a no definirlo: aplica el valor por defecto. */
+const unsetIfEmpty = <T extends z.ZodType>(schema: T) =>
+  z.preprocess((value) => (value === '' ? undefined : value), schema);
+
 /** `trust proxy` de Express: número de saltos, lista de IPs/subredes o palabras como `loopback`. */
 const trustProxySchema = z
   .string()
@@ -48,18 +52,20 @@ export const envSchema = z
     RATE_LIMIT_PDF_PER_MIN: z.coerce.number().int().positive().default(30),
     RATE_LIMIT_RESERVATION_PER_10MIN: z.coerce.number().int().positive().default(5),
     /** Correo (SMTP). En desarrollo: Mailpit en localhost:1025 (ver docs/tooling.md). */
-    SMTP_HOST: z.string().min(1).default('localhost'),
-    SMTP_PORT: z.coerce.number().int().positive().default(1025),
-    SMTP_SECURE: z
-      .enum(['true', 'false'])
-      .default('false')
-      .transform((value) => value === 'true'),
+    SMTP_HOST: unsetIfEmpty(z.string().min(1).default('localhost')),
+    SMTP_PORT: unsetIfEmpty(z.coerce.number().int().positive().default(1025)),
+    SMTP_SECURE: unsetIfEmpty(
+      z
+        .enum(['true', 'false'])
+        .default('false')
+        .transform((value) => value === 'true'),
+    ),
     // Un valor vacío en .env equivale a no definirlo.
     SMTP_USER: emptyToUndefined,
     SMTP_PASS: emptyToUndefined,
-    MAIL_FROM: z.string().min(1).default('Pachamama <reservierung@localhost>'),
+    MAIL_FROM: unsetIfEmpty(z.string().min(1).default('Pachamama <reservierung@localhost>')),
     /** Dirección del personal que recibe el aviso de cada solicitud de reserva. */
-    RESERVATIONS_NOTIFY_EMAIL: z.string().min(1).default('reservierung@localhost'),
+    RESERVATIONS_NOTIFY_EMAIL: unsetIfEmpty(z.string().min(1).default('reservierung@localhost')),
   })
   .superRefine((env, ctx) => {
     if (Boolean(env.SMTP_USER) !== Boolean(env.SMTP_PASS)) {
