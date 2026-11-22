@@ -263,30 +263,40 @@ export function createMenuService(repo: MenuRepository, events: MenuEvents, stor
       events.emitMenuChanged();
     },
 
-    /** Carta pública (categorías y platos visibles, sin campos internos). */
+    /**
+     * Carta pública (categorías y platos visibles, sin campos internos).
+     * Una categoría visible sin platos visibles no se publica: saldría como título suelto
+     * en la web y en el PDF.
+     */
     async publicMenu(): Promise<PublicMenu> {
       const groups = await repo.listPublic();
       return {
-        categories: groups.map(({ category: c, dishes }) => ({
-          id: c.id,
-          nameDe: c.nameDe,
-          nameEs: c.nameEs,
-          descriptionDe: c.descriptionDe,
-          descriptionEs: c.descriptionEs,
-          dishes: dishes.map((d) => ({
-            id: d.id,
-            nameDe: d.nameDe,
-            nameEs: d.nameEs,
-            descriptionDe: d.descriptionDe,
-            descriptionEs: d.descriptionEs,
-            price: Number(d.price),
-            diet: d.diet,
-            allergens: parseAllergens(d.allergens),
-            image: d.imageKey
-              ? { url: imageUrls(d.imageKey), altDe: d.imageAltDe ?? '', altEs: d.imageAltEs ?? '' }
-              : null,
+        categories: groups
+          .filter(({ dishes }) => dishes.length > 0)
+          .map(({ category: c, dishes }) => ({
+            id: c.id,
+            nameDe: c.nameDe,
+            nameEs: c.nameEs,
+            descriptionDe: c.descriptionDe,
+            descriptionEs: c.descriptionEs,
+            dishes: dishes.map((d) => ({
+              id: d.id,
+              nameDe: d.nameDe,
+              nameEs: d.nameEs,
+              descriptionDe: d.descriptionDe,
+              descriptionEs: d.descriptionEs,
+              price: Number(d.price),
+              diet: d.diet,
+              allergens: parseAllergens(d.allergens),
+              image: d.imageKey
+                ? {
+                    url: imageUrls(d.imageKey),
+                    altDe: d.imageAltDe ?? '',
+                    altEs: d.imageAltEs ?? '',
+                  }
+                : null,
+            })),
           })),
-        })),
       };
     },
   };
