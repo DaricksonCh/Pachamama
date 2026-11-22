@@ -73,7 +73,9 @@ export function HomePage() {
                 className="aspect-[16/10] rounded-md object-[50%_85%]"
               />
               <figcaption className="mt-3">
-                <span className="font-display text-2xl text-selva">Causa Limeña</span>
+                <span className="font-display text-2xl text-selva">
+                  {t('home.kitchen.causaName')}
+                </span>
                 <span className="block text-muted-foreground">{t('home.kitchen.causa')}</span>
               </figcaption>
             </figure>
@@ -103,7 +105,9 @@ export function HomePage() {
                 className="aspect-[2/1] rounded-md object-[60%_85%]"
               />
               <figcaption className="mt-3">
-                <span className="font-display text-2xl text-selva">Tamal</span>
+                <span className="font-display text-2xl text-selva">
+                  {t('home.kitchen.tamalName')}
+                </span>
                 <span className="block text-muted-foreground">{t('home.kitchen.tamal')}</span>
               </figcaption>
             </figure>

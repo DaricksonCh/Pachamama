@@ -30,7 +30,11 @@ export const routes: RouteObject[] = [
   {
     path: '/:lang',
     element: <LanguageLayout />,
-    children: [{ index: true, element: <HomePage /> }],
+    children: [
+      { index: true, element: <HomePage /> },
+      // Unknown public page: back to the home page of the same language.
+      { path: '*', element: <Navigate to=".." relative="path" replace /> },
+    ],
   },
   { path: '*', element: <Navigate to={`/${DEFAULT_LANGUAGE}`} replace /> },
 ];

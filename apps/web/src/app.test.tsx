@@ -39,6 +39,15 @@ describe('home page', () => {
     );
   });
 
+  it('sends unknown public pages to the home page of the same language', async () => {
+    const router = renderAt('/es/no-existe/para-nada');
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Cocina peruana en pleno Bremen' }),
+    ).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe('/es');
+  });
+
   it('links imprint and privacy from the footer', async () => {
     renderAt('/de');
 
