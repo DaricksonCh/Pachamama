@@ -60,6 +60,21 @@ Para trabajo extenso, el agente principal delega en subagentes (cada uno trabaja
 
 Reglas: un subagente que **escribe** código nunca comparte archivos con otro en paralelo; los de revisión/QA solo leen y reportan; el agente principal comprueba siempre el resultado antes de darlo por hecho.
 
+### Modelos y ahorro de tokens (decidido por el usuario el 2026-11-22)
+
+- **Sesión principal:** Sonnet (lo elige el usuario en el selector de modelo). Opus solo si algo se atasca.
+- **Modelo de cada subagente** (indicarlo siempre al lanzarlo):
+  - **Haiku:** re-revisiones de correcciones pequeñas y tareas mecánicas.
+  - **Sonnet:** implementar y revisar.
+  - **Opus:** solo si una tarea falla 2 veces o es diseño difícil, y **avisando antes al usuario**.
+- **Revisión completa** solo en tareas de seguridad, BD o permisos. En UI y datos, revisión ligera; las correcciones pequeñas las verifica el agente principal leyendo el diff.
+- **Hallazgos menores:** se apuntan (ledger o `docs/pendientes.md`) y no se corrigen en el momento, salvo seguridad o accesibilidad.
+- **E2e:** una vez por línea de trabajo al final, no tras cada tarea.
+- **Informes al usuario:** cortos; solo al terminar una tarea o cuando haga falta una decisión.
+- **Si tras 3 intentos distintos no se avanza**, o el fallo no parece causado por el cambio, se para, se resume lo probado y se pregunta.
+- **Sin cambios:** `npm run check:all` en verde antes de cerrar una fase y nunca debilitar ni borrar tests.
+- **Contexto:** `/clear` (o chat nuevo) al cerrar cada fase; a mitad de fase, `/compact` si el contexto crece.
+
 ## Skills obligatorias por tipo de tarea
 
 Antes de empezar una tarea, el agente **consulta (carga) las skills que le corresponden** según esta tabla, aunque el usuario no las nombre, y al terminar indica cuáles usó. Las skills globales (`~/.claude/skills/`) y las del proyecto (`.claude/skills/`) están disponibles en todas las sesiones. Si una tarea encaja en varias filas, se usan todas.
