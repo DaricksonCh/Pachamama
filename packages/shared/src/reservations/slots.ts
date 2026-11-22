@@ -1,4 +1,5 @@
 import { TZDate } from '@date-fns/tz';
+import { isRealDate } from './reservation.schema';
 import type { Closure, OpeningHours, ReservationSettings } from './reservation.schema';
 
 export const RESTAURANT_TIME_ZONE = 'Europe/Berlin';
@@ -51,6 +52,7 @@ type DayInput = {
 
 function daySlots(date: string, input: DayInput): { time: string; startsAt: Date }[] {
   const { now, hours, closures, settings } = input;
+  if (!isRealDate(date)) return [];
   const today = toRestaurantLocal(now).date;
   const diff = dayNumber(date) - dayNumber(today);
   if (diff < 0 || diff > settings.maxAdvanceDays) return [];

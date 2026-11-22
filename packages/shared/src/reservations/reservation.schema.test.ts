@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  isoDateSchema,
   DEFAULT_RESERVATION_SETTINGS,
   closureSchema,
   openingHoursSchema,
@@ -47,6 +48,8 @@ describe('reservationRequestSchema', () => {
       { comment: 'x'.repeat(501) },
       { lang: 'fr' },
       { email: 'nope' },
+      { phone: '+ + + + +' },
+      { date: '2027-02-31' },
       { partySize: 0 },
     ];
     for (const bad of cases) {
@@ -77,10 +80,24 @@ describe('openingHoursSchema', () => {
     expect(openingHoursSchema.safeParse([a, { ...b, weekday: 3 }]).success).toBe(true);
   });
 
+  it('rejects opening times off the half-hour grid', () => {
+    expect(
+      openingHoursSchema.safeParse([{ weekday: 2, opens: '12:15', closes: '15:00' }]).success,
+    ).toBe(false);
+  });
+
   it('rejects weekday out of range', () => {
     expect(
       openingHoursSchema.safeParse([{ weekday: 7, opens: '12:00', closes: '15:00' }]).success,
     ).toBe(false);
+  });
+});
+
+describe('isoDateSchema', () => {
+  it('rejects non-existent dates', () => {
+    expect(isoDateSchema.safeParse('2027-02-31').success).toBe(false);
+    expect(isoDateSchema.safeParse('2027-13-01').success).toBe(false);
+    expect(isoDateSchema.safeParse('2028-02-29').success).toBe(true);
   });
 });
 
@@ -96,6 +113,11 @@ describe('reservationSettingsSchema', () => {
     expect(reservationSettingsSchema.parse(DEFAULT_RESERVATION_SETTINGS)).toEqual(
       DEFAULT_RESERVATION_SETTINGS,
     );
+  });
+
+  it('rejects slotMinutes other than 30', () => {
+    const s = DEFAULT_RESERVATION_SETTINGS;
+    expect(reservationSettingsSchema.safeParse({ ...s, slotMinutes: 45 }).success).toBe(false);
   });
 
   it('rejects partyMin > partyMax and out-of-range values', () => {

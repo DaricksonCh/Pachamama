@@ -106,6 +106,31 @@ describe('buildDaySlots', () => {
   });
 });
 
+describe('invalid dates and lead boundary', () => {
+  const everyDay: OpeningHours = [0, 1, 2, 3, 4, 5, 6].map((weekday) => ({
+    weekday,
+    opens: '13:00',
+    closes: '22:00',
+  }));
+
+  it('returns [] for non-existent calendar dates', () => {
+    for (const date of ['2027-02-31', '2027-13-01']) {
+      expect(buildDaySlots({ ...base, hours: everyDay, date, now: early })).toEqual([]);
+    }
+  });
+
+  it('includes a slot exactly at now + minLead', () => {
+    const now = new Date('2027-03-02T10:00:00Z'); // 13:00 Berlin = 12:00Z = now + 120 min
+    const slots = buildDaySlots({
+      ...base,
+      settings: { ...settings, sameDayOnline: true },
+      date: '2027-03-02',
+      now,
+    });
+    expect(slots[0]?.startsAt).toBe('2027-03-02T12:00:00.000Z');
+  });
+});
+
 describe('availableDays', () => {
   it('lists only open, non-closed, bookable days of the month', () => {
     const days = availableDays({
