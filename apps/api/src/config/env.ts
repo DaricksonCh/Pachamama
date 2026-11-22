@@ -20,7 +20,8 @@ const trustProxySchema = z
   .default('loopback')
   .transform((value) => (/^\d+$/.test(value) ? Number(value) : value));
 
-const envSchema = z
+/** Exportado solo para poder probar las reglas de producción. */
+export const envSchema = z
   .object({
     NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
     API_PORT: z.coerce.number().int().positive().default(3000),
@@ -40,6 +41,18 @@ const envSchema = z
     RATE_LIMIT_API_PER_MIN: z.coerce.number().int().positive().default(300),
     RATE_LIMIT_IMAGE_PER_10MIN: z.coerce.number().int().positive().default(30),
     RATE_LIMIT_PDF_PER_MIN: z.coerce.number().int().positive().default(30),
+    /** Correo (SMTP). En desarrollo: Mailpit en localhost:1025 (ver docs/tooling.md). */
+    SMTP_HOST: z.string().min(1).default('localhost'),
+    SMTP_PORT: z.coerce.number().int().positive().default(1025),
+    SMTP_SECURE: z
+      .enum(['true', 'false'])
+      .default('false')
+      .transform((value) => value === 'true'),
+    SMTP_USER: z.string().min(1).optional(),
+    SMTP_PASS: z.string().min(1).optional(),
+    MAIL_FROM: z.string().min(1).default('Pachamama <reservierung@localhost>'),
+    /** Dirección del personal que recibe el aviso de cada solicitud de reserva. */
+    RESERVATIONS_NOTIFY_EMAIL: z.string().min(1).default('reservierung@localhost'),
   })
   .superRefine((env, ctx) => {
     if (env.NODE_ENV !== 'production') return;
@@ -59,6 +72,22 @@ const envSchema = z
           code: 'custom',
           path: [key],
           message: `${key} sigue con el valor de ejemplo`,
+        });
+      }
+    }
+    if (['localhost', '127.0.0.1'].includes(env.SMTP_HOST)) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['SMTP_HOST'],
+        message: 'SMTP_HOST no puede ser localhost en producción',
+      });
+    }
+    for (const key of ['MAIL_FROM', 'RESERVATIONS_NOTIFY_EMAIL'] as const) {
+      if (/localhost|example/i.test(env[key])) {
+        ctx.addIssue({
+          code: 'custom',
+          path: [key],
+          message: `${key} sigue con un valor de ejemplo`,
         });
       }
     }
