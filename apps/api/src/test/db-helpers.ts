@@ -24,6 +24,13 @@ export async function resetMenuTables() {
   await db.deleteFrom('menuCategories').execute();
 }
 
+/** Vacía reservas e historial (no las tablas de configuración sembradas). Solo BD de tests. */
+export async function resetReservationTables() {
+  await assertConnectedToTestDatabase();
+  await db.deleteFrom('reservationEvents').execute();
+  await db.deleteFrom('reservations').execute();
+}
+
 let ipCounter = 0;
 
 /** IP distinta por petición/test para que el rate-limit de un test no afecte a otro. */

@@ -100,6 +100,81 @@ export interface DishesTable {
   updatedAt: DefaultDate;
 }
 
+export type ReservationStatus =
+  'pending' | 'confirmed' | 'rejected' | 'cancelled' | 'completed' | 'no_show';
+export type ReservationLang = 'de' | 'es';
+export type ReservationMessageKind = 'received' | 'confirmed' | 'rejected' | 'cancelled';
+
+export interface OpeningHoursTable {
+  id: AutoId;
+  /** 0 = domingo ... 6 = sábado. */
+  weekday: number;
+  /** TIME: mysql2 lo devuelve como "HH:MM:SS". */
+  opens: string;
+  closes: string;
+}
+
+export interface ClosuresTable {
+  id: AutoId;
+  /** DATE: mysql2 (dateStrings false, timezone Z) lo devuelve como Date a medianoche UTC. */
+  fromDate: Date;
+  toDate: Date;
+  reasonDe: string | null;
+  reasonEs: string | null;
+}
+
+export interface ReservationSettingsTable {
+  /** Fila única, siempre 1. */
+  id: number;
+  slotMinutes: WithDefault<number>;
+  lastSlotBeforeCloseMinutes: WithDefault<number>;
+  partyMin: WithDefault<number>;
+  partyMax: WithDefault<number>;
+  capacityPerSlot: WithDefault<number>;
+  minLeadMinutes: WithDefault<number>;
+  maxAdvanceDays: WithDefault<number>;
+  sameDayOnline: WithDefault<boolean>;
+  hoursConfirmed: WithDefault<boolean>;
+  updatedAt: DefaultDate;
+}
+
+export interface ReservationMessageTemplatesTable {
+  kind: ReservationMessageKind;
+  lang: ReservationLang;
+  subject: string;
+  body: string;
+}
+
+export interface ReservationsTable {
+  id: AutoId;
+  publicId: string;
+  /** UTC. */
+  startsAt: Date;
+  partySize: number;
+  name: string;
+  email: string;
+  phone: string;
+  comment: string | null;
+  lang: ReservationLang;
+  status: WithDefault<ReservationStatus>;
+  decidedBy: string | null;
+  decidedAt: Date | null;
+  anonymizedAt: Date | null;
+  createdAt: DefaultDate;
+  updatedAt: DefaultDate;
+}
+
+export interface ReservationEventsTable {
+  id: AutoId;
+  reservationId: number;
+  fromStatus: ReservationStatus | null;
+  toStatus: ReservationStatus;
+  actorId: string | null;
+  message: string | null;
+  emailStatus: 'sent' | 'failed' | 'skipped' | null;
+  createdAt: DefaultDate;
+}
+
 export interface Database {
   users: UsersTable;
   sessions: SessionsTable;
@@ -107,6 +182,12 @@ export interface Database {
   verifications: VerificationsTable;
   menuCategories: MenuCategoriesTable;
   dishes: DishesTable;
+  openingHours: OpeningHoursTable;
+  closures: ClosuresTable;
+  reservationSettings: ReservationSettingsTable;
+  reservationMessageTemplates: ReservationMessageTemplatesTable;
+  reservations: ReservationsTable;
+  reservationEvents: ReservationEventsTable;
 }
 
 export type User = Selectable<UsersTable>;

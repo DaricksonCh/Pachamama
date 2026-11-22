@@ -6,8 +6,14 @@ import { migrations } from './migrations';
 
 const AUTH_AND_MENU_TABLES = [
   'accounts',
+  'closures',
   'dishes',
   'menu_categories',
+  'opening_hours',
+  'reservation_events',
+  'reservation_message_templates',
+  'reservation_settings',
+  'reservations',
   'sessions',
   'users',
   'verifications',
@@ -71,6 +77,9 @@ describe('migraciones', () => {
     expect(rows.map((r) => `${r.table}:${r.rule}`).sort()).toEqual([
       'accounts:CASCADE',
       'dishes:RESTRICT',
+      'reservation_events:CASCADE',
+      'reservation_events:SET NULL',
+      'reservations:SET NULL',
       'sessions:CASCADE',
     ]);
   });
@@ -101,5 +110,57 @@ describe('migraciones', () => {
 
     await sql`DELETE FROM dishes`.execute(db);
     await sql`DELETE FROM menu_categories`.execute(db);
+  });
+
+  it('reservas: crea las semillas (horario, ajustes por defecto y plantillas)', async () => {
+    const hours = await sql<{ weekday: number; opens: string; closes: string }>`
+      SELECT weekday, opens, closes FROM opening_hours ORDER BY weekday`.execute(db);
+    expect(hours.rows.map((r) => r.weekday)).toEqual([0, 2, 3, 4, 5, 6]);
+    expect(hours.rows.every((r) => r.opens === '13:00:00' && r.closes === '22:00:00')).toBe(true);
+
+    const settings = await db.selectFrom('reservationSettings').selectAll().execute();
+    expect(settings).toHaveLength(1);
+    expect(settings[0]).toMatchObject({
+      id: 1,
+      slotMinutes: 30,
+      lastSlotBeforeCloseMinutes: 60,
+      partyMin: 1,
+      partyMax: 10,
+      capacityPerSlot: 30,
+      minLeadMinutes: 120,
+      maxAdvanceDays: 60,
+    });
+    expect(Boolean(settings[0]?.sameDayOnline)).toBe(false);
+    expect(Boolean(settings[0]?.hoursConfirmed)).toBe(false);
+
+    const templates = await db
+      .selectFrom('reservationMessageTemplates')
+      .select(['kind', 'lang', 'subject', 'body'])
+      .execute();
+    expect(templates.map((t) => `${t.kind}:${t.lang}`).sort()).toEqual([
+      'cancelled:de',
+      'cancelled:es',
+      'confirmed:de',
+      'confirmed:es',
+      'received:de',
+      'received:es',
+      'rejected:de',
+      'rejected:es',
+    ]);
+    expect(templates.every((t) => t.subject.length > 0 && t.body.includes('{name}'))).toBe(true);
+  });
+
+  it('reservas: estados y tipos de columna', async () => {
+    const r = await columns('reservations');
+    expect(r.status?.type).toBe(
+      "enum('pending','confirmed','rejected','cancelled','completed','no_show')",
+    );
+    expect(r.lang?.type).toBe("enum('de','es')");
+    expect(r.starts_at?.type).toBe('datetime(3)');
+    expect(r.public_id?.type).toBe('char(36)');
+    expect(r.decided_by?.nullable).toBe('YES');
+    const e = await columns('reservation_events');
+    expect(e.email_status?.type).toBe("enum('sent','failed','skipped')");
+    expect(e.email_status?.nullable).toBe('YES');
   });
 });
