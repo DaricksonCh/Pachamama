@@ -135,3 +135,28 @@ describe('carta pública (service)', () => {
     expect(JSON.stringify(menu)).not.toMatch(/status|isProvisional|provisionalNote/);
   });
 });
+
+describe('altas concurrentes', () => {
+  it('10 platos a la vez en la misma categoría: todos se crean con orden distinto', async () => {
+    const service = createMenuService(createMenuRepository(db), createMenuEvents(), {
+      save: async () => {},
+      remove: async () => {},
+    });
+    const cat = await makeCategory({ nameDe: 'Concurrente' });
+    const input = (n: number) => ({
+      categoryId: cat.id,
+      nameDe: `Gericht ${n}`,
+      nameEs: `Plato ${n}`,
+      price: 10,
+      diet: null,
+      allergens: [],
+      status: 'visible' as const,
+      isProvisional: false,
+    });
+    const created = await Promise.all(
+      Array.from({ length: 10 }, (_, n) => service.createDish(input(n))),
+    );
+    expect(created).toHaveLength(10);
+    expect(new Set(created.map((d) => d.sortOrder)).size).toBe(10);
+  });
+});
