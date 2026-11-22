@@ -21,14 +21,14 @@ El restaurante **se queda sin página web ese día**. Prioridad absoluta: tener 
 
 **Cambio de plan:** el restaurante ya no tiene web ni dominio, así que la nueva sale **directamente con base de datos y panel admin** para que el personal gestione su carta (platos, precios, alérgenos, fotos y el PDF descargable) sin depender del desarrollador. El diseño avanza **en paralelo** porque no depende de la BD.
 
-| Bloque | Contenido                                                                                                                             | Fechas   | Estado      |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------- | -------- | ----------- |
-| F3     | **BD y login**: Kysely + migraciones, Better Auth + plugin admin, login de `/admin`, primer admin, permisos (ADR 0007)                | 22–23.11 | ✅ Hecha    |
-| F5     | **Carta editable**: categorías y platos (de/es, precio, alérgenos, foto, visible, orden), carga inicial desde el PDF, PDF descargable | 24–26.11 | ⏭ Siguiente |
-| M1     | **Diseño** (en paralelo): paleta y estilo del logo, tokens Tailwind, decidir shadcn, maquetas                                         | 22–26.11 | Pendiente   |
-| M2     | **Páginas públicas (de/es)**: Inicio, Carta (desde la BD), Historia (lorem), Contacto + mapa, Impressum, Datenschutz                  | 27–28.11 | Pendiente   |
-| M4     | **Publicación**: servidor en la UE (Node + MySQL), dominio nuevo, HTTPS, copias de seguridad, SEO básico                              | 29.11    | Pendiente   |
-| —      | Margen                                                                                                                                | 30.11    | —           |
+| Bloque | Contenido                                                                                                                             | Fechas   | Estado    |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------- | -------- | --------- |
+| F3     | **BD y login**: Kysely + migraciones, Better Auth + plugin admin, login de `/admin`, primer admin, permisos (ADR 0007)                | 22–23.11 | ✅ Hecha  |
+| F5     | **Carta editable**: categorías y platos (de/es, precio, alérgenos, foto, visible, orden), carga inicial desde el PDF, PDF descargable | 24–26.11 | ✅ Hecha  |
+| M1     | **Diseño** (en paralelo): paleta y estilo del logo, tokens Tailwind, decidir shadcn, maquetas                                         | 22–26.11 | Pendiente |
+| M2     | **Páginas públicas (de/es)**: Inicio, Carta (desde la BD), Historia (lorem), Contacto + mapa, Impressum, Datenschutz                  | 27–28.11 | Pendiente |
+| M4     | **Publicación**: servidor en la UE (Node + MySQL), dominio nuevo, HTTPS, copias de seguridad, SEO básico                              | 29.11    | Pendiente |
+| —      | Margen                                                                                                                                | 30.11    | —         |
 
 **Después del 01.12:** reservas (formulario por email primero, luego en BD), horarios editables, noticias, pedidos, tienda, multimedia, textos legales editables.
 
@@ -65,7 +65,7 @@ El restaurante **se queda sin página web ese día**. Prioridad absoluta: tener 
 
 - Hosting en la UE con Node + MySQL (p. ej. un VPS pequeño) y proveedor de email (SMTP con contrato AVV).
 - Herramienta de prerender/SEO para la SPA.
-- shadcn/ui sí o no (según el diseño).
+- ✅ shadcn/ui: sí (ADR 0008), ya usado en el panel.
 - Anti-bot del formulario (honeypot + rate-limit; Turnstile opcional).
 
 **Fase 3**
@@ -79,20 +79,28 @@ El restaurante **se queda sin página web ese día**. Prioridad absoluta: tener 
 - Antes de publicar: cron diario de `npm run db:cleanup`, nginx con `X-Forwarded-For $remote_addr`, `API_HOST=127.0.0.1`, información al personal sobre sus datos de acceso.
 - Valorar: límite de intentos también por email, lista local de contraseñas comunes, sesión más corta en dispositivos compartidos, colación `utf8mb4_0900_as_ci` en `users.email`, manejo global de 401 en la web.
 
+**Antes de publicar (anotado en la revisión de la fase 5)**
+
+- nginx: CSP y HSTS para la SPA y `/admin`, `/uploads` servido bajo el mismo origen que la web (helmet pone `Cross-Origin-Resource-Policy: same-origin`), `client_max_body_size` ≈ 11 MB, reenviar `Origin` y `Sec-Fetch-*` (CSRF).
+- `UPLOADS_DIR` absoluto, fuera del repo, permisos 0750 y dentro de las copias de seguridad. Ejecutar `npm run db:seed:menu` en el servidor con las fotos y reiniciar la API.
+- `npm audit --omit=dev` (sharp, multer, @react-pdf) y test de humo del build (`dist/assets` con fuentes y logo).
+- Resolver los platos provisionales de [`pendientes.md`](pendientes.md) (alérgenos, precios dudosos, Chaufa "vegano" con salsa de ostión).
+
 **Más adelante**
 
 - Docker · almacenamiento de imágenes/vídeos · franjas y límites de pedidos · reservas con confirmación manual vs. aforo automático · roles definitivos · plazo de retención de datos.
 
 ## Historial
 
-| Fecha      | Hito                                                                                                                                                                                                                                         |
-| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-11-10 | Fase 0: plan de arquitectura y auditoría de herramientas aprobados. Repo GitHub creado.                                                                                                                                                      |
-| 2026-11-18 | Proyecto movido fuera de OneDrive a `C:\claude-code`. Fase 1 completada.                                                                                                                                                                     |
-| 2026-11-18 | Flujo de ramas `main` + `development` + `feat/*`. find-skills instalado; herramientas de IA documentadas en `docs/tooling.md`.                                                                                                               |
-| 2026-11-18 | Skills globales y de proyecto instaladas (frontend, backend, BD, Superpowers); subagentes `code-reviewer` y `qa-tester`. Diseño: se creará con `frontend-design` + referencias (Figma opcional).                                             |
-| 2026-11-18 | Fase 2 completada: monorepo (web + API + shared), `GET /api/v1/health`, i18n de/es, ESLint/Prettier/Vitest, CI de GitHub Actions.                                                                                                            |
-| 2026-11-18 | MySQL 8.4.13 instalado (puerto 3307, junto a MariaDB de XAMPP). Plan MVP aprobado: web pública publicada antes del 01.12; BD y panel después.                                                                                                |
-| 2026-11-21 | Skills de QA, seguridad (OWASP), DSGVO, rendimiento y formularios. Pruebas: Playwright e2e (escritorio + móvil), axe WCAG 2.2 AA, skeleton loader, tests de seguridad de la API, `db:check`. Regla: no cerrar nada sin `check:all` en verde. |
-| 2026-11-21 | Material del restaurante recibido. Plan revisado: BD y carta editable antes del 01.12 (el restaurante no tiene web ni dominio). ADR 0007: Kysely.                                                                                            |
-| 2026-11-22 | Fase 3 completada: Kysely + migraciones, Better Auth con roles admin/staff, login `/admin` (de/es). Revisión de código y de seguridad aplicada (IP fiable para el rate-limit, logs sin datos personales, limpieza de sesiones).              |
+| Fecha      | Hito                                                                                                                                                                                                                                                                                                                                                  |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-11-10 | Fase 0: plan de arquitectura y auditoría de herramientas aprobados. Repo GitHub creado.                                                                                                                                                                                                                                                               |
+| 2026-11-18 | Proyecto movido fuera de OneDrive a `C:\claude-code`. Fase 1 completada.                                                                                                                                                                                                                                                                              |
+| 2026-11-18 | Flujo de ramas `main` + `development` + `feat/*`. find-skills instalado; herramientas de IA documentadas en `docs/tooling.md`.                                                                                                                                                                                                                        |
+| 2026-11-18 | Skills globales y de proyecto instaladas (frontend, backend, BD, Superpowers); subagentes `code-reviewer` y `qa-tester`. Diseño: se creará con `frontend-design` + referencias (Figma opcional).                                                                                                                                                      |
+| 2026-11-18 | Fase 2 completada: monorepo (web + API + shared), `GET /api/v1/health`, i18n de/es, ESLint/Prettier/Vitest, CI de GitHub Actions.                                                                                                                                                                                                                     |
+| 2026-11-18 | MySQL 8.4.13 instalado (puerto 3307, junto a MariaDB de XAMPP). Plan MVP aprobado: web pública publicada antes del 01.12; BD y panel después.                                                                                                                                                                                                         |
+| 2026-11-21 | Skills de QA, seguridad (OWASP), DSGVO, rendimiento y formularios. Pruebas: Playwright e2e (escritorio + móvil), axe WCAG 2.2 AA, skeleton loader, tests de seguridad de la API, `db:check`. Regla: no cerrar nada sin `check:all` en verde.                                                                                                          |
+| 2026-11-21 | Material del restaurante recibido. Plan revisado: BD y carta editable antes del 01.12 (el restaurante no tiene web ni dominio). ADR 0007: Kysely.                                                                                                                                                                                                     |
+| 2026-11-22 | Fase 5 completada: carta en BD (categorías y platos de/es, alérgenos, dieta, provisional), panel `/admin` con shadcn (menú lateral, resumen, listados y formularios accesibles), fotos con sharp (WebP sin metadatos), carta pública + PDF de/es generado desde la BD, carga de la carta real (50 platos), CSRF y límite de peticiones. Node 24.22.3. |
+| 2026-11-22 | Fase 3 completada: Kysely + migraciones, Better Auth con roles admin/staff, login `/admin` (de/es). Revisión de código y de seguridad aplicada (IP fiable para el rate-limit, logs sin datos personales, limpieza de sesiones).                                                                                                                       |
