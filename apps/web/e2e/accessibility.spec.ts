@@ -30,7 +30,16 @@ for (const path of ['/de/speisekarte', '/es/carta']) {
   });
 }
 
-for (const path of ['/de/geschichte', '/es/historia', '/de/kontakt', '/es/contacto']) {
+for (const path of [
+  '/de/geschichte',
+  '/es/historia',
+  '/de/kontakt',
+  '/es/contacto',
+  '/de/impressum',
+  '/es/aviso-legal',
+  '/de/datenschutz',
+  '/es/privacidad',
+]) {
   test(`${path} no tiene infracciones de accesibilidad WCAG 2.2 AA`, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto(path);

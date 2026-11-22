@@ -69,3 +69,60 @@ test.describe('páginas públicas: Geschichte/Historia y Kontakt/Contacto', () =
     expect(external).toEqual([]);
   });
 });
+
+const LEGAL = [
+  {
+    lang: 'de',
+    imprintLink: 'Impressum',
+    privacyLink: 'Datenschutz',
+    imprintUrl: /\/de\/impressum$/,
+    privacyUrl: /\/de\/datenschutz$/,
+    imprintH1: 'Impressum',
+    privacyH1: 'Datenschutzerklärung',
+  },
+  {
+    lang: 'es',
+    imprintLink: 'Aviso legal',
+    privacyLink: 'Privacidad',
+    imprintUrl: /\/es\/aviso-legal$/,
+    privacyUrl: /\/es\/privacidad$/,
+    imprintH1: 'Aviso legal',
+    privacyH1: 'Política de privacidad',
+  },
+] as const;
+
+test.describe('páginas legales: Impressum y Datenschutz', () => {
+  for (const c of LEGAL) {
+    test(`el pie de página llega a Impressum y Datenschutz (${c.lang})`, async ({ page }) => {
+      await page.goto(`/${c.lang}`);
+      const footer = page.getByRole('contentinfo');
+
+      await footer.getByRole('link', { name: c.imprintLink, exact: true }).click();
+      await expect(page).toHaveURL(c.imprintUrl);
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(c.imprintH1);
+
+      await page
+        .getByRole('contentinfo')
+        .getByRole('link', { name: c.privacyLink, exact: true })
+        .click();
+      await expect(page).toHaveURL(c.privacyUrl);
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(c.privacyH1);
+    });
+  }
+
+  for (const c of [
+    { from: '/de/impressum', to: /\/es\/aviso-legal$/, h1: 'Aviso legal' },
+    { from: '/de/datenschutz', to: /\/es\/privacidad$/, h1: 'Política de privacidad' },
+  ]) {
+    test(`el cambio de idioma en ${c.from} conserva la página legal`, async ({
+      page,
+      isMobile,
+    }) => {
+      await page.goto(c.from);
+      if (isMobile) await page.getByRole('button', { name: 'Menü öffnen' }).click();
+      await page.getByRole('link', { name: 'Español' }).click();
+      await expect(page).toHaveURL(c.to);
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(c.h1);
+    });
+  }
+});

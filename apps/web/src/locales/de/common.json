@@ -371,5 +371,84 @@
     "howTitle": "So finden Sie uns",
     "howText": "Das Restaurant liegt in der Nähe des Bahnhofs Bremen-Neustadt.",
     "mapNote": "Die Karte ist ein Bild. Erst beim Klick auf einen Link wird ein externer Kartendienst geöffnet."
+  },
+  "imprint": {
+    "notice": "Hinweis: Dieses Impressum ist noch nicht vollständig. Mit „[ausstehend]“ gekennzeichnete Angaben (und die Anschrift) muss der Betreiber noch bestätigen; bis dahin ist der Text vorläufig.",
+    "translationNote": "Maßgeblich ist diese deutsche Fassung.",
+    "pending": "[ausstehend]",
+    "provider": {
+      "title": "Angaben gemäß § 5 DDG",
+      "operator": "Betreiber",
+      "legalForm": "Rechtsform",
+      "representative": "Vertretungsberechtigt",
+      "address": "Anschrift",
+      "phone": "Telefon",
+      "email": "E-Mail",
+      "vatId": "Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG",
+      "register": "Handelsregister (falls eingetragen)",
+      "responsible": "Verantwortlich für den Inhalt gemäß § 18 Abs. 2 MStV"
+    },
+    "disputes": {
+      "title": "Verbraucherstreitbeilegung",
+      "body": "Wir sind weder bereit noch verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen (§ 36 VSBG).",
+      "toConfirm": "Diese Angabe muss der Betreiber noch bestätigen."
+    },
+    "links": {
+      "title": "Haftung für Links",
+      "body": "Diese Website enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Für diese fremden Inhalte übernehmen wir keine Gewähr; verantwortlich ist stets der jeweilige Anbieter."
+    }
+  },
+  "privacy": {
+    "notice": "Hinweis: Diese Datenschutzerklärung ist ein Entwurf und muss vom Betreiber geprüft und freigegeben werden. Mit „[ausstehend]“ gekennzeichnete Angaben fehlen noch.",
+    "translationNote": "Maßgeblich ist diese deutsche Fassung.",
+    "pending": "[ausstehend]",
+    "sections": {
+      "overview": {
+        "title": "Überblick",
+        "p1": "Diese Website informiert über das Restaurant: Speisekarte, Öffnungszeiten, Geschichte und Kontaktdaten. Wir verarbeiten dabei so wenige personenbezogene Daten wie möglich.",
+        "p2": "Auf dieser Website gibt es derzeit keine Formulare und keine Kundenkonten."
+      },
+      "controller": {
+        "title": "Verantwortlicher",
+        "p1": "Verantwortlich im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:",
+        "imprintLink": "Weitere Angaben zum Anbieter finden Sie im Impressum."
+      },
+      "hosting": {
+        "title": "Hosting und Server-Logfiles",
+        "p1": "Diese Website wird auf einem Server in der Europäischen Union betrieben. Hosting-Anbieter: {{provider}}.",
+        "p2": "Beim Aufruf der Website verarbeitet der Webserver automatisch technisch erforderliche Daten und speichert sie in Logfiles: IP-Adresse, Datum und Uhrzeit des Abrufs, abgerufene URL, Browsertyp und -version (User-Agent) sowie die zuvor besuchte Seite (Referrer).",
+        "p3": "Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes Interesse ist der sichere und stabile Betrieb der Website (Abwehr von Angriffen, Fehleranalyse). Die Daten werden nicht mit anderen Daten zusammengeführt.",
+        "p4": "Speicherdauer der Logfiles: {{retention}}."
+      },
+      "cookies": {
+        "title": "Cookies",
+        "p1": "Auf den öffentlichen Seiten dieser Website setzen wir keine Cookies und keine Analyse- oder Tracking-Werkzeuge ein. Ein Cookie-Banner ist daher nicht erforderlich.",
+        "p2": "Nur im Verwaltungsbereich für unser Personal wird nach der Anmeldung ein technisch zwingend erforderliches Sitzungs-Cookie gesetzt, das die Anmeldung aufrechterhält. Es läuft nach spätestens sieben Tagen ab. Rechtsgrundlagen: § 25 Abs. 2 Nr. 2 TDDDG sowie Art. 6 Abs. 1 lit. f DSGVO und, für Beschäftigte, Art. 6 Abs. 1 lit. b DSGVO in Verbindung mit § 26 BDSG. Besucherinnen und Besucher der Website sind davon nicht betroffen."
+      },
+      "external": {
+        "title": "Schriftarten, Bilder und externe Dienste",
+        "p1": "Schriftarten und Bilder werden von unserem eigenen Server ausgeliefert. Wir laden keine Inhalte von Drittanbietern nach und setzen keine Analyse- oder Tracking-Dienste, keine Social-Media-Plugins und keine eingebetteten Karten ein.",
+        "p2": "Die Karte auf der Kontaktseite ist ein Bild. Die Links zu Google Maps und OpenStreetMap übermitteln erst dann Daten (insbesondere Ihre IP-Adresse) an den jeweiligen Anbieter, wenn Sie sie anklicken. Ab dann gilt dessen Datenschutzerklärung."
+      },
+      "contact": {
+        "title": "Kontakt per Telefon oder E-Mail",
+        "p1": "Wenn Sie uns anrufen oder schreiben, verarbeiten wir Ihre Angaben (zum Beispiel Name, Telefonnummer, E-Mail-Adresse und den Inhalt Ihrer Nachricht) nur, um Ihre Anfrage zu bearbeiten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, wenn die Anfrage mit einem Vertrag zusammenhängt, sonst Art. 6 Abs. 1 lit. f DSGVO (Bearbeitung von Anfragen).",
+        "p2": "Wir löschen die Daten, sobald sie dafür nicht mehr erforderlich sind und keine gesetzlichen Aufbewahrungspflichten entgegenstehen."
+      },
+      "rights": {
+        "title": "Ihre Rechte",
+        "p1": "Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21).",
+        "p2": "Beruht die Verarbeitung auf Art. 6 Abs. 1 lit. f DSGVO, können Sie aus Gründen, die sich aus Ihrer besonderen Situation ergeben, jederzeit widersprechen. Wenden Sie sich dazu an die oben genannten Kontaktdaten."
+      },
+      "authority": {
+        "title": "Beschwerderecht bei der Aufsichtsbehörde",
+        "p1": "Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren (Art. 77 DSGVO). Für uns zuständig ist:",
+        "name": "Die Landesbeauftragte für Datenschutz und Informationsfreiheit der Freien Hansestadt Bremen"
+      },
+      "updated": {
+        "title": "Stand",
+        "p1": "Stand: 22. November 2026. Wir passen diese Erklärung an, wenn sich die Website oder die Rechtslage ändert."
+      }
+    }
   }
 }

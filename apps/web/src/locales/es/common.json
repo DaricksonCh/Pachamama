@@ -371,5 +371,84 @@
     "howTitle": "Cómo llegar",
     "howText": "El restaurante está cerca de la estación de tren de Bremen-Neustadt.",
     "mapNote": "El mapa es una imagen. Un servicio de mapas externo solo se abre si haces clic en un enlace."
+  },
+  "imprint": {
+    "notice": "Aviso: este aviso legal aún no está completo. Los datos marcados con «[pendiente]» (y la dirección) deben ser confirmados por el titular; hasta entonces el texto es provisional.",
+    "translationNote": "Traducción de cortesía del texto alemán. Es vinculante la versión alemana (Impressum).",
+    "pending": "[pendiente]",
+    "provider": {
+      "title": "Datos según el § 5 DDG (Ley alemana de servicios digitales)",
+      "operator": "Titular",
+      "legalForm": "Forma jurídica",
+      "representative": "Representante legal",
+      "address": "Dirección",
+      "phone": "Teléfono",
+      "email": "Correo electrónico",
+      "vatId": "Número de identificación fiscal (IVA) según el § 27a UStG",
+      "register": "Registro mercantil (si está inscrito)",
+      "responsible": "Responsable del contenido según el § 18 apdo. 2 MStV"
+    },
+    "disputes": {
+      "title": "Resolución de litigios de consumo",
+      "body": "No estamos dispuestos ni obligados a participar en procedimientos de resolución de litigios ante una entidad de arbitraje de consumo (§ 36 VSBG).",
+      "toConfirm": "El titular debe confirmar todavía este dato."
+    },
+    "links": {
+      "title": "Responsabilidad por enlaces",
+      "body": "Esta web contiene enlaces a sitios externos de terceros sobre cuyo contenido no tenemos influencia. No asumimos ninguna garantía sobre ese contenido ajeno; el responsable es siempre el proveedor correspondiente."
+    }
+  },
+  "privacy": {
+    "notice": "Aviso: esta política de privacidad es un borrador y debe ser revisada y aprobada por el titular. Los datos marcados con «[pendiente]» aún faltan.",
+    "translationNote": "Traducción de cortesía del texto alemán. Es vinculante la versión alemana (Datenschutzerklärung).",
+    "pending": "[pendiente]",
+    "sections": {
+      "overview": {
+        "title": "Resumen",
+        "p1": "Esta web informa sobre el restaurante: carta, horario, historia y datos de contacto. Tratamos la menor cantidad posible de datos personales.",
+        "p2": "Por ahora esta web no tiene formularios ni cuentas de cliente."
+      },
+      "controller": {
+        "title": "Responsable del tratamiento",
+        "p1": "El responsable en el sentido del Reglamento general de protección de datos (RGPD) es:",
+        "imprintLink": "Encontrará más datos del titular en el aviso legal."
+      },
+      "hosting": {
+        "title": "Alojamiento y archivos de registro del servidor",
+        "p1": "Esta web funciona en un servidor situado en la Unión Europea. Proveedor de alojamiento: {{provider}}.",
+        "p2": "Al abrir la web, el servidor trata automáticamente datos técnicamente necesarios y los guarda en archivos de registro: dirección IP, fecha y hora de la petición, URL solicitada, tipo y versión del navegador (user agent) y la página visitada antes (referrer).",
+        "p3": "La base jurídica es el art. 6, apdo. 1, letra f RGPD. Nuestro interés legítimo es el funcionamiento seguro y estable de la web (defensa frente a ataques, análisis de errores). Los datos no se combinan con otros datos.",
+        "p4": "Plazo de conservación de los archivos de registro: {{retention}}."
+      },
+      "cookies": {
+        "title": "Cookies",
+        "p1": "En las páginas públicas de esta web no usamos cookies ni herramientas de análisis o seguimiento. Por eso no hace falta un banner de cookies.",
+        "p2": "Solo en el área de gestión para nuestro personal se instala, tras iniciar sesión, una cookie de sesión técnicamente imprescindible que mantiene la sesión abierta. Caduca como máximo a los siete días. Bases jurídicas: § 25 apdo. 2 n.º 2 TDDDG, art. 6, apdo. 1, letra f RGPD y, para empleados, art. 6, apdo. 1, letra b RGPD en relación con el § 26 BDSG. Quienes visitan la web no se ven afectados."
+      },
+      "external": {
+        "title": "Fuentes, imágenes y servicios externos",
+        "p1": "Las fuentes y las imágenes se sirven desde nuestro propio servidor. No cargamos contenido de terceros y no usamos servicios de análisis o seguimiento, complementos de redes sociales ni mapas incrustados.",
+        "p2": "El mapa de la página de contacto es una imagen. Los enlaces a Google Maps y OpenStreetMap solo transmiten datos (en particular su dirección IP) al proveedor correspondiente cuando usted los pulsa. A partir de ese momento se aplica la política de privacidad de ese proveedor."
+      },
+      "contact": {
+        "title": "Contacto por teléfono o correo electrónico",
+        "p1": "Si nos llama o nos escribe, tratamos sus datos (por ejemplo nombre, teléfono, correo electrónico y el contenido del mensaje) solo para atender su consulta. La base jurídica es el art. 6, apdo. 1, letra b RGPD si la consulta está relacionada con un contrato y, en los demás casos, el art. 6, apdo. 1, letra f RGPD (atención de consultas).",
+        "p2": "Borramos los datos cuando ya no son necesarios para ello y no lo impide ninguna obligación legal de conservación."
+      },
+      "rights": {
+        "title": "Sus derechos",
+        "p1": "Usted tiene derecho de acceso (art. 15 RGPD), rectificación (art. 16), supresión (art. 17), limitación del tratamiento (art. 18), portabilidad (art. 20) y oposición (art. 21).",
+        "p2": "Si el tratamiento se basa en el art. 6, apdo. 1, letra f RGPD, puede oponerse en cualquier momento por motivos relacionados con su situación particular. Para ello, diríjase a los datos de contacto indicados arriba."
+      },
+      "authority": {
+        "title": "Derecho a reclamar ante la autoridad de control",
+        "p1": "Tiene derecho a presentar una reclamación ante una autoridad de control de protección de datos (art. 77 RGPD). La competente para nosotros es:",
+        "name": "Die Landesbeauftragte für Datenschutz und Informationsfreiheit der Freien Hansestadt Bremen"
+      },
+      "updated": {
+        "title": "Fecha",
+        "p1": "Fecha: 22 de noviembre de 2026. Adaptamos esta política cuando cambie la web o la normativa."
+      }
+    }
   }
 }

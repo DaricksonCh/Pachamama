@@ -16,19 +16,26 @@ Leyenda: ⏳ pendiente · ✅ confirmado
 | Email     | PENDIENTE (en la web: `info@example.com` de relleno) | ⏳     |
 | Logo SVG  | Solo hay PNG de 600 px; falta el vectorial original  | ⏳     |
 
-> **Técnico (revisión de M1):** Carta, Historia, Contacto, Impressum y Datenschutz aún no tienen ruta (llegan en M2; hasta entonces sus enlaces vuelven a la Inicio). M2 debe añadir el e2e de «el skeleton no anima con `prefers-reduced-motion`» en la Carta, `<title>`/description por página y fotos de 1280 px para la quinua y la causa si existen originales mayores.
+> **Técnico (revisión de M1):** M2 debe añadir el e2e de «el skeleton no anima con `prefers-reduced-motion`» en la Carta, `<title>`/description por página y fotos de 1280 px para la quinua y la causa si existen originales mayores.
 > | Reservas | Email que recibe las reservas: PENDIENTE | ⏳ |
 > | Dominio | Se compra uno nuevo al publicar (el anterior caducó) | ⏳ |
 
 ## Impressum (obligatorio en Alemania)
 
-| Dato                        | Valor     | Estado |
-| --------------------------- | --------- | ------ |
-| Razón social / nombre       | PENDIENTE | ⏳     |
-| Titular o representante     | PENDIENTE | ⏳     |
-| Dirección legal             | PENDIENTE | ⏳     |
-| USt-IdNr. (número de IVA)   | PENDIENTE | ⏳     |
-| Registro mercantil (si hay) | PENDIENTE | ⏳     |
+| Dato                                                                             | Valor                           | Estado |
+| -------------------------------------------------------------------------------- | ------------------------------- | ------ |
+| Razón social / nombre                                                            | PENDIENTE                       | ⏳     |
+| Titular o representante                                                          | PENDIENTE                       | ⏳     |
+| Dirección legal                                                                  | PENDIENTE                       | ⏳     |
+| USt-IdNr. (número de IVA)                                                        | PENDIENTE                       | ⏳     |
+| Registro mercantil (si hay)                                                      | PENDIENTE                       | ⏳     |
+| Forma jurídica                                                                   | PENDIENTE                       | ⏳     |
+| Responsable del contenido (§ 18 Abs. 2 MStV)                                     | PENDIENTE                       | ⏳     |
+| Confirmar que la dirección legal es la del local                                 | Provisional (usa Am Gaswerk 1)  | ⏳     |
+| Confirmar «ni dispuestos ni obligados» a arbitraje de consumo (§ 36 VSBG)        | Texto provisional               | ⏳     |
+| Proveedor de hosting (UE) y contrato de encargo (AVV)                            | PENDIENTE                       | ⏳     |
+| Plazo de conservación de los logs del servidor web (nginx)                       | PENDIENTE (la API no guarda IP) | ⏳     |
+| Revisión jurídica de Impressum y Datenschutzerklärung por el titular o un asesor | Textos en borrador (22.11.2026) | ⏳     |
 
 ## Contenidos
 
