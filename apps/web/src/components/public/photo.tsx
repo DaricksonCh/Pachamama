@@ -7,6 +7,8 @@ const PHOTOS = {
   quinua: { name: 'ensalada-quinua', widths: [640], ratio: 640 / 993 },
   tamal: { name: 'tamal', widths: [640, 1280], ratio: 1280 / 920 },
   localInterior: { name: 'local-interior', widths: [640, 1280], ratio: 1280 / 720 },
+  equipo: { name: 'equipo', widths: [640, 1280], ratio: 1280 / 1091 },
+  localVertical: { name: 'local-vertical', widths: [640], ratio: 640 / 1138 },
   cocinera: { name: 'cocinera-retrato', widths: [640, 1280], ratio: 1280 / 1707 },
 } as const;
 

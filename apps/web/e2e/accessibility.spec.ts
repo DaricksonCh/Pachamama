@@ -30,6 +30,19 @@ for (const path of ['/de/speisekarte', '/es/carta']) {
   });
 }
 
+for (const path of ['/de/geschichte', '/es/historia', '/de/kontakt', '/es/contacto']) {
+  test(`${path} no tiene infracciones de accesibilidad WCAG 2.2 AA`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(path);
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    await page.waitForLoadState('networkidle');
+
+    const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
+
+    expect(results.violations.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+  });
+}
+
 test('el menú móvil abierto también es accesible', async ({ page, isMobile }) => {
   test.skip(!isMobile, 'Menú hamburguesa: solo móvil');
   await page.emulateMedia({ reducedMotion: 'reduce' });

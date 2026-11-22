@@ -339,5 +339,37 @@
   },
   "common": {
     "close": "Schließen"
+  },
+  "story": {
+    "lead": "Peruanische Küche, die Erde und Menschen zusammenbringt.",
+    "notice": "Hinweis: Dieser Text ist ein Platzhalter. Die ausführliche Geschichte von Pachamama folgt in Kürze.",
+    "originTitle": "Woher wir kommen",
+    "p1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+    "p2": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.",
+    "p3": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+    "houseTitle": "Unser Haus",
+    "visitTitle": "Kommen Sie vorbei",
+    "seeMenu": "Zur Speisekarte",
+    "photos": {
+      "cocinera": "Porträt einer Köchin mit traditionellem Hut",
+      "equipo": "Das Team des Restaurants gemeinsam im Gastraum",
+      "interior": "Der Gastraum mit Bar, Holztischen und bunter Dekoration",
+      "vertical": "Blick in den Gastraum mit Dekoration an den Wänden"
+    }
+  },
+  "contact": {
+    "lead": "Wir freuen uns auf Ihren Besuch.",
+    "address": "Adresse",
+    "hours": "Öffnungszeiten",
+    "phone": "Telefon",
+    "email": "E-Mail",
+    "mapAlt": "Karte der Umgebung mit Markierung am Restaurant, Am Gaswerk 1, Bremen",
+    "mapAttribution": "© OpenStreetMap-Mitwirkende",
+    "openGoogle": "In Google Maps öffnen",
+    "openOsm": "In OpenStreetMap öffnen",
+    "newTab": "(öffnet in neuem Tab)",
+    "howTitle": "So finden Sie uns",
+    "howText": "Das Restaurant liegt in der Nähe des Bahnhofs Bremen-Neustadt.",
+    "mapNote": "Die Karte ist ein Bild. Erst beim Klick auf einen Link wird ein externer Kartendienst geöffnet."
   }
 }
