@@ -2,12 +2,13 @@ import { DEFAULT_LANGUAGE, isSupportedLanguage } from '@pachamama/shared';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, Outlet, useParams } from 'react-router';
-import { LanguageSwitcher } from '@/components/language-switcher';
+import { SiteFooter } from '@/components/public/site-footer';
+import { SiteHeader } from '@/components/public/site-header';
 
-/** Sincroniza el idioma de la URL (/de, /es) con i18next y el atributo lang del documento. */
+/** Public layout: syncs the URL language (/de, /es) with i18next and <html lang>, adds header and footer. */
 export function LanguageLayout() {
   const { lang } = useParams();
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const valid = isSupportedLanguage(lang);
 
   useEffect(() => {
@@ -24,14 +25,12 @@ export function LanguageLayout() {
   }
 
   return (
-    <div className="min-h-dvh bg-brand-50 text-gray-900">
-      <header className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
-        <span className="font-display text-xl font-semibold text-brand-700">{t('app.name')}</span>
-        <LanguageSwitcher />
-      </header>
-      <main className="mx-auto max-w-5xl px-4 py-12">
+    <div className="flex min-h-dvh flex-col bg-papel text-tierra">
+      <SiteHeader />
+      <main id="main" tabIndex={-1} className="flex-1 focus:outline-none">
         <Outlet />
       </main>
+      <SiteFooter />
     </div>
   );
 }

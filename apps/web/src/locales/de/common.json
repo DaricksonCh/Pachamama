@@ -4,8 +4,54 @@
     "tagline": "Peruanische Küche"
   },
   "home": {
-    "title": "Willkommen bei Pachamama",
-    "placeholder": "Die Website befindet sich im Aufbau."
+    "title": "Peruanische Küche mitten in Bremen",
+    "lead": "Ceviche, Lomo Saltado, Causa und Tamales – frisch zubereitet, so wie man sie in Peru isst.",
+    "seeMenu": "Speisekarte ansehen",
+    "photos": {
+      "mesaSurtida": "Ein Tisch voller peruanischer Gerichte: Causa, Ceviche, Lomo Saltado und frische Ají-Schoten",
+      "localInterior": "Der Gastraum mit Bar, Holztischen und bunter Dekoration",
+      "cocinera": "Unsere Köchin mit traditionellem Hut"
+    },
+    "kitchen": {
+      "title": "Aus unserer Küche",
+      "link": "Zur ganzen Speisekarte",
+      "causa": "Kartoffelterrine mit Ají amarillo und Limette",
+      "quinuaName": "Quinoa-Salat",
+      "quinua": "Quinoa, Avocado und Gemüse",
+      "tamal": "Maisteig im Bananenblatt mit Salsa criolla"
+    },
+    "visit": {
+      "title": "Besuchen Sie uns",
+      "address": "Adresse",
+      "hours": "Öffnungszeiten",
+      "phone": "Telefon",
+      "link": "Anfahrt und Kontakt"
+    },
+    "story": {
+      "title": "Pachamama heißt Mutter Erde",
+      "text": "Mais, Kartoffeln, Ají und frischer Fisch: Die Küche Perus lebt von dem, was die Erde gibt. Genau das bringen wir nach Bremen.",
+      "link": "Unsere Geschichte lesen"
+    }
+  },
+  "nav": {
+    "label": "Hauptnavigation",
+    "skip": "Zum Inhalt springen",
+    "home": "Startseite",
+    "open": "Menü öffnen",
+    "menu": "Speisekarte",
+    "story": "Geschichte",
+    "contact": "Kontakt",
+    "imprint": "Impressum",
+    "privacy": "Datenschutz"
+  },
+  "reserve": {
+    "cta": "Tisch reservieren",
+    "byPhone": "telefonisch unter {{phone}}"
+  },
+  "footer": {
+    "claim": "Peruanisches Restaurant in Bremen.",
+    "visit": "Besuch",
+    "contact": "Kontakt"
   },
   "status": {
     "label": "API-Status",

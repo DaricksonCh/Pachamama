@@ -12,8 +12,9 @@ Leyenda: ⏳ pendiente · ✅ confirmado
 | --------- | ---------------------------------------------------- | ------ |
 | Horario   | Martes a domingo, 13:00–22:00 · Lunes cerrado        | ⏳     |
 | Dirección | Am Gaswerk 1, 28197 Bremen                           | ✅     |
-| Teléfono  | PENDIENTE                                            | ⏳     |
-| Email     | PENDIENTE                                            | ⏳     |
+| Teléfono  | PENDIENTE (en la web: `0421 000 000 0` de relleno)   | ⏳     |
+| Email     | PENDIENTE (en la web: `info@example.com` de relleno) | ⏳     |
+| Logo SVG  | Solo hay PNG de 600 px; falta el vectorial original  | ⏳     |
 | Reservas  | Email que recibe las reservas: PENDIENTE             | ⏳     |
 | Dominio   | Se compra uno nuevo al publicar (el anterior caducó) | ⏳     |
 

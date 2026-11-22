@@ -4,8 +4,54 @@
     "tagline": "Cocina peruana"
   },
   "home": {
-    "title": "Bienvenidos a Pachamama",
-    "placeholder": "El sitio web está en construcción."
+    "title": "Cocina peruana en pleno Bremen",
+    "lead": "Ceviche, lomo saltado, causa y tamales, preparados al momento como se comen en el Perú.",
+    "seeMenu": "Ver la carta",
+    "photos": {
+      "mesaSurtida": "Una mesa llena de platos peruanos: causa, ceviche, lomo saltado y ajíes frescos",
+      "localInterior": "El comedor con barra, mesas de madera y decoración colorida",
+      "cocinera": "Nuestra cocinera con sombrero tradicional"
+    },
+    "kitchen": {
+      "title": "De nuestra cocina",
+      "link": "Ver toda la carta",
+      "causa": "Pastel de papa con ají amarillo y limón",
+      "quinuaName": "Ensalada de quinua",
+      "quinua": "Quinua, palta y verduras",
+      "tamal": "Masa de maíz en hoja de plátano con salsa criolla"
+    },
+    "visit": {
+      "title": "Visítanos",
+      "address": "Dirección",
+      "hours": "Horario",
+      "phone": "Teléfono",
+      "link": "Cómo llegar y contacto"
+    },
+    "story": {
+      "title": "Pachamama significa Madre Tierra",
+      "text": "Maíz, papa, ají y pescado fresco: la cocina peruana vive de lo que da la tierra. Eso es lo que traemos a Bremen.",
+      "link": "Leer nuestra historia"
+    }
+  },
+  "nav": {
+    "label": "Navegación principal",
+    "skip": "Saltar al contenido",
+    "home": "Inicio",
+    "open": "Abrir menú",
+    "menu": "Carta",
+    "story": "Historia",
+    "contact": "Contacto",
+    "imprint": "Aviso legal",
+    "privacy": "Privacidad"
+  },
+  "reserve": {
+    "cta": "Reservar mesa",
+    "byPhone": "por teléfono al {{phone}}"
+  },
+  "footer": {
+    "claim": "Restaurante peruano en Bremen.",
+    "visit": "Visita",
+    "contact": "Contacto"
   },
   "status": {
     "label": "Estado de la API",
