@@ -58,6 +58,22 @@ Requieren sesión. Las escrituras exigen `Origin` de la web y `Content-Type: app
 | PUT    | `/admin/menu/dishes/:id/image`                                         | admin                                           | multipart: `image` (JPEG/PNG/WebP, ≤10 MB) + `altDe` + `altEs`; WebP 400/800/1600 sin EXIF; 415 `UNSUPPORTED_IMAGE`, 413 `IMAGE_TOO_LARGE` |
 | DELETE | `/admin/menu/dishes/:id/image`                                         | admin                                           | Quita la foto y borra los archivos; las fotos se sirven en `/uploads/dishes/<key>-<w>.webp` (`UPLOADS_DIR`)                                |
 
+## Reservas — configuración (`/api/v1/admin/reservation-settings`)
+
+Requieren sesión; lectura para admin y staff, escritura solo admin. Las escrituras exigen `Origin` de la web y `Content-Type: application/json`. Respuestas `{ data }`. Días 0 = domingo; horas `HH:mm` en rejilla :00/:30; fechas `YYYY-MM-DD` (Europe/Berlin).
+
+| Método | Ruta                                                | Acceso       | Notas                                                                                                                                 |
+| ------ | --------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/admin/reservation-settings/hours`                 | admin, staff | `{ hours: OpeningHours, hoursConfirmed }`                                                                                             |
+| PUT    | `/admin/reservation-settings/hours`                 | admin        | `{ hours }`: reemplaza la semana entera en una transacción y marca `hoursConfirmed`; solape o rango inválido → 400 `VALIDATION_ERROR` |
+| GET    | `/admin/reservation-settings/closures`              | admin, staff | Cierres con `toDate` de hoy en adelante, por `fromDate`; cada uno con `id`                                                            |
+| POST   | `/admin/reservation-settings/closures`              | admin        | `{ from, to, reasonDe?, reasonEs? }` → 201; `from > to` → 400                                                                         |
+| DELETE | `/admin/reservation-settings/closures/:id`          | admin        | 204; 404 `NOT_FOUND`                                                                                                                  |
+| GET    | `/admin/reservation-settings/settings`              | admin, staff | `ReservationSettings`                                                                                                                 |
+| PATCH  | `/admin/reservation-settings/settings`              | admin        | Parcial; se fusiona con lo actual y se valida el conjunto (p. ej. `partyMin ≤ partyMax`); clave desconocida → 400                     |
+| GET    | `/admin/reservation-settings/templates`             | admin, staff | Las 8 plantillas `{ kind, lang, subject, body }`                                                                                      |
+| PUT    | `/admin/reservation-settings/templates/:kind/:lang` | admin        | `kind`: received, confirmed, rejected, cancelled; `lang`: de, es; `subject` ≤ 150, `body` ≤ 4000; kind o lang inválidos → 400         |
+
 ## Códigos de error
 
 | Código                | HTTP | Cuándo                                           |
