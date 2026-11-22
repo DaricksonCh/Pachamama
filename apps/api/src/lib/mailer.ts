@@ -20,6 +20,11 @@ export interface SmtpConfig {
   from: string;
 }
 
+/** Header injection guard: a subject must never contain line breaks. */
+export function sanitizeSubject(subject: string): string {
+  return subject.replace(/[\r\n]+/g, ' ');
+}
+
 export function createSmtpMailer(config: SmtpConfig): Mailer {
   const transport = nodemailer.createTransport({
     host: config.host,
@@ -29,7 +34,11 @@ export function createSmtpMailer(config: SmtpConfig): Mailer {
   });
   return {
     async send(msg) {
-      await transport.sendMail({ from: config.from, ...msg });
+      await transport.sendMail({
+        from: config.from,
+        ...msg,
+        subject: sanitizeSubject(msg.subject),
+      });
     },
   };
 }

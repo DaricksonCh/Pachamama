@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { envSchema } from '../config/env';
-import { createMemoryMailer } from './mailer';
+import { createMemoryMailer, sanitizeSubject } from './mailer';
 
 const msg = { to: 'a@b.de', subject: 's', text: 't', html: '<p>t</p>' };
 
@@ -18,6 +18,12 @@ describe('createMemoryMailer', () => {
     expect(mailer.sent).toHaveLength(0);
     await mailer.send(msg);
     expect(mailer.sent).toHaveLength(1);
+  });
+});
+
+describe('sanitizeSubject', () => {
+  it('replaces CR/LF with a space', () => {
+    expect(sanitizeSubject('Hi\r\nBcc: x@y.z\nmore')).toBe('Hi Bcc: x@y.z more');
   });
 });
 
@@ -58,6 +64,29 @@ describe('env mail settings', () => {
   it('rejects localhost SMTP in production', () => {
     expect(issuePaths({ ...prod, SMTP_HOST: 'localhost' })).toContain('SMTP_HOST');
     expect(issuePaths({ ...prod, SMTP_HOST: '127.0.0.1' })).toContain('SMTP_HOST');
+  });
+
+  it('rejects local SMTP host variants in production', () => {
+    for (const host of ['LOCALHOST', '::1', '0.0.0.0', 'mail.localhost']) {
+      expect(issuePaths({ ...prod, SMTP_HOST: host })).toContain('SMTP_HOST');
+    }
+  });
+
+  it('requires SMTP_USER and SMTP_PASS together', () => {
+    expect(issuePaths({ ...base, SMTP_PASS: 'p' })).toContain('SMTP_USER');
+    expect(issuePaths({ ...base, SMTP_USER: 'u' })).toContain('SMTP_PASS');
+    expect(issuePaths({ ...base, SMTP_USER: 'u', SMTP_PASS: 'p' })).toEqual([]);
+  });
+
+  it('treats empty SMTP_USER and SMTP_PASS as unset', () => {
+    const r = envSchema.parse({ ...base, SMTP_USER: '', SMTP_PASS: '' });
+    expect(r.SMTP_USER).toBeUndefined();
+    expect(r.SMTP_PASS).toBeUndefined();
+  });
+
+  it('parses SMTP_SECURE=false and rejects invalid values', () => {
+    expect(envSchema.parse({ ...base, SMTP_SECURE: 'false' }).SMTP_SECURE).toBe(false);
+    expect(issuePaths({ ...base, SMTP_SECURE: 'yes' })).toContain('SMTP_SECURE');
   });
 
   it('rejects placeholder sender and notify addresses in production', () => {

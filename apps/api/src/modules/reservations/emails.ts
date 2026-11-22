@@ -61,10 +61,11 @@ function layout(bodyHtml: string, detailsHtml: string): string {
 }
 
 function detailsTable(rows: Array<[string, string]>): string {
+  // Values are multi-line plain text: same escape + newline handling as the body.
   const tr = rows
     .map(
       ([k, v]) =>
-        `<tr><td style="padding:2px 12px 2px 0;color:#555;">${escapeHtml(k)}</td><td style="padding:2px 0;"><strong>${escapeHtml(v)}</strong></td></tr>`,
+        `<tr><td style="padding:2px 12px 2px 0;color:#555;">${escapeHtml(k)}</td><td style="padding:2px 0;"><strong>${toHtml(v)}</strong></td></tr>`,
     )
     .join('');
   return `<table style="border-top:1px solid #ddd;padding-top:8px;width:100%;" cellpadding="0" cellspacing="0">${tr}</table>`;

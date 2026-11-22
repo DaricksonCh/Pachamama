@@ -20,6 +20,11 @@ const trustProxySchema = z
   .default('loopback')
   .transform((value) => (/^\d+$/.test(value) ? Number(value) : value));
 
+const emptyToUndefined = z
+  .string()
+  .optional()
+  .transform((value) => (value === '' ? undefined : value));
+
 /** Exportado solo para poder probar las reglas de producción. */
 export const envSchema = z
   .object({
@@ -48,13 +53,21 @@ export const envSchema = z
       .enum(['true', 'false'])
       .default('false')
       .transform((value) => value === 'true'),
-    SMTP_USER: z.string().min(1).optional(),
-    SMTP_PASS: z.string().min(1).optional(),
+    // Un valor vacío en .env equivale a no definirlo.
+    SMTP_USER: emptyToUndefined,
+    SMTP_PASS: emptyToUndefined,
     MAIL_FROM: z.string().min(1).default('Pachamama <reservierung@localhost>'),
     /** Dirección del personal que recibe el aviso de cada solicitud de reserva. */
     RESERVATIONS_NOTIFY_EMAIL: z.string().min(1).default('reservierung@localhost'),
   })
   .superRefine((env, ctx) => {
+    if (Boolean(env.SMTP_USER) !== Boolean(env.SMTP_PASS)) {
+      ctx.addIssue({
+        code: 'custom',
+        path: [env.SMTP_USER ? 'SMTP_PASS' : 'SMTP_USER'],
+        message: 'SMTP_USER y SMTP_PASS deben definirse juntos',
+      });
+    }
     if (env.NODE_ENV !== 'production') return;
     // En producción no se aceptan valores de desarrollo ni marcadores sin rellenar.
     for (const key of ['WEB_ORIGIN', 'BETTER_AUTH_URL'] as const) {
@@ -75,7 +88,11 @@ export const envSchema = z
         });
       }
     }
-    if (['localhost', '127.0.0.1'].includes(env.SMTP_HOST)) {
+    const smtpHost = env.SMTP_HOST.trim().toLowerCase();
+    if (
+      ['localhost', '127.0.0.1', '::1', '[::1]', '0.0.0.0'].includes(smtpHost) ||
+      smtpHost.endsWith('.localhost')
+    ) {
       ctx.addIssue({
         code: 'custom',
         path: ['SMTP_HOST'],

@@ -47,6 +47,11 @@ describe('buildDecisionEmail', () => {
     expect(de.html).toContain(dateOf('de-DE'));
   });
 
+  it('escapes & " and \' in html', () => {
+    const r = build({ body: 'a & b "c" \'d\'' });
+    expect(r.html).toContain('a &amp; b &quot;c&quot; &#39;d&#39;');
+  });
+
   it('includes party size, address and subject', () => {
     const r = build();
     expect(r.subject).toBe('Betreff');
@@ -74,6 +79,23 @@ describe('buildStaffNotification', () => {
     expect(r.text).toContain('https://example.org/admin/reservations/42');
     expect(r.html).toContain('https://example.org/admin/reservations/42');
     expect(r.text).toContain(dateOf('de-DE'));
+  });
+
+  it('escapes a multi-line comment and renders newlines as <br>', () => {
+    const c = buildStaffNotification(
+      {
+        publicId: 'p',
+        id: 1,
+        startsAt,
+        partySize: 2,
+        name: 'Eva',
+        phone: '1',
+        comment: '<b>&"\'\nzwei',
+      },
+      'https://example.org',
+    );
+    expect(c.html).toContain('&lt;b&gt;&amp;&quot;&#39;<br>zwei');
+    expect(c.text).toContain('<b>&"\'\nzwei');
   });
 
   it('escapes personal data in html', () => {
