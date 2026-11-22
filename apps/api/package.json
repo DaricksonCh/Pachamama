@@ -16,7 +16,8 @@
     "e2e:seed": "tsx scripts/e2e-seed.ts",
     "e2e:serve": "tsx scripts/e2e-server.ts",
     "db:cleanup": "tsx scripts/cleanup.ts",
-    "db:seed:menu": "tsx scripts/seed-menu.ts"
+    "db:seed:menu": "tsx scripts/seed-menu.ts",
+    "publish:check": "tsx scripts/publish-check.ts"
   },
   "dependencies": {
     "@better-auth/kysely-adapter": "^1.7.27",
