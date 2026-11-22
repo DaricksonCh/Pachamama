@@ -24,9 +24,10 @@ const defaultPhotosDir = resolve(
   '../../../material/fotos',
 );
 let photosDir = values.photos ?? process.env.MENU_PHOTOS_DIR;
+let missingDefaultPhotosDir = false;
 if (photosDir === undefined) {
   if (existsSync(defaultPhotosDir)) photosDir = defaultPhotosDir;
-  else console.warn(`⚠ Sin carpeta de fotos (${defaultPhotosDir}): la carta se carga sin fotos.`);
+  else missingDefaultPhotosDir = true;
 }
 
 try {
@@ -39,6 +40,9 @@ try {
     photosDir,
     warn: (message) => console.warn(`⚠ ${message}`),
   });
+  if (result.created && missingDefaultPhotosDir) {
+    console.warn(`⚠ Sin carpeta de fotos (${defaultPhotosDir}): la carta se carga sin fotos.`);
+  }
   if (!result.created) {
     console.log('La carta ya tiene categorías: no se ha cargado nada (se gestiona en /admin).');
   } else {

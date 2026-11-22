@@ -36,6 +36,10 @@ const envSchema = z
     BETTER_AUTH_URL: z.url().default('http://localhost:3000'),
     /** Carpeta de las fotos subidas (se sirve en /uploads). En producción: fuera del repo y con copia de seguridad. */
     UPLOADS_DIR: z.string().min(1).default('./uploads'),
+    /** Límites de peticiones por IP (ver middlewares/rate-limit.ts). */
+    RATE_LIMIT_API_PER_MIN: z.coerce.number().int().positive().default(300),
+    RATE_LIMIT_IMAGE_PER_10MIN: z.coerce.number().int().positive().default(30),
+    RATE_LIMIT_PDF_PER_MIN: z.coerce.number().int().positive().default(30),
   })
   .superRefine((env, ctx) => {
     if (env.NODE_ENV !== 'production') return;

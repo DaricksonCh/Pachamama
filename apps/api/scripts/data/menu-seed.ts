@@ -307,11 +307,12 @@ export const MENU_SEED: SeedGroup[] = [
           descriptionEs:
             'Champiñones flambeados al wok con col china, verduras, cebolla china, salsa de soja, salsa de ostión, aceite de sésamo, masa wantán frita y arroz.',
           price: 13.5,
-          diet: 'vegan',
+          // Sin etiqueta vegana hasta que el restaurante confirme la receta: lleva salsa de ostión.
+          diet: null,
           allergens: ['A', 'F', 'N'],
         },
         ALLERGEN_R,
-        'Lleva aceite de sésamo (el PDF no indica K) y salsa de ostión (N), que no es vegana.',
+        'Sin etiqueta vegana: lleva salsa de ostión (N), que no es vegana. Lleva aceite de sésamo (el PDF no indica K).',
       ),
       dish(
         {
