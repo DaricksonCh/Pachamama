@@ -11,6 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { InstagramLink } from './instagram-link';
 import { ReserveButton } from './reserve-button';
 import { WovenStripe } from './woven-stripe';
 import { useLang } from './use-lang';
@@ -81,7 +82,8 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        <div className="hidden items-center gap-5 md:flex">
+        <div className="hidden items-center gap-3 md:flex">
+          <InstagramLink className="text-selva" />
           <LanguageSwitcher />
           <ReserveButton tone="onLight" className="min-h-10 px-4 py-2 text-sm" />
         </div>
@@ -115,7 +117,10 @@ export function SiteHeader() {
             </nav>
             <div className="mt-auto flex flex-col gap-6 px-6 pb-8">
               <ReserveButton tone="onDark" />
-              <LanguageSwitcher className="text-base [&_a]:focus-visible:outline-maiz" />
+              <div className="flex items-center justify-between gap-4">
+                <LanguageSwitcher align="start" className="text-base focus-visible:outline-maiz" />
+                <InstagramLink className="focus-visible:outline-maiz" />
+              </div>
             </div>
           </SheetContent>
         </Sheet>

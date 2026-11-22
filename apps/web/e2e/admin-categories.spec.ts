@@ -1,3 +1,4 @@
+import { switchLanguage } from './language-helpers';
 import { expect, test } from '@playwright/test';
 import {
   axeViolations,
@@ -168,7 +169,7 @@ test.describe('panel /admin: categorías de la carta', () => {
     await expect(row(page, name)).toBeVisible();
     expect(await axeViolations(page)).toEqual([]);
 
-    await page.getByRole('button', { name: 'Español' }).click();
+    await switchLanguage(page, 'Español');
     await expect(page.getByRole('heading', { name: 'Categorías' })).toBeVisible();
     expect(await axeViolations(page)).toEqual([]);
 
@@ -177,7 +178,7 @@ test.describe('panel /admin: categorías de la carta', () => {
     await expect(page.getByLabel(/Nombre \(alemán\)/)).toHaveAttribute('aria-invalid', 'true');
     expect(await axeViolations(page)).toEqual([]);
 
-    await page.getByRole('button', { name: 'Deutsch' }).click();
+    await switchLanguage(page, 'Deutsch');
     await expect(page.getByRole('heading', { name: 'Neue Kategorie' })).toBeVisible();
     expect(await axeViolations(page)).toEqual([]);
   });

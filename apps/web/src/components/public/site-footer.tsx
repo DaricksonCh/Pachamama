@@ -1,6 +1,7 @@
 import { RESTAURANT_INFO, publicPath } from '@pachamama/shared';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import { InstagramLink } from './instagram-link';
 import { ProvisionalMark } from './provisional-mark';
 import { useLang } from './use-lang';
 import { WovenStripe } from './woven-stripe';
@@ -44,6 +45,9 @@ export function SiteFooter() {
               {email}
             </a>
             <ProvisionalMark />
+          </p>
+          <p className="pt-2">
+            <InstagramLink showLabel className="-ml-2 px-2 focus-visible:outline-maiz" />
           </p>
         </div>
       </div>

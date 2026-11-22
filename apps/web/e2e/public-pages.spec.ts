@@ -1,3 +1,4 @@
+import { switchLanguage } from './language-helpers';
 import { expect, test } from '@playwright/test';
 
 const CASES = [
@@ -48,7 +49,7 @@ test.describe('páginas públicas: Geschichte/Historia y Kontakt/Contacto', () =
   test('el cambio de idioma en /de/kontakt lleva a /es/contacto', async ({ page, isMobile }) => {
     await page.goto('/de/kontakt');
     if (isMobile) await page.getByRole('button', { name: 'Menü öffnen' }).click();
-    await page.getByRole('link', { name: 'Español' }).click();
+    await switchLanguage(page, 'Español');
     await expect(page).toHaveURL(/\/es\/contacto$/);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Contacto y cómo llegar');
   });
@@ -122,7 +123,7 @@ test.describe('páginas legales: Impressum y Datenschutz', () => {
     }) => {
       await page.goto(c.from);
       if (isMobile) await page.getByRole('button', { name: 'Menü öffnen' }).click();
-      await page.getByRole('link', { name: 'Español' }).click();
+      await switchLanguage(page, 'Español');
       await expect(page).toHaveURL(c.to);
       await expect(page.getByRole('heading', { level: 1 })).toHaveText(c.h1);
     });

@@ -1,3 +1,4 @@
+import { switchLanguage } from './language-helpers';
 import { expect, test } from '@playwright/test';
 import { axeViolations, signIn, useOwnIp } from './admin-helpers';
 import { E2E_ADMIN } from './fixtures';
@@ -68,7 +69,7 @@ test.describe('panel /admin: navegación lateral e inicio', () => {
     const de = await axeViolations(page);
     expect(de).toEqual([]);
 
-    await page.getByRole('button', { name: 'Español' }).click();
+    await switchLanguage(page, 'Español');
     await expect(page.getByRole('region', { name: 'Resumen de la carta' })).toHaveAttribute(
       'aria-busy',
       'false',

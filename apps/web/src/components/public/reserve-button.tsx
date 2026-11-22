@@ -4,7 +4,7 @@ import {
   publicPath,
   type ReservationsMode,
 } from '@pachamama/shared';
-import { Phone } from 'lucide-react';
+import { ClipboardPen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { cn } from '@/lib/utils';
@@ -46,6 +46,7 @@ export function ReserveButton({
   if (mode === 'form') {
     return (
       <Link to={publicPath('reservations', lang)} className={classes}>
+        <ClipboardPen aria-hidden="true" className="size-4" />
         {t('reserve.cta')}
       </Link>
     );
@@ -58,7 +59,7 @@ export function ReserveButton({
       aria-label={`${t('reserve.cta')} ${t('reserve.byPhone', { phone: RESTAURANT_INFO.phone.display })}`}
       className={classes}
     >
-      <Phone aria-hidden="true" className="size-4" />
+      <ClipboardPen aria-hidden="true" className="size-4" />
       {t('reserve.cta')}
     </a>
   );

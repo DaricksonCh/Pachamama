@@ -26,6 +26,10 @@ export const RESTAURANT_INFO = {
   phone: { e164: '+494210000000', display: '0421 000 000 0' },
   /** PROVISIONAL */
   email: 'info@example.com',
+  /** Official social media profiles (plain links, no embeds). */
+  social: {
+    instagram: 'https://www.instagram.com/pachamamarestaurantebremen/',
+  },
   /**
    * PROVISIONAL: Impressum data (§ 5 DDG). Every field is a placeholder until the owner confirms it;
    * the legal address defaults to the restaurant address but still has to be confirmed.
