@@ -9,6 +9,7 @@ import { CategoryFormPage } from '@/pages/admin/menu/category-form-page';
 import { DishFormPage } from '@/pages/admin/menu/dish-form-page';
 import { DishesPage } from '@/pages/admin/menu/dishes-page';
 import { HomePage } from '@/pages/home-page';
+import { PublicPageRoute } from '@/pages/public-page-route';
 
 export const routes: RouteObject[] = [
   { path: '/', element: <Navigate to={`/${DEFAULT_LANGUAGE}`} replace /> },
@@ -32,6 +33,7 @@ export const routes: RouteObject[] = [
     element: <LanguageLayout />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: ':slug', element: <PublicPageRoute /> },
       // Unknown public page: back to the home page of the same language.
       { path: '*', element: <Navigate to=".." relative="path" replace /> },
     ],

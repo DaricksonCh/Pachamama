@@ -55,6 +55,31 @@
     "visit": "Visita",
     "contact": "Contacto"
   },
+  "meta": {
+    "homeDescription": "Restaurante peruano en Bremen: ceviche, lomo saltado, causa y más. Am Gaswerk 1."
+  },
+  "pages": {
+    "menu": {
+      "title": "Carta",
+      "description": "La carta de Pachamama: platos peruanos con precios y alérgenos, también en PDF."
+    },
+    "story": {
+      "title": "Nuestra historia",
+      "description": "Quién está detrás de Pachamama y de dónde viene nuestra cocina."
+    },
+    "contact": {
+      "title": "Contacto y cómo llegar",
+      "description": "Dirección, horario, teléfono y cómo llegar a Pachamama en Bremen."
+    },
+    "imprint": {
+      "title": "Aviso legal",
+      "description": "Aviso legal (Impressum) de Pachamama Restaurant, Bremen."
+    },
+    "privacy": {
+      "title": "Política de privacidad",
+      "description": "Cómo trata Pachamama Restaurant los datos personales en esta web."
+    }
+  },
   "status": {
     "label": "Estado de la API",
     "loading": "Comprobando …",

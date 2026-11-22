@@ -55,6 +55,31 @@
     "visit": "Besuch",
     "contact": "Kontakt"
   },
+  "meta": {
+    "homeDescription": "Peruanisches Restaurant in Bremen: Ceviche, Lomo Saltado, Causa und mehr. Am Gaswerk 1."
+  },
+  "pages": {
+    "menu": {
+      "title": "Speisekarte",
+      "description": "Die Speisekarte von Pachamama: peruanische Gerichte mit Preisen und Allergenen, auch als PDF."
+    },
+    "story": {
+      "title": "Unsere Geschichte",
+      "description": "Wer hinter Pachamama steht und woher unsere Küche kommt."
+    },
+    "contact": {
+      "title": "Kontakt und Anfahrt",
+      "description": "Adresse, Öffnungszeiten, Telefon und Anfahrt zu Pachamama in Bremen."
+    },
+    "imprint": {
+      "title": "Impressum",
+      "description": "Impressum von Pachamama Restaurant, Bremen."
+    },
+    "privacy": {
+      "title": "Datenschutzerklärung",
+      "description": "Wie Pachamama Restaurant personenbezogene Daten auf dieser Website verarbeitet."
+    }
+  },
   "status": {
     "label": "API-Status",
     "loading": "Wird geprüft …",
