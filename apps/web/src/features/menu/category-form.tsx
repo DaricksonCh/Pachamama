@@ -59,6 +59,7 @@ export function CategoryForm({
     setFocus,
     formState: { errors, isDirty, isSubmitting, submitCount },
   } = useForm<FormInput, unknown, FormOutput>({
+    shouldFocusError: false,
     resolver: zodResolver(categoryInputSchema),
     defaultValues: toDefaults(category),
   });
@@ -113,6 +114,7 @@ export function CategoryForm({
     <form onSubmit={onSubmit} noValidate className="max-w-2xl space-y-5">
       {submitCount > 0 ? (
         <FormErrorSummary
+          attempt={submitCount}
           items={invalidFields.map((field) => ({
             id: `category-${field}`,
             label: t(LABEL_KEYS[field]),

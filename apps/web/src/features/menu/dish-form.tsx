@@ -224,6 +224,7 @@ export function DishForm({
     setFocus,
     formState: { errors, isDirty, isSubmitting, submitCount },
   } = useForm<DishFormValues, unknown, DishFormOutput>({
+    shouldFocusError: false,
     resolver,
     defaultValues: toDefaults(dish, defaultCategoryId),
   });
@@ -353,6 +354,7 @@ export function DishForm({
     <form onSubmit={onSubmit} noValidate className="max-w-3xl space-y-6">
       {submitCount > 0 ? (
         <FormErrorSummary
+          attempt={submitCount}
           items={invalidFields.map((field) => ({
             id: idOf(field),
             label: t(LABEL_KEYS[field]),
@@ -411,7 +413,11 @@ export function DishForm({
         <FieldError id={`${idOf('price')}-error`} message={errorOf('price')} />
       </div>
 
-      <fieldset className="space-y-2">
+      <fieldset
+        className="space-y-2"
+        aria-invalid={errorOf('diet') ? true : undefined}
+        aria-describedby={errorOf('diet') ? 'dish-diet-error' : undefined}
+      >
         <legend className="text-sm font-medium">{t('admin.menu.dishes.form.diet')}</legend>
         <div className="flex flex-wrap gap-x-6 gap-y-2">
           {(
@@ -436,12 +442,14 @@ export function DishForm({
             </div>
           ))}
         </div>
+        <FieldError id="dish-diet-error" message={errorOf('diet')} />
       </fieldset>
 
       <AllergenPicker
         idPrefix="dish-allergen"
         inputProps={register('allergens')}
         disabled={readOnly}
+        error={errorOf('allergens')}
       />
 
       <ImageField

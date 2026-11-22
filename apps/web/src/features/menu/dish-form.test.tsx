@@ -143,7 +143,7 @@ describe('DishForm', () => {
     expect(screen.getByLabelText(/^Categoría/)).toHaveAccessibleDescription(
       'Este campo es obligatorio.',
     );
-    expect(screen.getByLabelText(/^Categoría/)).toHaveFocus();
+    expect(summary).toHaveFocus();
     expect(summary).not.toHaveTextContent(/Invalid|expected/i);
     expect(calls).toHaveLength(0);
   });
@@ -353,6 +353,43 @@ describe('DishForm', () => {
     expect(await screen.findByLabelText(/^Categoría/)).toHaveAccessibleDescription(
       'Elige una categoría activa.',
     );
+  });
+
+  it('shows server errors for diet and allergens next to their groups', async () => {
+    mockApi(() =>
+      Response.json(
+        {
+          error: {
+            code: 'VALIDATION_ERROR',
+            details: { diet: ['validation.invalid'], allergens: ['validation.invalid'] },
+          },
+        },
+        { status: 400 },
+      ),
+    );
+    renderForm();
+
+    await fillRequired();
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar' }));
+
+    const diet = await screen.findByRole('group', { name: 'Dieta' });
+    expect(diet).toHaveAttribute('aria-invalid', 'true');
+    expect(diet).toHaveAccessibleDescription('Valor no válido.');
+    const allergens = screen.getByRole('group', { name: 'Alérgenos' });
+    expect(allergens).toHaveAttribute('aria-invalid', 'true');
+    expect(allergens).toHaveAccessibleDescription('Valor no válido.');
+    expect(await screen.findByRole('alert')).toHaveFocus();
+  });
+
+  it('revokes the preview URL when a newly chosen photo is removed', async () => {
+    mockApi();
+    renderForm();
+
+    await userEvent.upload(screen.getByLabelText('Elegir foto'), photo());
+    expect(URL.createObjectURL).toHaveBeenCalledTimes(1);
+    await userEvent.click(screen.getByRole('button', { name: 'Quitar foto' }));
+
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:preview');
   });
 
   it('is read-only for staff except the visible switch, which saves right away', async () => {

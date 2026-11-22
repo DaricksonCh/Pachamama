@@ -28,7 +28,12 @@ function useFilePreview(file: File | null) {
     setEntry({ file: chosen, url: URL.createObjectURL(chosen) });
   };
 
-  return { url: entry && entry.file === file ? entry.url : null, show };
+  const clear = () => {
+    if (entry) URL.revokeObjectURL(entry.url);
+    setEntry(null);
+  };
+
+  return { url: entry && entry.file === file ? entry.url : null, show, clear };
 }
 
 /**
@@ -113,7 +118,15 @@ export function ImageField({
                 )}
               </label>
               {preview ? (
-                <Button type="button" variant="outline" size="sm" onClick={onRemove}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    if (file) filePreview.clear();
+                    onRemove();
+                  }}
+                >
                   <Trash2 aria-hidden="true" />
                   {t('admin.menu.dishes.form.removePhoto')}
                 </Button>

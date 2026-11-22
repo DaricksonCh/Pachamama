@@ -13,8 +13,8 @@ export function errorKey(message: string | undefined): string | undefined {
 }
 
 /**
- * Pasa los errores por campo de un 400 de la API (`details`) al formulario y enfoca el primero
- * (en el orden de `fields`). `aliases` da el nombre de la API de un campo cuando no coincide
+ * Pasa los errores por campo de un 400 de la API (`details`) al formulario
+ * (en el orden de `fields`); el foco lo recibe el resumen de errores del formulario. `aliases` da el nombre de la API de un campo cuando no coincide
  * (p. ej. `imageAltDe` → `altDe`). Devuelve `true` si había alguno de los campos indicados.
  */
 export function applyServerErrors<T extends FieldValues>(
@@ -30,7 +30,7 @@ export function applyServerErrors<T extends FieldValues>(
     const alias = aliases[field];
     const message = details[field]?.[0] ?? (alias ? details[alias]?.[0] : undefined);
     if (message) {
-      setError(field, { message }, { shouldFocus: !any });
+      setError(field, { message });
       any = true;
     }
   }

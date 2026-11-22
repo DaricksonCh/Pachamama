@@ -49,7 +49,7 @@ describe('CategoryForm', () => {
     expect(screen.getByLabelText(/Nombre \(español\)/)).toHaveAttribute('aria-required', 'true');
   });
 
-  it('shows errors on both names when submitted empty and focuses the first invalid field', async () => {
+  it('shows errors on both names when submitted empty and focuses the error summary', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
     renderForm();
 
@@ -60,7 +60,8 @@ describe('CategoryForm', () => {
     await waitFor(() => expect(de).toHaveAttribute('aria-invalid', 'true'));
     expect(es).toHaveAttribute('aria-invalid', 'true');
     expect(de).toHaveAccessibleDescription('Este campo es obligatorio.');
-    expect(de).toHaveFocus();
+    expect(await screen.findByRole('alert')).toHaveFocus();
+    expect(de).not.toHaveFocus();
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 

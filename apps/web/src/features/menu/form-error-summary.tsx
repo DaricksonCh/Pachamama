@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export interface SummaryItem {
@@ -9,14 +10,27 @@ export interface SummaryItem {
   focus: () => void;
 }
 
-/** Resumen de errores al enviar, con enlaces que llevan el foco a cada campo inválido. */
-export function FormErrorSummary({ items }: { items: SummaryItem[] }) {
+/**
+ * Resumen de errores al enviar, con enlaces que llevan el foco a cada campo inválido.
+ * Al fallar un envío (`attempt` = nº de envíos) el foco pasa al resumen, una vez por intento.
+ */
+export function FormErrorSummary({ items, attempt }: { items: SummaryItem[]; attempt: number }) {
   const { t } = useTranslation();
-  if (items.length === 0) return null;
+  const ref = useRef<HTMLDivElement>(null);
+  const focusedAttempt = useRef(0);
+  const hasItems = items.length > 0;
+  useEffect(() => {
+    if (!hasItems || focusedAttempt.current === attempt) return;
+    focusedAttempt.current = attempt;
+    ref.current?.focus();
+  }, [attempt, hasItems]);
+  if (!hasItems) return null;
   return (
     <div
+      ref={ref}
+      tabIndex={-1}
       role="alert"
-      className="rounded-md border border-destructive/40 bg-red-50 p-4 text-sm text-red-900"
+      className="rounded-md border border-destructive/40 bg-red-50 p-4 text-sm text-red-900 focus:outline-2 focus:outline-offset-2 focus:outline-ring"
     >
       <p className="font-medium">{t('admin.menu.errors.summary')}</p>
       <ul className="mt-2 list-disc space-y-1 ps-5">
