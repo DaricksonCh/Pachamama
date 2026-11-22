@@ -32,7 +32,7 @@ export function LanguageMenu({ current, targetFor, className, align = 'end' }: L
         // The name includes the visible code (WCAG 2.5.3): "Sprache: DE".
         aria-label={`${t('language.label')}: ${current.toUpperCase()}`}
         className={cn(
-          'inline-flex min-h-10 items-center gap-2 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors hover:bg-current/10 focus-visible:outline-2 focus-visible:outline-offset-2 data-[state=open]:bg-current/10',
+          'inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors hover:bg-current/10 focus-visible:outline-2 focus-visible:outline-offset-2 data-[state=open]:bg-current/10',
           className,
         )}
       >
