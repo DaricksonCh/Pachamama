@@ -1,4 +1,4 @@
-import { publicPath, type ReservationRequest } from '@pachamama/shared';
+import { publicPath } from '@pachamama/shared';
 import { useTranslation } from 'react-i18next';
 import { Controller, type UseFormReturn } from 'react-hook-form';
 import { Link } from 'react-router';
@@ -15,10 +15,12 @@ import {
   COMMENT_MAX,
   DETAILS_FIELDS,
   FORM_ID,
+  type ClientRequest,
   type DetailsField,
   type DetailsValues,
 } from '../details-fields';
 const idOf = (field: DetailsField) => `res-${field}`;
+const PRIVACY_LABEL_ID = 'res-privacy-label';
 const LABEL_KEYS: Record<DetailsField, string> = {
   name: 'reservations.details.name',
   email: 'reservations.details.email',
@@ -28,7 +30,7 @@ const LABEL_KEYS: Record<DetailsField, string> = {
 };
 
 interface DetailsStepProps {
-  form: UseFormReturn<DetailsValues, unknown, ReservationRequest>;
+  form: UseFormReturn<DetailsValues, unknown, ClientRequest>;
   onSubmit: React.FormEventHandler<HTMLFormElement>;
   /** Non-field problem of the last submit (rate limit, network…), already translated. */
   submitError: string | undefined;
@@ -50,6 +52,13 @@ export function DetailsStep({ form, onSubmit, submitError }: DetailsStepProps) {
   const errorOf = (field: DetailsField) =>
     errorKey((errors as Record<string, { message?: string } | undefined>)[field]?.message);
   const invalid = DETAILS_FIELDS.filter((field) => errorOf(field));
+  // Errors on choices of earlier steps (party, date, time, language) have no field here.
+  const hiddenError =
+    submitCount > 0 &&
+    Object.keys(errors).some(
+      (key) =>
+        !(DETAILS_FIELDS as readonly string[]).includes(key) && key !== 'website' && key !== 'root',
+    );
 
   const a11y = (field: DetailsField, opts: { required?: boolean; hint?: boolean } = {}) => {
     const error = errorOf(field);
@@ -92,9 +101,9 @@ export function DetailsStep({ form, onSubmit, submitError }: DetailsStepProps) {
           }))}
         />
       ) : null}
-      {submitError ? (
+      {submitError || hiddenError ? (
         <p role="alert" className="rounded-md border border-aji/50 bg-white p-4 font-medium">
-          {submitError}
+          {submitError ?? t('reservations.errors.generic')}
         </p>
       ) : null}
       <p className="text-sm text-tierra/80">{t('reservations.details.requiredHint')}</p>
@@ -160,12 +169,14 @@ export function DetailsStep({ form, onSubmit, submitError }: DetailsStepProps) {
                 onCheckedChange={(value) => field.onChange(value === true)}
                 onBlur={field.onBlur}
                 ref={field.ref}
+                aria-labelledby={PRIVACY_LABEL_ID}
                 className="mt-1 size-5 border-selva bg-white data-[state=checked]:bg-selva data-[state=checked]:text-papel"
               />
             )}
           />
           <Label
             htmlFor={idOf('privacyAccepted')}
+            id={PRIVACY_LABEL_ID}
             className="block text-base leading-relaxed font-normal"
           >
             {t('reservations.details.privacyBefore')}{' '}

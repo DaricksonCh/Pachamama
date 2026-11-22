@@ -27,13 +27,21 @@ export function BookingSummary({ state, submitting, onBack, onNext }: BookingSum
   return (
     <aside
       aria-label={t('reservations.summary.title')}
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-selva/25 bg-papel px-4 py-3 shadow-[0_-6px_16px_rgba(31,42,29,0.12)] lg:sticky lg:top-24 lg:z-auto lg:self-start lg:rounded-md lg:border lg:bg-white lg:p-6 lg:shadow-none"
+      data-booking-bar
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-selva/25 bg-papel px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-[0_-6px_16px_rgba(31,42,29,0.12)] lg:sticky lg:top-24 lg:z-auto lg:self-start lg:rounded-md lg:border lg:bg-white lg:p-6 lg:shadow-none"
     >
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-2 lg:block">
         <h3 className="hidden font-display text-2xl text-selva lg:block">
           {t('reservations.summary.title')}
         </h3>
-        <dl className="flex min-w-0 flex-wrap gap-x-4 gap-y-1 text-sm lg:mt-4 lg:block lg:space-y-3 lg:text-base">
+        {state.partySize === undefined ? (
+          <p className="text-sm font-medium text-selva lg:hidden">
+            {t('reservations.summary.hint')}
+          </p>
+        ) : null}
+        <dl
+          className={`flex min-w-0 flex-wrap gap-x-4 gap-y-1 text-sm lg:mt-4 lg:block lg:space-y-3 lg:text-base ${state.partySize === undefined ? 'max-lg:hidden' : ''}`}
+        >
           <div className="flex gap-1.5 lg:block">
             <dt className="hidden font-semibold lg:block">{t('reservations.steps.party')}</dt>
             <dd>
@@ -78,6 +86,7 @@ export function BookingSummary({ state, submitting, onBack, onNext }: BookingSum
         <div className="flex items-center gap-2 lg:mt-6 lg:flex-col-reverse lg:items-stretch">
           {state.step !== 'party' ? (
             <Button
+              key="back"
               type="button"
               variant="ghost"
               onClick={onBack}
@@ -89,6 +98,7 @@ export function BookingSummary({ state, submitting, onBack, onNext }: BookingSum
           ) : null}
           {isLast ? (
             <Button
+              key="submit"
               type="submit"
               form={FORM_ID}
               disabled={submitting}
@@ -98,6 +108,7 @@ export function BookingSummary({ state, submitting, onBack, onNext }: BookingSum
             </Button>
           ) : (
             <Button
+              key="next"
               type="button"
               onClick={onNext}
               disabled={!canAdvance(state)}

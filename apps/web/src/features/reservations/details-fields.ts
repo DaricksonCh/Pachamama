@@ -1,3 +1,5 @@
+import type { ReservationRequest } from '@pachamama/shared';
+
 export const COMMENT_MAX = 500;
 export const FORM_ID = 'reservation-form';
 
@@ -13,3 +15,6 @@ export interface DetailsValues {
 
 export const DETAILS_FIELDS = ['name', 'email', 'phone', 'comment', 'privacyAccepted'] as const;
 export type DetailsField = (typeof DETAILS_FIELDS)[number];
+
+/** What the client validates: the API's schema without the honeypot, so autofill cannot block silently. */
+export type ClientRequest = Omit<ReservationRequest, 'website'>;

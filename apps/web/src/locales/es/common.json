@@ -499,7 +499,8 @@
     "retry": "Reintentar",
     "summary": {
       "title": "Tu reserva",
-      "pending": "aún sin elegir"
+      "pending": "aún sin elegir",
+      "hint": "Elige el número de personas"
     },
     "party": {
       "heading": "¿Cuántas personas?",

@@ -356,3 +356,57 @@ describe('ReservationWizard', () => {
     expect(screen.getByRole('button', { name: 'Reintentar' })).toBeVisible();
   });
 });
+
+describe('ReservationWizard fixes', () => {
+  it('opens the details step without any validation error shown', async () => {
+    mockApi();
+    renderWizard();
+    await reachDetails();
+    expect(screen.queryByRole('alert')).toBeNull();
+    expect(screen.getByLabelText(/^Nombre/)).not.toHaveAttribute('aria-invalid');
+    expect(screen.queryByText(/Este campo es obligatorio/)).toBeNull();
+  });
+
+  it('still sends the request when autofill filled the honeypot, with its real value', async () => {
+    const calls = mockApi();
+    renderWizard();
+    await reachDetails();
+    await fillDetails();
+    const honeypot = document.querySelector<HTMLInputElement>('input[name="website"]');
+    await userEvent.type(honeypot as HTMLInputElement, 'http://spam.example');
+    await userEvent.click(screen.getByRole('button', { name: 'Enviar solicitud' }));
+    await screen.findByRole('heading', { name: /Solicitud recibida/ });
+    expect(calls.find((c) => c.method === 'POST')?.body).toMatchObject({
+      website: 'http://spam.example',
+    });
+  });
+
+  it('shows a generic alert when the server rejects a field outside the details step', async () => {
+    mockApi((call) =>
+      call.method === 'POST'
+        ? Response.json(
+            { error: { code: 'VALIDATION_ERROR', details: { date: ['validation.date'] } } },
+            { status: 400 },
+          )
+        : undefined,
+    );
+    renderWizard();
+    await reachDetails();
+    await fillDetails();
+    await userEvent.click(screen.getByRole('button', { name: 'Enviar solicitud' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent(/No se pudo enviar/);
+  });
+
+  it('names the privacy checkbox with the full sentence including the link text', async () => {
+    mockApi();
+    renderWizard();
+    await reachDetails();
+    expect(screen.getByRole('checkbox', { name: /política de privacidad/i })).toBeVisible();
+  });
+
+  it('shows a hint instead of dashes before anything is chosen', async () => {
+    mockApi();
+    renderWizard();
+    expect(await screen.findByText('Elige el número de personas')).toBeInTheDocument();
+  });
+});

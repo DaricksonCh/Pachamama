@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { reservationRequestSchema, type ReservationRequest } from '@pachamama/shared';
+import { reservationRequestSchema } from '@pachamama/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
@@ -14,7 +14,7 @@ import { availabilityKey, createReservation } from './api';
 import { BookingSummary } from './booking-summary';
 import { restaurantToday, toMonthKey } from './dates';
 import { DateStep } from './steps/date-step';
-import { DETAILS_FIELDS, type DetailsValues } from './details-fields';
+import { DETAILS_FIELDS, type ClientRequest, type DetailsValues } from './details-fields';
 import { DetailsStep } from './steps/details-step';
 import { PartyStep } from './steps/party-step';
 import { TimeStep } from './steps/time-step';
@@ -59,19 +59,17 @@ export function ReservationWizard() {
   }, [state.step]);
 
   const resolver = useMemo(() => {
-    const base = zodResolver(reservationRequestSchema) as unknown as Resolver<
-      DetailsValues,
-      unknown,
-      ReservationRequest
-    >;
+    const base = zodResolver(
+      reservationRequestSchema.omit({ website: true }),
+    ) as unknown as Resolver<DetailsValues, unknown, ClientRequest>;
     // The choices of steps 1–3 live in the reducer; they join the form values for validation.
     const { partySize, date, time } = state;
-    const merged: Resolver<DetailsValues, unknown, ReservationRequest> = (values, ctx, options) =>
+    const merged: Resolver<DetailsValues, unknown, ClientRequest> = (values, ctx, options) =>
       base({ ...values, partySize, date, time, lang } as unknown as DetailsValues, ctx, options);
     return merged;
   }, [state, lang]);
 
-  const form = useForm<DetailsValues, unknown, ReservationRequest>({
+  const form = useForm<DetailsValues, unknown, ClientRequest>({
     shouldFocusError: false,
     resolver,
     defaultValues: EMPTY_DETAILS,
@@ -85,6 +83,8 @@ export function ReservationWizard() {
       const confirmation = await create.mutateAsync({
         ...data,
         comment: data.comment || undefined,
+        // The real honeypot value goes to the server, which rejects bots.
+        website: form.getValues('website'),
       });
       dispatch({ type: 'done', confirmation });
     } catch (err) {
@@ -99,7 +99,10 @@ export function ReservationWizard() {
         const shown = applyServerErrors(err, DETAILS_FIELDS, form.setError, {
           privacyAccepted: 'privacy',
         });
-        if (!shown) setSubmitError(t('reservations.errors.generic'));
+        const outside = Object.keys(err.details ?? {}).some(
+          (key) => !(DETAILS_FIELDS as readonly string[]).includes(key) && key !== 'website',
+        );
+        if (!shown || outside) setSubmitError(t('reservations.errors.generic'));
       } else if (err instanceof ApiError && err.status === 429) {
         setSubmitError(t('reservations.errors.rateLimited'));
       } else if (err instanceof ApiError) {
@@ -129,7 +132,7 @@ export function ReservationWizard() {
   const step = state.step as StepId;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 pt-8 pb-40 sm:px-6 md:pt-12 lg:pb-16">
+    <div className="mx-auto max-w-6xl px-4 pt-8 pb-16 sm:px-6 md:pt-12">
       <nav aria-label={t('reservations.progress')}>
         <ol className="grid grid-cols-4 gap-2 sm:gap-4">
           {STEPS.map((id, index) => {

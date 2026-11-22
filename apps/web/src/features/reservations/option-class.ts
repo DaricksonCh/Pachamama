@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
  */
 export const optionClass = (extra?: string) =>
   cn(
-    'min-h-11 min-w-11 rounded-md border border-selva/40 bg-white px-3 font-semibold text-tierra shadow-none transition-colors',
+    'min-h-11 min-w-11 rounded-md border border-selva/70 bg-white px-3 font-semibold text-tierra shadow-none transition-colors',
     'hover:border-selva hover:bg-papel hover:text-tierra',
     'data-[state=on]:border-selva data-[state=on]:bg-selva data-[state=on]:text-papel',
     'focus-visible:border-selva focus-visible:ring-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-selva',

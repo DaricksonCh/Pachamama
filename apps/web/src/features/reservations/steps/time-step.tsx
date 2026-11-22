@@ -117,7 +117,7 @@ function SlotGroup({
             className={cn(
               optionClass('min-w-20 tabular-nums'),
               !slot.available &&
-                'cursor-not-allowed border-dashed bg-transparent text-tierra/75 line-through hover:border-selva/40 hover:bg-transparent',
+                'cursor-not-allowed border-dashed bg-transparent text-tierra/75 line-through hover:border-selva/70 hover:bg-transparent',
             )}
           >
             {slot.time}
