@@ -14,13 +14,22 @@
     },
     "kitchen": {
       "title": "De nuestra cocina",
+      "lead": "Tres clásicos para conocer el Perú en la mesa.",
       "link": "Ver toda la carta",
-      "causa": "Pastel de papa con ají amarillo y limón",
-      "quinuaName": "Ensalada de quinua",
-      "quinua": "Quinua, palta y verduras",
-      "tamal": "Masa de maíz en hoja de plátano con salsa criolla",
-      "causaName": "Causa limeña",
-      "tamalName": "Tamal"
+      "dishes": {
+        "ceviche": {
+          "name": "Ceviche clásico",
+          "text": "Perca del Nilo en jugo de limón con cebolla roja, ají limo, cilantro y camote."
+        },
+        "lomo": {
+          "name": "Lomo saltado",
+          "text": "Lomo de res o pollo salteado al wok con tomate y cebolla, con arroz y papas fritas."
+        },
+        "causa": {
+          "name": "Causa limeña",
+          "text": "Masa de papa con ají amarillo, pollo, palta, huevo y mayonesa."
+        }
+      }
     },
     "visit": {
       "title": "Visítanos",

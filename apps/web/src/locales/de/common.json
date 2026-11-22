@@ -14,13 +14,22 @@
     },
     "kitchen": {
       "title": "Aus unserer Küche",
+      "lead": "Drei Klassiker, mit denen man Peru am besten kennenlernt.",
       "link": "Zur ganzen Speisekarte",
-      "causa": "Kartoffelterrine mit Ají amarillo und Limette",
-      "quinuaName": "Quinoa-Salat",
-      "quinua": "Quinoa, Avocado und Gemüse",
-      "tamal": "Maisteig im Bananenblatt mit Salsa criolla",
-      "causaName": "Causa Limeña",
-      "tamalName": "Tamal"
+      "dishes": {
+        "ceviche": {
+          "name": "Ceviche Clásico",
+          "text": "Viktoriabarsch in Limettensaft mit roten Zwiebeln, Ají Limo, Koriander und Süßkartoffel."
+        },
+        "lomo": {
+          "name": "Lomo Saltado",
+          "text": "Rinderhüfte oder Hähnchen, im Wok flambiert mit Tomate und Zwiebel, dazu Reis und Pommes frites."
+        },
+        "causa": {
+          "name": "Causa Limeña",
+          "text": "Kartoffelteig mit gelbem Chili, Hähnchen, Avocado, Ei und Mayo."
+        }
+      }
     },
     "visit": {
       "title": "Besuchen Sie uns",

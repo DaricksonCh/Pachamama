@@ -6,24 +6,11 @@ import { useLang } from '@/components/public/use-lang';
 import { usePageMeta } from '@/components/public/use-page-meta';
 import { Skeleton } from '@/components/ui/skeleton';
 import { menuPdfUrl } from '@/features/menu/pdf-url';
+import { formatPrice } from '@/features/menu/price-format';
 import { usePublicMenu } from '@/features/menu/public-api';
 
 type Category = PublicMenu['categories'][number];
 type Dish = Category['dishes'][number];
-
-const priceFormats = new Map<Language, Intl.NumberFormat>();
-/** One formatter per language, created on first use. */
-function priceFormat(lang: Language) {
-  let format = priceFormats.get(lang);
-  if (!format) {
-    format = new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'es-ES', {
-      style: 'currency',
-      currency: 'EUR',
-    });
-    priceFormats.set(lang, format);
-  }
-  return format;
-}
 
 const pickText = (lang: Language, de: string, es: string) => (lang === 'de' ? de : es);
 
@@ -71,7 +58,7 @@ function MenuSkeleton() {
 
 function DishItem({ dish, lang }: { dish: Dish; lang: Language }) {
   const { t } = useTranslation();
-  const price = priceFormat(lang).format(dish.price);
+  const price = formatPrice(lang, dish.price);
   const description = pickText(lang, dish.descriptionDe ?? '', dish.descriptionEs ?? '');
   const { image } = dish;
 
