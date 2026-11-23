@@ -117,6 +117,9 @@
   },
   "menu": {
     "lead": "Peruanische Gerichte, frisch zubereitet. Alle Preise in Euro, Bezahlung im Restaurant.",
+    "tagline": "jede Farbe unserer Manta, eine Kategorie",
+    "dishCount_one": "{{count}} Gericht",
+    "dishCount_other": "{{count}} Gerichte",
     "pdf": "Speisekarte als PDF",
     "pdfHint": "(PDF, öffnet in neuem Tab)",
     "categoriesNav": "Kategorien der Speisekarte",

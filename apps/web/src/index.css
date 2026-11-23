@@ -228,3 +228,37 @@
 @utility diamond {
   clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
 }
+
+/*
+ * Menu (ADR 0016): each category is a band of the manta. The head carries a row of woven diamonds
+ * in the band's accent, fading in from the left so the title stays readable; the thread in the
+ * sticky bar fills with how much of the category has been read (--progress, set on scroll).
+ */
+@layer components {
+  .menu-band-head::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(55%, 32rem);
+    background: conic-gradient(
+        from 45deg,
+        var(--band-accent) 0 25%,
+        transparent 0 50%,
+        var(--band-accent) 0 75%,
+        transparent 0
+      )
+      0 0 / 36px 36px;
+    mask-image: linear-gradient(90deg, transparent, #000 40%);
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  .menu-thread {
+    width: calc(var(--progress, 0) * 100%);
+    background:
+      repeating-linear-gradient(90deg, transparent 0 8px, rgb(255 255 255 / 0.35) 8px 10px),
+      var(--band);
+  }
+}
