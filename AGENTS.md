@@ -18,6 +18,7 @@ Todo se paga **en el local** (sin pasarela de pagos). El personal gestiona todo 
 - Fase 3 hecha: Kysely + migraciones, Better Auth (login del personal en `/admin`, roles admin/staff). Diseño de la web provisional.
 - Fase 5 hecha: carta editable en `/admin` (shadcn), fotos, carta pública + PDF de/es, carga de la carta real. Datos dudosos en [`docs/pendientes.md`](docs/pendientes.md).
 - M1 y M2 hechas: sistema de diseño público (ADR 0010) y páginas públicas de/es (Inicio, Carta, Historia, Contacto, Impressum, Datenschutz; ADR 0011). Siguiente: M4, publicación.
+- Fase 7 hecha (ADR 0012): reservas de mesa propias (asistente público de/es, gestión y ajustes en el panel, horario y cierres editables = parte de la fase 4), botón Reservar activo. Falta antes de publicar: proveedor SMTP + AVV y horario real.
 - **⚠ Fecha límite 01.12.2026** (el restaurante no tiene web): plan revisado el 2026-11-21. Primero BD + login admin (fase 3) y carta editable desde el panel (fase 5), con el diseño en paralelo; después páginas públicas y publicación. Detalle en `docs/roadmap.md`.
 
 ## Forma de trabajar (obligatorio)

@@ -8,15 +8,15 @@ Leyenda: ⏳ pendiente · ✅ confirmado
 
 ## Datos de contacto y horario
 
-| Dato      | Valor provisional                                    | Estado |
-| --------- | ---------------------------------------------------- | ------ |
-| Horario   | Martes a domingo, 13:00–22:00 · Lunes cerrado        | ⏳     |
-| Dirección | Am Gaswerk 1, 28197 Bremen                           | ✅     |
-| Teléfono  | PENDIENTE (en la web: `0421 000 000 0` de relleno)   | ⏳     |
-| Email     | PENDIENTE (en la web: `info@example.com` de relleno) | ⏳     |
-| Reservas  | Email que recibe las reservas: PENDIENTE             | ⏳     |
-| Dominio   | Se compra uno nuevo al publicar (el anterior caducó) | ⏳     |
-| Logo SVG  | Solo hay PNG de 600 px; falta el vectorial original  | ⏳     |
+| Dato      | Valor provisional                                                                                              | Estado |
+| --------- | -------------------------------------------------------------------------------------------------------------- | ------ |
+| Horario   | Martes a domingo, 13:00–22:00 · Lunes cerrado (el horario real se guarda desde `/admin/reservations/settings`) | ⏳     |
+| Dirección | Am Gaswerk 1, 28197 Bremen                                                                                     | ✅     |
+| Teléfono  | PENDIENTE (en la web: `0421 000 000 0` de relleno)                                                             | ⏳     |
+| Email     | PENDIENTE (en la web: `info@example.com` de relleno)                                                           | ⏳     |
+| Reservas  | Email que recibe los avisos de reservas: PENDIENTE                                                             | ⏳     |
+| Dominio   | Se compra uno nuevo al publicar (el anterior caducó)                                                           | ⏳     |
+| Logo SVG  | Solo hay PNG de 600 px; falta el vectorial original                                                            | ⏳     |
 
 ## Técnico antes de publicar
 
@@ -24,6 +24,8 @@ Leyenda: ⏳ pendiente · ✅ confirmado
 | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
 | Fotos de platos         | 5 platos visibles apuntan a fotos que no están en `apps/api/uploads` (Tamal de Pollo, Causa veggie, Solterito, Empanadas, Jalea Mixta). Volver a subirlas desde el panel o recargar la carta con `--photos` en el servidor.              | ⏳     |
 | Mapa de Contacto        | `apps/web/public/images/map/kontakt-karte.webp`: 9 teselas de tile.openstreetmap.org (zoom 16, descarga única autorizada el 2026-11-22, coordenadas de Nominatim 53.07536, 8.78354), unidas en local. © OpenStreetMap-Mitwirkende, ODbL. | ✅     |
+| Proveedor SMTP + AVV    | Elegir proveedor SMTP en la UE y firmar el contrato de encargo; rellenar `legal.smtpProvider` (Datenschutz) y las variables SMTP del servidor. `check:publish` falla hasta entonces.                                                     | ⏳     |
+| Cron de `db:cleanup`    | Programar a diario en el servidor (sesiones caducadas y anonimización de reservas a los 90 días)                                                                                                                                         | ⏳     |
 | Logs del servidor (IPs) | Cuadrar la Datenschutzerklärung con la configuración real de nginx (qué se guarda y cuánto tiempo)                                                                                                                                       | ⏳     |
 | Fotos más grandes       | Causa y quinua solo tienen versión de 640 px (se ven algo blandas en pantallas retina)                                                                                                                                                   | ⏳     |
 | Fotos de la portada     | «Aus unserer Küche» (Ceviche Clásico, Lomo Saltado, Causa Limeña): ceviche y lomo usan un recorte provisional de `mesa-surtida`. Sustituir por fotos profesionales en `kitchen-section.tsx` cuando lleguen.                              | ⏳     |
@@ -79,3 +81,20 @@ Dudas encontradas al pasar la carta a la base de datos (`npm run db:seed:menu`).
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
 | PDF de la carta sin fotos      | No cargar las fotos de los platos en el PDF: rompen el diseño (se montan unas sobre otras) y suponen un gasto innecesario de generación y peso.                                                                                                                                                                                                                           | ⏳     |
 | Revisar diseño en dispositivos | Revisar la web en distintos dispositivos; el diseño actual no resulta muy agradable y puede cambiar. Idea de referencia: [muchosmas.eu/la-historia](https://www.muchosmas.eu/la-historia): bloques alternos en bucle (texto a la izquierda y foto a la derecha; debajo, foto a la izquierda y texto a la derecha), con texto principal (lorem por ahora) y foto de fondo. | ⏳     |
+
+## Fase 7 — mejoras menores
+
+Hallazgos de las revisiones que no se corrigieron en el momento (ni seguridad ni accesibilidad).
+
+- "1 personas/Personen" en plural en las plantillas de correo.
+- Carrera en la caché de ajustes mientras hay una carga en curso.
+- La caché de ajustes es por proceso (se asume un único proceso de la API).
+- El tiempo de respuesta del honeypot se distingue del de una reserva real.
+- El límite por IP puede afectar a quienes comparten NAT.
+- Un reenvío entre el commit del PATCH y el envío del correo puede duplicar el mensaje.
+- El calendario de la web se limita a 12 meses.
+- La disponibilidad del mes ignora el tamaño del grupo.
+- Faltan tests: refresco de «hoy», tramos del contador, formulario de añadir cierre y payload al guardar una plantilla.
+- La guarda de publicación comprueba la subcadena `/example/`.
+- La retención usa una lista IN sin límite si hay un atraso enorme.
+- `createMemoryMailer` vive en un archivo de producción.
