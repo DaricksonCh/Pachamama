@@ -110,6 +110,20 @@ describe('public menu page', () => {
     expect(screen.getByText('Vegan')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Vorspeisen' })).toHaveAttribute('href', '#category-1');
     expect(screen.getByText(/Fragen zu Allergenen/)).toBeInTheDocument();
+    // The manta: handwritten line, one band per category with its dish count and description.
+    expect(screen.getByText('jede Farbe unserer Manta, eine Kategorie')).toBeInTheDocument();
+    const band = screen.getByRole('region', { name: 'Vorspeisen' });
+    expect(within(band).getByText('2 Gerichte')).toBeInTheDocument();
+    expect(within(band).getByText('Zum Teilen')).toBeInTheDocument();
+    // The woven bar marks the category in view for assistive technology too.
+    const nav = screen.getByRole('navigation', { name: 'Kategorien der Speisekarte' });
+    expect(within(nav).getByRole('link', { name: 'Vorspeisen' })).toHaveAttribute(
+      'aria-current',
+      'true',
+    );
+    // A dish with a photo shows it inside its own row.
+    const causa = screen.getByRole('heading', { name: 'Causa' }).closest('li')!;
+    expect(causa.querySelector('img')).toHaveAttribute('src', '/uploads/a-800.webp');
     expect(screen.getByRole('link', { name: /Speisekarte als PDF/ })).toHaveAttribute(
       'href',
       '/api/v1/menu/pdf?lang=de',
@@ -128,6 +142,8 @@ describe('public menu page', () => {
     expect(screen.getByText(/12,90/)).toBeInTheDocument();
     const dish = screen.getByRole('heading', { name: 'Ceviche clásico' }).closest('li')!;
     expect(within(dish).getByText('Pescado')).toBeInTheDocument();
+    expect(screen.getByText('cada color de nuestra manta, una categoría')).toBeInTheDocument();
+    expect(screen.getByText('2 platos')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Carta en PDF/ })).toHaveAttribute(
       'href',
       '/api/v1/menu/pdf?lang=es',
