@@ -7,11 +7,14 @@ import { Photo, type PhotoKey } from '../photo';
 
 const SLIDES: { photo: PhotoKey; alt: string }[] = [
   { photo: 'localVertical', alt: 'vertical' },
-  { photo: 'empanadas', alt: 'empanadas' },
-  { photo: 'causa', alt: 'causa' },
-  { photo: 'mariscosFritos', alt: 'mariscos' },
-  { photo: 'quinua', alt: 'quinua' },
-  { photo: 'ensaladaMixta', alt: 'ensalada' },
+  // Dish photos: provisional stock photos until the professional ones arrive (docs/pendientes.md).
+  { photo: 'stockEmpanadas', alt: 'empanadas' },
+  { photo: 'stockCausaLangostinos', alt: 'causa' },
+  { photo: 'stockJalea', alt: 'mariscos' },
+  { photo: 'stockQuinua', alt: 'quinua' },
+  { photo: 'stockHuancaina', alt: 'huancaina' },
+  { photo: 'stockMaizMorado', alt: 'maizMorado' },
+  { photo: 'stockMercadoAndino', alt: 'mercado' },
 ];
 
 const arrowClass =

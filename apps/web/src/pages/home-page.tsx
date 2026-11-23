@@ -17,7 +17,7 @@ export function HomePage() {
 
   return (
     <>
-      {/* Hero: the full table of dishes is the most characteristic image the restaurant has. */}
+      {/* Hero: a full table of dishes (provisional stock photo until the professional ones arrive). */}
       <section aria-labelledby="hero-title" className="bg-selva text-papel">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1fr_1.15fr] md:py-20">
           <div className="space-y-7 motion-safe:animate-hero-in">
@@ -40,7 +40,7 @@ export function HomePage() {
           </div>
           <div className="-mx-4 overflow-hidden sm:mx-0 sm:rounded-lg">
             <Photo
-              photo="mesaSurtida"
+              photo="stockFestin"
               alt={t('home.photos.mesaSurtida')}
               sizes="(min-width: 768px) 55vw, 100vw"
               priority

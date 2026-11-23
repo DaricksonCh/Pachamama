@@ -8,7 +8,7 @@
     "lead": "Ceviche, Lomo Saltado, Causa und Tamales – frisch zubereitet, so wie man sie in Peru isst.",
     "seeMenu": "Speisekarte ansehen",
     "photos": {
-      "mesaSurtida": "Ein Tisch voller peruanischer Gerichte: Causa, Ceviche, Lomo Saltado und frische Ají-Schoten",
+      "mesaSurtida": "Ein gedeckter Tisch mit peruanischen Gerichten: Lomo Saltado, Chicharrón, Salate und Cancha",
       "localInterior": "Der Gastraum mit Bar, Holztischen und bunter Dekoration",
       "cocinera": "Unsere Köchin mit traditionellem Hut"
     },
@@ -673,13 +673,15 @@
       "cocinera": "Porträt einer Köchin mit traditionellem Hut",
       "equipo": "Das Team des Restaurants gemeinsam im Gastraum",
       "vertical": "Blick in den Gastraum mit Dekoration an den Wänden",
-      "mesaSurtida": "Ein Tisch voller peruanischer Gerichte auf einer bunten Andendecke",
-      "tamal": "Ein Tamal im Bananenblatt, angerichtet auf dem Teller",
-      "empanadas": "Goldbraune Empanadas",
-      "causa": "Causa Limeña, geschichtet aus Kartoffelcreme und Füllung",
-      "mariscos": "Frittierte Meeresfrüchte mit Zitrone",
-      "ensalada": "Bunter gemischter Salat",
-      "quinua": "Quinoa-Salat mit frischem Gemüse"
+      "mesaSurtida": "Ein gedeckter Tisch mit peruanischen Gerichten und Getränken",
+      "tamal": "Tamales im Bananenblatt, daneben Oliven, Ají und Rosinen",
+      "empanadas": "Goldbraune Empanadas auf einem Bananenblatt",
+      "causa": "Causa mit Garnelen, geschichtet aus Kartoffelcreme",
+      "mariscos": "Jalea: frittierte Meeresfrüchte mit Yuca und Salsa criolla",
+      "quinua": "Quinoa-Salat mit frischen Kräutern",
+      "huancaina": "Papa a la Huancaína mit Ei und Oliven",
+      "maizMorado": "Kolben von lila Mais (maíz morado)",
+      "mercado": "Andine Zutaten wie Oca, Bohnen und Getreide auf bunten Webstoffen"
     }
   },
   "contact": {
