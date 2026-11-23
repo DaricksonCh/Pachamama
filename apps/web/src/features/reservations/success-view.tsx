@@ -34,7 +34,7 @@ export function SuccessView({
         <dt className="font-semibold">{t('reservations.steps.date')}</dt>
         <dd>{formatDateLabel(localIsoDate(confirmation.startsAt), lang)}</dd>
         <dt className="font-semibold">{t('reservations.steps.time')}</dt>
-        <dd className="tabular-nums">{formatLocalTime(confirmation.startsAt)}</dd>
+        <dd className="tabular-nums">{formatLocalTime(confirmation.startsAt, lang)}</dd>
       </dl>
       <p className="leading-relaxed">{t('reservations.success.next')}</p>
       <Link

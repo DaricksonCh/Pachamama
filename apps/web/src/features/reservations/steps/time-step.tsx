@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { cn } from '@/lib/utils';
-import type { Slot } from '../api';
+import type { Slot } from '@pachamama/shared';
 import { isLunch } from '../dates';
 import { optionClass } from '../option-class';
 import type { useSlots } from '../use-availability';

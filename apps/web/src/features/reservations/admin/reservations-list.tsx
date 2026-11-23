@@ -1,4 +1,4 @@
-import { RESERVATION_STATUSES, type ReservationStatus } from '@pachamama/shared';
+import { RESERVATION_STATUSES, addDays, type ReservationStatus } from '@pachamama/shared';
 import { ChevronLeft, ChevronRight, TriangleAlert } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,10 +15,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { localIsoDate } from '@/features/reservations/dates';
+import { formatLocalTime, localIsoDate } from '@/features/reservations/dates';
 import { LoadError, LoadingBlock } from '@/features/menu/load-states';
 import { useReservations } from './api';
-import { addDays, formatTime } from './format';
 import { ReservationStatusBadge } from './status-badge';
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -84,7 +83,7 @@ export function ReservationsList() {
           {data.map((item) => (
             <TableRow key={item.id}>
               <TableCell className="tabular-nums">
-                {formatTime(item.startsAt, i18n.language)}
+                {formatLocalTime(item.startsAt, i18n.language)}
               </TableCell>
               <TableCell className="font-medium">{item.name}</TableCell>
               <TableCell className="text-end tabular-nums">{item.partySize}</TableCell>

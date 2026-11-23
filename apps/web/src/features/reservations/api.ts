@@ -1,4 +1,4 @@
-import type { Language, ReservationRequest } from '@pachamama/shared';
+import type { ReservationRequest } from '@pachamama/shared';
 import { z } from 'zod';
 import { apiGet, apiSend } from '@/lib/api';
 
@@ -17,8 +17,6 @@ const slotsSchema = z.object({
     slots: z.array(z.object({ time: z.string(), startsAt: z.string(), available: z.boolean() })),
   }),
 });
-export type Slot = z.infer<typeof slotsSchema>['data']['slots'][number];
-
 const confirmationSchema = z.object({
   data: z.object({
     publicId: z.string(),
@@ -54,8 +52,8 @@ export async function fetchSlots(date: string, party: number, signal?: AbortSign
   return res.data.slots;
 }
 
-/** Payload of the form plus the wizard choices (what `reservationRequestSchema` parses). */
-export type ReservationPayload = ReservationRequest & { lang: Language };
+/** What `reservationRequestSchema` parses (form fields plus the wizard choices, including `lang`). */
+export type ReservationPayload = ReservationRequest;
 
 export async function createReservation(payload: ReservationPayload): Promise<Confirmation> {
   const res = await apiSend('POST', BASE, payload, confirmationSchema);

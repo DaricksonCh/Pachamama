@@ -1,5 +1,6 @@
 import {
   RESERVATION_STATUSES,
+  SUPPORTED_LANGUAGES,
   type ReservationStatus,
   type ReservationStatusChange,
 } from '@pachamama/shared';
@@ -20,7 +21,7 @@ export const reservationKeys = {
 };
 
 const statusSchema = z.enum(RESERVATION_STATUSES);
-const languageSchema = z.enum(['de', 'es']);
+const languageSchema = z.enum(SUPPORTED_LANGUAGES);
 const emailStatusSchema = z.enum(['sent', 'failed', 'skipped']);
 export type EmailStatus = z.infer<typeof emailStatusSchema>;
 

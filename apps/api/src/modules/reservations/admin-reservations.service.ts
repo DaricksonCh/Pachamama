@@ -1,5 +1,6 @@
 import {
   DECISION_STATUSES,
+  addDays,
   canTransition,
   renderTemplate,
   toUtc,
@@ -11,9 +12,9 @@ import { withDeadlockRetry } from '../../db/retry-deadlock';
 import { AppError } from '../../lib/app-error';
 import { logger } from '../../lib/logger';
 import type { Mailer } from '../../lib/mailer';
+import { safeErrorCode } from '../../lib/safe-error-code';
 import { buildDecisionEmail, formatDateTime } from './emails';
 import type { EmailStatus, ReservationsRepository } from './reservations.repository';
-import { addDays, safeErrorCode } from './reservations.service';
 
 type Row = NonNullable<Awaited<ReturnType<ReservationsRepository['getById']>>>;
 
@@ -182,7 +183,7 @@ export function createAdminReservationsService(repo: ReservationsRepository, mai
       );
 
       let emailStatus: EmailStatus | null = decision && !result.send ? 'skipped' : null;
-      if (result.send) {
+      if (result.send && isDecision(status)) {
         const { finalSubject, finalBody } = result;
         emailStatus =
           finalSubject !== null && finalBody !== null

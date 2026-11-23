@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_RESERVATION_SETTINGS, type OpeningHours } from './reservation.schema';
-import { availableDays, buildDaySlots, toRestaurantLocal, toUtc } from './slots';
+import { addDays, availableDays, buildDaySlots, toRestaurantLocal, toUtc } from './slots';
 
 // weekday: 0 = Sunday. 2027-03-02 is a Tuesday, 2027-03-01 a Monday.
 const hours: OpeningHours = [{ weekday: 2, opens: '13:00', closes: '22:00' }];
@@ -149,5 +149,29 @@ describe('time zone helpers', () => {
     const d = toUtc('2026-03-29', '13:00');
     expect(d.toISOString()).toBe('2026-03-29T11:00:00.000Z');
     expect(toRestaurantLocal(d)).toEqual({ date: '2026-03-29', time: '13:00' });
+  });
+});
+
+describe('addDays', () => {
+  it('adds and subtracts days', () => {
+    expect(addDays('2027-03-02', 1)).toBe('2027-03-03');
+    expect(addDays('2027-03-02', -2)).toBe('2027-02-28');
+    expect(addDays('2027-03-02', 0)).toBe('2027-03-02');
+  });
+
+  it('crosses month and year ends, and leap days', () => {
+    expect(addDays('2026-11-30', 1)).toBe('2026-12-01');
+    expect(addDays('2026-12-31', 1)).toBe('2027-01-01');
+    expect(addDays('2027-01-01', -1)).toBe('2026-12-31');
+    expect(addDays('2028-02-28', 1)).toBe('2028-02-29');
+    expect(addDays('2027-02-28', 1)).toBe('2027-03-01');
+  });
+
+  it('is not shifted by DST changes (Europe/Berlin: 2027-03-28 and 2027-10-31)', () => {
+    expect(addDays('2027-03-27', 1)).toBe('2027-03-28');
+    expect(addDays('2027-03-28', 1)).toBe('2027-03-29');
+    expect(addDays('2027-10-30', 1)).toBe('2027-10-31');
+    expect(addDays('2027-10-31', 1)).toBe('2027-11-01');
+    expect(addDays('2027-03-26', 3)).toBe('2027-03-29');
   });
 });

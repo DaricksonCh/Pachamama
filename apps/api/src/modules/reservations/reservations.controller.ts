@@ -1,22 +1,9 @@
 import { isoDateSchema, reservationRequestSchema, slotTimeSchema, toUtc } from '@pachamama/shared';
 import type { RequestHandler } from 'express';
 import { z } from 'zod';
-import { AppError } from '../../lib/app-error';
+import { parseOrThrow } from '../../lib/parse';
 import { logger } from '../../lib/logger';
 import type { ReservationsService } from './reservations.service';
-
-function parse<T extends z.ZodType>(schema: T, input: unknown): z.output<T> {
-  const result = schema.safeParse(input);
-  if (!result.success) {
-    throw new AppError(
-      400,
-      'VALIDATION_ERROR',
-      'Invalid input',
-      z.flattenError(result.error).fieldErrors,
-    );
-  }
-  return result.data;
-}
 
 /** `month` alone, or `date` + `party`; anything else is rejected. */
 const availabilityQuerySchema = z
@@ -60,7 +47,7 @@ function honeypotResponse(body: Record<string, unknown>) {
 
 export function createReservationsController(service: ReservationsService) {
   const availability: RequestHandler = async (req, res) => {
-    const q = parse(availabilityQuerySchema, req.query);
+    const q = parseOrThrow(availabilityQuerySchema, req.query);
     if (q.month !== undefined) {
       res.json({ data: await service.availableDays(q.month) });
       return;
@@ -79,7 +66,7 @@ export function createReservationsController(service: ReservationsService) {
         return;
       }
     }
-    const input = parse(reservationRequestSchema, body);
+    const input = parseOrThrow(reservationRequestSchema, body);
     res.status(201).json({ data: await service.create(input) });
   };
 

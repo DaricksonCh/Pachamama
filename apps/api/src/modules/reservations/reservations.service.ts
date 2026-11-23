@@ -1,4 +1,5 @@
 import {
+  addDays,
   availableDays,
   buildDaySlots,
   renderTemplate,
@@ -10,6 +11,7 @@ import { withDeadlockRetry } from '../../db/retry-deadlock';
 import { AppError } from '../../lib/app-error';
 import { logger } from '../../lib/logger';
 import type { Mailer } from '../../lib/mailer';
+import { safeErrorCode } from '../../lib/safe-error-code';
 import { buildDecisionEmail, buildStaffNotification, formatDateTime } from './emails';
 import type { EmailStatus, ReservationsRepository } from './reservations.repository';
 import type { SettingsService } from './settings.service';
@@ -22,24 +24,6 @@ export type CreatedReservation = {
 };
 
 type MailOptions = { notifyEmail: string; webOrigin: string };
-
-export const addDays = (date: string, n: number) => {
-  const [y = 0, m = 1, d = 1] = date.split('-').map(Number);
-  return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10);
-};
-
-/** Safe to log: error code or class name only. Never the message (may quote an email address). */
-export function safeErrorCode(err: unknown): string {
-  if (typeof err === 'object' && err !== null) {
-    const { code, responseCode } = err as { code?: unknown; responseCode?: unknown };
-    if (typeof code === 'string' || typeof code === 'number') return String(code);
-    if (typeof responseCode === 'string' || typeof responseCode === 'number') {
-      return String(responseCode);
-    }
-    if (err.constructor?.name) return err.constructor.name;
-  }
-  return 'UNKNOWN';
-}
 
 export function createReservationsService(
   repo: ReservationsRepository,

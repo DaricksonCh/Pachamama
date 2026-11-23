@@ -12,6 +12,12 @@ export type Slot = {
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
+/** Adds days to a `YYYY-MM-DD` calendar date. Pure UTC maths: no time zone or DST can shift the day. */
+export function addDays(date: string, n: number): string {
+  const [y = 0, m = 1, d = 1] = date.split('-').map(Number);
+  return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10);
+}
+
 /** Restaurant-local date + time to a UTC instant (DST-aware). */
 export function toUtc(date: string, time: string): Date {
   const [y = 0, mo = 1, d = 1] = date.split('-').map(Number);

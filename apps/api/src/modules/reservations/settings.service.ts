@@ -5,6 +5,7 @@ import {
   type OpeningHours,
   type ReservationSettings,
 } from '@pachamama/shared';
+import { z } from 'zod';
 import type { ReservationLang, ReservationMessageKind } from '../../db/types';
 import { AppError } from '../../lib/app-error';
 import type { MessageTemplate, SettingsRepository, StoredClosure } from './settings.repository';
@@ -72,12 +73,12 @@ export function createSettingsService(repo: SettingsRepository) {
       const merged = { ...(await repo.getSettings()), ...patch };
       const parsed = reservationSettingsSchema.safeParse(merged);
       if (!parsed.success) {
-        const fieldErrors: Record<string, string[]> = {};
-        for (const issue of parsed.error.issues) {
-          const key = String(issue.path[0] ?? '_');
-          (fieldErrors[key] ??= []).push(issue.message);
-        }
-        throw new AppError(400, 'VALIDATION_ERROR', 'Invalid input', fieldErrors);
+        throw new AppError(
+          400,
+          'VALIDATION_ERROR',
+          'Invalid input',
+          z.flattenError(parsed.error).fieldErrors,
+        );
       }
       await repo.updateSettings(parsed.data);
       invalidate();
