@@ -59,6 +59,7 @@ export function PrivacyPage() {
       provider: value(legal.hostingProvider),
       retention: value(legal.logRetention),
       smtp: value(legal.smtpProvider),
+      mailbox: value(legal.mailboxRetention),
       date: updated,
     });
 
@@ -113,6 +114,14 @@ export function PrivacyPage() {
                     </Link>
                   </p>
                 </>
+              ) : null}
+
+              {id === 'reservations' ? (
+                <p className="leading-relaxed">
+                  <a href="#privacy-rights" className={textLinkClass}>
+                    {t('privacy.sections.reservations.rightsLink')}
+                  </a>
+                </p>
               ) : null}
 
               {id === 'authority' ? (

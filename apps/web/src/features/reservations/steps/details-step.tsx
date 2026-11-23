@@ -63,6 +63,7 @@ export function DetailsStep({ form, onSubmit, submitError }: DetailsStepProps) {
   const a11y = (field: DetailsField, opts: { required?: boolean; hint?: boolean } = {}) => {
     const error = errorOf(field);
     const describedBy = [
+      field === 'comment' ? `${idOf(field)}-help` : null,
       opts.hint ? `${idOf(field)}-hint` : null,
       error ? `${idOf(field)}-error` : null,
     ].filter(Boolean);
@@ -151,6 +152,9 @@ export function DetailsStep({ form, onSubmit, submitError }: DetailsStepProps) {
           {...register('comment')}
           className="bg-white"
         />
+        <p id={`${idOf('comment')}-help`} className="text-sm text-tierra/80">
+          {t('reservations.details.commentHint')}
+        </p>
         <p id={`${idOf('comment')}-hint`} className="text-sm text-tierra/80">
           {comment.length}/{COMMENT_MAX}
         </p>

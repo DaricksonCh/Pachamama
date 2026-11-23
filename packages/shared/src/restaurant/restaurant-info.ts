@@ -55,6 +55,8 @@ export const RESTAURANT_INFO = {
     logRetention: LEGAL_PLACEHOLDER,
     /** SMTP provider that sends the reservation emails (privacy policy; an AVV is required). */
     smtpProvider: LEGAL_PLACEHOLDER,
+    /** How long reservation notification emails stay in the restaurant mailbox and at the email provider (privacy policy). */
+    mailboxRetention: LEGAL_PLACEHOLDER,
   },
   isProvisional: true,
   provisionalFields: ['openingHours', 'phone', 'email', 'legal'],
@@ -80,6 +82,7 @@ export function legalHasPlaceholders(): boolean {
     legal.hostingProvider,
     legal.logRetention,
     legal.smtpProvider,
+    legal.mailboxRetention,
   ];
   return !legal.addressConfirmed || values.some((v) => v === LEGAL_PLACEHOLDER);
 }

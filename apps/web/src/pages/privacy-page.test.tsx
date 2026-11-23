@@ -61,6 +61,19 @@ describe('privacy page', () => {
     expect(screen.getByText(/keine Cookies und kein Tracking/)).toBeVisible();
   });
 
+  it('states the legal requirement, comment advice, retention and AVV obligation', () => {
+    renderPage();
+    expect(screen.getByText(/ohne sie ist keine Reservierung möglich/)).toBeVisible();
+    expect(screen.getByText(/nur das Nötigste ein \(zum Beispiel Allergien\)/)).toBeVisible();
+    expect(screen.getByText(/in der Datenbank unwiderruflich/)).toBeVisible();
+    expect(screen.getByText(/Aufbewahrungsfrist: \[ausstehend\]/)).toBeVisible();
+    expect(screen.getByText(/Auftragsverarbeitungsvertrag geschlossen/)).toBeVisible();
+    expect(screen.getByRole('link', { name: /Ihre Rechte \(Auskunft/ })).toHaveAttribute(
+      'href',
+      '#privacy-rights',
+    );
+  });
+
   it('links phone, email and the imprint', () => {
     renderPage();
     expect(screen.getByRole('link', { name: RESTAURANT_INFO.phone.display })).toHaveAttribute(
@@ -86,7 +99,7 @@ describe('privacy page', () => {
     expect(screen.getByText(AUTHORITY)).toBeVisible();
     expect(screen.getByText(/Proveedor de alojamiento: \[pendiente\]/)).toBeVisible();
     expect(screen.getByRole('heading', { level: 2, name: 'Reservas de mesa' })).toBeVisible();
-    expect(screen.getByText(/Proveedor: \[pendiente\]\. Firmamos/)).toBeVisible();
+    expect(screen.getByText(/Proveedor: \[pendiente\]\. Con él se celebrará/)).toBeVisible();
     expect(screen.getByText(/como máximo 90 días después/)).toBeVisible();
     expect(screen.getByRole('link', { name: /aviso legal/ })).toHaveAttribute(
       'href',

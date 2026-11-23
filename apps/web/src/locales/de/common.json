@@ -721,11 +721,12 @@
       "reservations": {
         "title": "Tischreservierungen",
         "p1": "Zweck: Wenn Sie online einen Tisch anfragen, verarbeiten wir Ihre Angaben ausschließlich, um die Reservierung zu bearbeiten, zu bestätigen und durchzuführen.",
-        "p2": "Daten: Name, E-Mail-Adresse, Telefonnummer, optional eine Anmerkung, Datum und Uhrzeit, Personenzahl sowie die Sprache Ihrer Anfrage. Außerdem protokollieren wir, wann die Anfrage eingegangen ist und wie sie bearbeitet wurde (Status, gesendete E-Mails).",
-        "p3": "Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen und Durchführung der Reservierung).",
-        "p4": "Empfänger: Die Angaben sehen nur die Mitarbeitenden des Restaurants im Verwaltungsbereich. Die E-Mails an Sie (Eingangsbestätigung und Antwort) werden über einen SMTP-Anbieter versendet. Anbieter: {{smtp}}. Mit ihm schließen wir einen Auftragsverarbeitungsvertrag. Es werden keine Widgets oder Dienste von Drittanbietern eingebunden.",
-        "p5": "Speicherdauer: Spätestens 90 Tage nach dem Reservierungsdatum anonymisieren wir Name, E-Mail-Adresse, Telefonnummer und Anmerkung unwiderruflich.",
-        "p6": "Spam-Schutz: Wir verwenden ein verstecktes Formularfeld und eine Begrenzung der Anfragen pro Zeitraum. Dafür werden keine Cookies und kein Tracking eingesetzt; die IP-Adresse wird nur kurzzeitig im Arbeitsspeicher für die Begrenzung genutzt."
+        "p2": "Daten: Name, E-Mail-Adresse, Telefonnummer, optional eine Anmerkung, Datum und Uhrzeit, Personenzahl sowie die Sprache Ihrer Anfrage. Außerdem protokollieren wir, wann die Anfrage eingegangen ist und wie sie bearbeitet wurde (Status, gesendete E-Mails). Bitte tragen Sie in die Anmerkung nur das Nötigste ein (zum Beispiel Allergien). Gesundheitsbezogene Angaben, die Sie dort freiwillig machen, nutzen wir ausschließlich, um Ihren Besuch vorzubereiten.",
+        "p3": "Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen und Durchführung der Reservierung). Die Angaben (außer der Anmerkung) sind für die Bearbeitung der Reservierung erforderlich; ohne sie ist keine Reservierung möglich.",
+        "p4": "Empfänger: Die Angaben sehen nur die Mitarbeitenden des Restaurants im Verwaltungsbereich. Die E-Mails an Sie (Eingangsbestätigung und Antwort) werden über einen SMTP-Anbieter versendet. Anbieter: {{smtp}}. Mit ihm wird ein Auftragsverarbeitungsvertrag geschlossen. Es werden keine Widgets oder Dienste von Drittanbietern eingebunden.",
+        "p5": "Speicherdauer: Spätestens 90 Tage nach dem Reservierungsdatum anonymisieren wir Name, E-Mail-Adresse, Telefonnummer und Anmerkung in der Datenbank unwiderruflich. Kopien in den Benachrichtigungs-E-Mails im Postfach des Restaurants und beim E-Mail-Anbieter löschen wir nach der dort festgelegten Aufbewahrungsfrist: {{mailbox}}.",
+        "p6": "Spam-Schutz: Wir verwenden ein verstecktes Formularfeld und eine Begrenzung der Anfragen pro Zeitraum. Dafür werden keine Cookies und kein Tracking eingesetzt; die IP-Adresse wird nur kurzzeitig im Arbeitsspeicher für die Begrenzung genutzt.",
+        "rightsLink": "Ihre Rechte (Auskunft, Löschung u. a.)"
       },
       "rights": {
         "title": "Ihre Rechte",
@@ -799,7 +800,8 @@
       "privacyBefore": "Ich habe die",
       "privacyLink": "Datenschutzerklärung",
       "privacyAfter": " gelesen und akzeptiere sie.",
-      "newTab": "(öffnet in neuem Tab)"
+      "newTab": "(öffnet in neuem Tab)",
+      "commentHint": "Bitte nur das Nötigste angeben (z. B. Allergien)."
     },
     "errors": {
       "slotFull": "Diese Uhrzeit ist leider nicht mehr frei. Bitte wählen Sie eine andere.",
