@@ -86,6 +86,15 @@ El restaurante **se queda sin página web ese día**. Prioridad absoluta: tener 
 - `npm audit --omit=dev` (sharp, multer, @react-pdf) y test de humo del build (`dist/assets` con fuentes y logo).
 - Resolver los platos provisionales de [`pendientes.md`](pendientes.md) (alérgenos, precios dudosos, Chaufa "vegano" con salsa de ostión).
 
+**Antes de publicar (anotado en la revisión final de la fase 7, checklist M4)**
+
+- En producción la API y `db:cleanup` no arrancan sin `SMTP_HOST`, `MAIL_FROM` y `RESERVATIONS_NOTIFY_EMAIL` reales, y con TLS (`SMTP_SECURE=true` o `SMTP_REQUIRE_TLS=true`).
+- Hacer un `mysqldump` antes de ejecutar las migraciones en producción (MySQL no tiene DDL transaccional).
+- Programar el cron diario de `npm run db:cleanup`.
+- Fijar el plazo de conservación del buzón de avisos y rellenar `legal.mailboxRetention` (Datenschutz).
+- Ejecutar `npm audit --omit=dev`.
+- Ejecutar `npm run check:publish`: tiene que estar en verde.
+
 **Más adelante**
 
 - Docker · almacenamiento de imágenes/vídeos · franjas y límites de pedidos · reservas con confirmación manual vs. aforo automático · roles definitivos · plazo de retención de datos.

@@ -20,16 +20,17 @@ Leyenda: ⏳ pendiente · ✅ confirmado
 
 ## Técnico antes de publicar
 
-| Tema                    | Situación                                                                                                                                                                                                                                | Estado |
-| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| Fotos de platos         | 5 platos visibles apuntan a fotos que no están en `apps/api/uploads` (Tamal de Pollo, Causa veggie, Solterito, Empanadas, Jalea Mixta). Volver a subirlas desde el panel o recargar la carta con `--photos` en el servidor.              | ⏳     |
-| Mapa de Contacto        | `apps/web/public/images/map/kontakt-karte.webp`: 9 teselas de tile.openstreetmap.org (zoom 16, descarga única autorizada el 2026-11-22, coordenadas de Nominatim 53.07536, 8.78354), unidas en local. © OpenStreetMap-Mitwirkende, ODbL. | ✅     |
-| Proveedor SMTP + AVV    | Elegir proveedor SMTP en la UE y firmar el contrato de encargo; rellenar `legal.smtpProvider` (Datenschutz) y las variables SMTP del servidor. `check:publish` falla hasta entonces.                                                     | ⏳     |
-| Cron de `db:cleanup`    | Programar a diario en el servidor (sesiones caducadas y anonimización de reservas a los 90 días)                                                                                                                                         | ⏳     |
-| Logs del servidor (IPs) | Cuadrar la Datenschutzerklärung con la configuración real de nginx (qué se guarda y cuánto tiempo)                                                                                                                                       | ⏳     |
-| Fotos más grandes       | Causa y quinua solo tienen versión de 640 px (se ven algo blandas en pantallas retina)                                                                                                                                                   | ⏳     |
-| Fotos de la portada     | «Aus unserer Küche» (Ceviche Clásico, Lomo Saltado, Causa Limeña): ceviche y lomo usan un recorte provisional de `mesa-surtida`. Sustituir por fotos profesionales en `kitchen-section.tsx` cuando lleguen.                              | ⏳     |
-| Precios de la portada   | Los 3 platos de la portada toman el precio de la carta buscando su nombre en alemán. Si se renombra uno en `/admin`, su tarjeta sale sin precio: actualizar `FEATURED` en `kitchen-section.tsx`.                                         | ⏳     |
+| Tema                          | Situación                                                                                                                                                                                                                                | Estado |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| Fotos de platos               | 5 platos visibles apuntan a fotos que no están en `apps/api/uploads` (Tamal de Pollo, Causa veggie, Solterito, Empanadas, Jalea Mixta). Volver a subirlas desde el panel o recargar la carta con `--photos` en el servidor.              | ⏳     |
+| Mapa de Contacto              | `apps/web/public/images/map/kontakt-karte.webp`: 9 teselas de tile.openstreetmap.org (zoom 16, descarga única autorizada el 2026-11-22, coordenadas de Nominatim 53.07536, 8.78354), unidas en local. © OpenStreetMap-Mitwirkende, ODbL. | ✅     |
+| Proveedor SMTP + AVV          | Elegir proveedor SMTP en la UE y firmar el contrato de encargo; rellenar `legal.smtpProvider` (Datenschutz) y las variables SMTP del servidor. `check:publish` falla hasta entonces.                                                     | ⏳     |
+| Retención del buzón de avisos | Fijar cuánto tiempo se conservan los correos de aviso en el buzón del restaurante y en el proveedor de correo; rellenar `legal.mailboxRetention` (Datenschutz). `check:publish` falla hasta entonces.                                    | ⏳     |
+| Cron de `db:cleanup`          | Programar a diario en el servidor (sesiones caducadas y anonimización de reservas a los 90 días)                                                                                                                                         | ⏳     |
+| Logs del servidor (IPs)       | Cuadrar la Datenschutzerklärung con la configuración real de nginx (qué se guarda y cuánto tiempo)                                                                                                                                       | ⏳     |
+| Fotos más grandes             | Causa y quinua solo tienen versión de 640 px (se ven algo blandas en pantallas retina)                                                                                                                                                   | ⏳     |
+| Fotos de la portada           | «Aus unserer Küche» (Ceviche Clásico, Lomo Saltado, Causa Limeña): ceviche y lomo usan un recorte provisional de `mesa-surtida`. Sustituir por fotos profesionales en `kitchen-section.tsx` cuando lleguen.                              | ⏳     |
+| Precios de la portada         | Los 3 platos de la portada toman el precio de la carta buscando su nombre en alemán. Si se renombra uno en `/admin`, su tarjeta sale sin precio: actualizar `FEATURED` en `kitchen-section.tsx`.                                         | ⏳     |
 
 ## Impressum (obligatorio en Alemania)
 
@@ -95,6 +96,12 @@ Hallazgos de las revisiones que no se corrigieron en el momento (ni seguridad ni
 - El calendario de la web se limita a 12 meses.
 - La disponibilidad del mes ignora el tamaño del grupo.
 - Faltan tests: refresco de «hoy», tramos del contador, formulario de añadir cierre y payload al guardar una plantilla.
+- `check:publish` no comprueba las variables SMTP (`SMTP_HOST`, `MAIL_FROM`, TLS); solo las valida el arranque en producción.
+- `closureSchema` no limita el rango máximo de un cierre.
+- El SQL de la retención (anonimización) vive fuera del repositorio de reservas.
+- Tipos duplicados: `EmailKind`, `ReservationLang` y `ReservationMessageKind` existen en la API y en `shared`.
+- `PATCH` de ajustes se ejecuta sin transacción.
+- El límite de reservas por IP y las redes con NAT compartido: revisar antes de M4.
 - La guarda de publicación comprueba la subcadena `/example/`.
 - La retención usa una lista IN sin límite si hay un atraso enorme.
 - `createMemoryMailer` vive en un archivo de producción.

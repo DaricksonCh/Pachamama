@@ -90,35 +90,35 @@ Requieren sesión; lectura para admin y staff, escritura solo admin. Las escritu
 
 Todo para `admin` y `staff`. `:id` es el id numérico; inválido → 400 `VALIDATION_ERROR`.
 
-| Método | Ruta                                              | Descripción                                                                                                                                                                                                                                                         |
-| ------ | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| GET    | `/admin/reservations?date=&status=`               | Reservas del día local (`date` obligatorio, `YYYY-MM-DD`, hora de Berlín) por hora; `status` opcional. Cada una: `id, publicId, startsAt, partySize, name, phone, email, comment, lang, status, decidedAt, lastEmailFailed`                                         |
-| GET    | `/admin/reservations/pending-count`               | `{ count }`: pendientes con `startsAt` futuro                                                                                                                                                                                                                       |
-| GET    | `/admin/reservations/:id`                         | La reserva + `events: [{ id, fromStatus, toStatus, actorName, subject, message, emailStatus, createdAt }]`; 404 `NOT_FOUND`                                                                                                                                         |
-| GET    | `/admin/reservations/:id/message-preview?status=` | `status`: confirmed, rejected o cancelled (otro → 400). `{ subject, body, lang }`: plantilla del idioma del cliente ya rellenada                                                                                                                                    |
+| Método | Ruta                                              | Descripción                                                                                                                                                                                                                                                                                                                                                                      |
+| ------ | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/admin/reservations?date=&status=`               | Reservas del día local (`date` obligatorio, `YYYY-MM-DD`, hora de Berlín) por hora; `status` opcional. Cada una: `id, publicId, startsAt, partySize, name, phone, email, comment, lang, status, decidedAt, lastEmailFailed`                                                                                                                                                      |
+| GET    | `/admin/reservations/pending-count`               | `{ count }`: pendientes con `startsAt` futuro                                                                                                                                                                                                                                                                                                                                    |
+| GET    | `/admin/reservations/:id`                         | La reserva + `events: [{ id, fromStatus, toStatus, actorName, subject, message, emailStatus, createdAt }]`; 404 `NOT_FOUND`                                                                                                                                                                                                                                                      |
+| GET    | `/admin/reservations/:id/message-preview?status=` | `status`: confirmed, rejected o cancelled (otro → 400). `{ subject, body, lang }`: plantilla del idioma del cliente ya rellenada                                                                                                                                                                                                                                                 |
 | PATCH  | `/admin/reservations/:id/status`                  | Cuerpo `reservationStatusChangeSchema`: `{ status, message? ≤2000, subject? ≤150, notify? = true }` → `{ reservation, emailStatus }`. `message`/`subject` solo con confirmed, rejected o cancelled (si no, 400). En una reserva ya anonimizada nunca se envía correo (`emailStatus: skipped`; con `message`/`subject` → 400). Transición no permitida → 409 `INVALID_TRANSITION` |
-| POST   | `/admin/reservations/:id/resend-email`            | Reenvía el último mensaje de decisión (si el estado actual sigue siendo ese) y añade un evento; si no hay nada que reenviar → 409 `NOTHING_TO_RESEND`; si el último evento tiene menos de 60 s → 429 `RESEND_TOO_SOON`                                                                                                               |
+| POST   | `/admin/reservations/:id/resend-email`            | Reenvía el último mensaje de decisión (si el estado actual sigue siendo ese) y añade un evento; si no hay nada que reenviar → 409 `NOTHING_TO_RESEND`; si el último evento tiene menos de 60 s → 429 `RESEND_TOO_SOON`                                                                                                                                                           |
 
 Al decidir (confirmed, rejected, cancelled) con `notify` el cliente recibe un correo: asunto y texto salen de la plantilla de su idioma, salvo que el personal envíe `subject`/`message` (se envían tal cual, sin rellenar variables: la vista previa ya lo hizo). Se guarda el texto enviado en el evento. `emailStatus`: `sent`, `failed` (el cambio de estado **no** se revierte; usar `resend-email`), `skipped` (`notify: false`) o `null` (completed, no_show). Se guardan `decidedBy` y `decidedAt`.
 
 ## Códigos de error
 
-| Código                | HTTP | Cuándo                                           |
-| --------------------- | ---- | ------------------------------------------------ |
-| `UNAUTHORIZED`        | 401  | Sin sesión o sesión caducada                     |
-| `FORBIDDEN`           | 403  | Rol insuficiente o cuenta bloqueada              |
-| `NOT_FOUND`           | 404  | Ruta inexistente                                 |
-| `INVALID_JSON`        | 400  | Cuerpo JSON mal formado                          |
-| `VALIDATION_ERROR`    | 400  | Entrada inválida; `details` = errores por campo  |
-| `SLOT_UNAVAILABLE`    | 400  | Franja de reserva inexistente, pasada o cerrada  |
-| `SLOT_FULL`           | 409  | La franja ya no tiene aforo para el grupo        |
-| `INVALID_TRANSITION`  | 409  | Cambio de estado de reserva no permitido         |
-| `NOTHING_TO_RESEND`   | 409  | No hay mensaje de decisión que reenviar          |
+| Código                | HTTP | Cuándo                                                  |
+| --------------------- | ---- | ------------------------------------------------------- |
+| `UNAUTHORIZED`        | 401  | Sin sesión o sesión caducada                            |
+| `FORBIDDEN`           | 403  | Rol insuficiente o cuenta bloqueada                     |
+| `NOT_FOUND`           | 404  | Ruta inexistente                                        |
+| `INVALID_JSON`        | 400  | Cuerpo JSON mal formado                                 |
+| `VALIDATION_ERROR`    | 400  | Entrada inválida; `details` = errores por campo         |
+| `SLOT_UNAVAILABLE`    | 400  | Franja de reserva inexistente, pasada o cerrada         |
+| `SLOT_FULL`           | 409  | La franja ya no tiene aforo para el grupo               |
+| `INVALID_TRANSITION`  | 409  | Cambio de estado de reserva no permitido                |
+| `NOTHING_TO_RESEND`   | 409  | No hay mensaje de decisión que reenviar                 |
 | `RESEND_TOO_SOON`     | 429  | Reenvío a menos de 60 s del último evento de la reserva |
-| `RATE_LIMITED`        | 429  | Demasiadas peticiones desde la misma IP          |
-| `INVALID_CATEGORY`    | 400  | El plato apunta a una categoría inexistente      |
-| `INVALID_ORDER`       | 400  | La lista de orden incluye ids desconocidos       |
-| `NO_IMAGE`            | 400  | Texto alternativo de un plato sin foto           |
-| `CATEGORY_HAS_DISHES` | 409  | Archivar una categoría con platos no archivados  |
-| `PAYLOAD_TOO_LARGE`   | 413  | Cuerpo de más de 100 kB                          |
-| `INTERNAL_ERROR`      | 500  | Error no controlado (sin detalles en producción) |
+| `RATE_LIMITED`        | 429  | Demasiadas peticiones desde la misma IP                 |
+| `INVALID_CATEGORY`    | 400  | El plato apunta a una categoría inexistente             |
+| `INVALID_ORDER`       | 400  | La lista de orden incluye ids desconocidos              |
+| `NO_IMAGE`            | 400  | Texto alternativo de un plato sin foto                  |
+| `CATEGORY_HAS_DISHES` | 409  | Archivar una categoría con platos no archivados         |
+| `PAYLOAD_TOO_LARGE`   | 413  | Cuerpo de más de 100 kB                                 |
+| `INTERNAL_ERROR`      | 500  | Error no controlado (sin detalles en producción)        |
