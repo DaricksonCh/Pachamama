@@ -8,7 +8,7 @@
 export const LEGAL_PLACEHOLDER = 'PENDIENTE' as const;
 
 /** Last revision of the privacy policy (ISO date); the page formats it per language. */
-export const PRIVACY_POLICY_UPDATED = '2026-11-22';
+export const PRIVACY_POLICY_UPDATED = '2026-11-23';
 
 const ADDRESS = { street: 'Am Gaswerk 1', postalCode: '28197', city: 'Bremen' } as const;
 
@@ -53,6 +53,8 @@ export const RESTAURANT_INFO = {
     hostingProvider: LEGAL_PLACEHOLDER,
     /** How long web server logs are kept (privacy policy). */
     logRetention: LEGAL_PLACEHOLDER,
+    /** SMTP provider that sends the reservation emails (privacy policy; an AVV is required). */
+    smtpProvider: LEGAL_PLACEHOLDER,
   },
   isProvisional: true,
   provisionalFields: ['openingHours', 'phone', 'email', 'legal'],
@@ -77,6 +79,7 @@ export function legalHasPlaceholders(): boolean {
     legal.contentResponsible,
     legal.hostingProvider,
     legal.logRetention,
+    legal.smtpProvider,
   ];
   return !legal.addressConfirmed || values.some((v) => v === LEGAL_PLACEHOLDER);
 }

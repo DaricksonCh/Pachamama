@@ -54,6 +54,7 @@ describe('legalHasPlaceholders with not-applicable fields', () => {
       contentResponsible: 'F',
       hostingProvider: 'G',
       logRetention: 'H',
+      smtpProvider: 'I',
       addressConfirmed: true,
     });
     expect(legalHasPlaceholders()).toBe(false);

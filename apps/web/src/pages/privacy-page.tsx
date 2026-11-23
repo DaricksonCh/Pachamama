@@ -22,6 +22,7 @@ type Section =
   | 'cookies'
   | 'external'
   | 'contact'
+  | 'reservations'
   | 'rights'
   | 'authority'
   | 'updated';
@@ -34,6 +35,7 @@ const SECTIONS: { id: Section; paragraphs: string[] }[] = [
   { id: 'cookies', paragraphs: ['p1', 'p2'] },
   { id: 'external', paragraphs: ['p1', 'p2'] },
   { id: 'contact', paragraphs: ['p1', 'p2'] },
+  { id: 'reservations', paragraphs: ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'] },
   { id: 'rights', paragraphs: ['p1', 'p2'] },
   { id: 'authority', paragraphs: ['p1'] },
   { id: 'updated', paragraphs: ['p1'] },
@@ -56,6 +58,7 @@ export function PrivacyPage() {
     t(`privacy.sections.${section}.${key}`, {
       provider: value(legal.hostingProvider),
       retention: value(legal.logRetention),
+      smtp: value(legal.smtpProvider),
       date: updated,
     });
 

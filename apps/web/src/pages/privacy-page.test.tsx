@@ -28,6 +28,7 @@ describe('privacy page', () => {
       'Cookies',
       'Schriftarten, Bilder und externe Dienste',
       'Kontakt per Telefon oder E-Mail',
+      'Tischreservierungen',
       'Ihre Rechte',
       'Beschwerderecht bei der Aufsichtsbehörde',
       'Stand',
@@ -44,9 +45,20 @@ describe('privacy page', () => {
   it('names the supervisory authority, the date and the legal bases', () => {
     renderPage();
     expect(screen.getByText(AUTHORITY)).toBeVisible();
-    expect(screen.getByText(/Stand: 22. November 2026/)).toBeVisible();
+    expect(screen.getByText(/Stand: 23. November 2026/)).toBeVisible();
     expect(screen.getByText(/§ 25 Abs. 2 Nr. 2 TDDDG/)).toBeVisible();
     expect(screen.getByText(/Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes/)).toBeVisible();
+  });
+
+  it('describes the reservations processing', () => {
+    renderPage();
+    expect(
+      screen.getByText(/Name, E-Mail-Adresse, Telefonnummer, optional eine Anmerkung/),
+    ).toBeVisible();
+    expect(screen.getByText(/lit. b DSGVO \(vorvertragliche/)).toBeVisible();
+    expect(screen.getByText(/Spätestens 90 Tage nach dem Reservierungsdatum/)).toBeVisible();
+    expect(screen.getByText(/Anbieter: \[ausstehend\]\. Mit ihm/)).toBeVisible();
+    expect(screen.getByText(/keine Cookies und kein Tracking/)).toBeVisible();
   });
 
   it('links phone, email and the imprint', () => {
@@ -73,6 +85,9 @@ describe('privacy page', () => {
     expect(screen.getByRole('note')).toHaveTextContent(/borrador/);
     expect(screen.getByText(AUTHORITY)).toBeVisible();
     expect(screen.getByText(/Proveedor de alojamiento: \[pendiente\]/)).toBeVisible();
+    expect(screen.getByRole('heading', { level: 2, name: 'Reservas de mesa' })).toBeVisible();
+    expect(screen.getByText(/Proveedor: \[pendiente\]\. Firmamos/)).toBeVisible();
+    expect(screen.getByText(/como máximo 90 días después/)).toBeVisible();
     expect(screen.getByRole('link', { name: /aviso legal/ })).toHaveAttribute(
       'href',
       '/es/aviso-legal',

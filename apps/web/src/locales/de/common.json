@@ -688,7 +688,7 @@
       "overview": {
         "title": "Überblick",
         "p1": "Diese Website informiert über das Restaurant: Speisekarte, Öffnungszeiten, Geschichte und Kontaktdaten. Wir verarbeiten dabei so wenige personenbezogene Daten wie möglich.",
-        "p2": "Auf dieser Website gibt es derzeit keine Formulare und keine Kundenkonten."
+        "p2": "Für Tischreservierungen gibt es ein Formular (siehe unten). Kundenkonten gibt es nicht."
       },
       "controller": {
         "title": "Verantwortlicher",
@@ -716,6 +716,15 @@
         "title": "Kontakt per Telefon oder E-Mail",
         "p1": "Wenn Sie uns anrufen oder schreiben, verarbeiten wir Ihre Angaben (zum Beispiel Name, Telefonnummer, E-Mail-Adresse und den Inhalt Ihrer Nachricht) nur, um Ihre Anfrage zu bearbeiten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, wenn die Anfrage mit einem Vertrag zusammenhängt, sonst Art. 6 Abs. 1 lit. f DSGVO (Bearbeitung von Anfragen).",
         "p2": "Wir löschen die Daten, sobald sie dafür nicht mehr erforderlich sind und keine gesetzlichen Aufbewahrungspflichten entgegenstehen."
+      },
+      "reservations": {
+        "title": "Tischreservierungen",
+        "p1": "Zweck: Wenn Sie online einen Tisch anfragen, verarbeiten wir Ihre Angaben ausschließlich, um die Reservierung zu bearbeiten, zu bestätigen und durchzuführen.",
+        "p2": "Daten: Name, E-Mail-Adresse, Telefonnummer, optional eine Anmerkung, Datum und Uhrzeit, Personenzahl sowie die Sprache Ihrer Anfrage. Außerdem protokollieren wir, wann die Anfrage eingegangen ist und wie sie bearbeitet wurde (Status, gesendete E-Mails).",
+        "p3": "Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen und Durchführung der Reservierung).",
+        "p4": "Empfänger: Die Angaben sehen nur die Mitarbeitenden des Restaurants im Verwaltungsbereich. Die E-Mails an Sie (Eingangsbestätigung und Antwort) werden über einen SMTP-Anbieter versendet. Anbieter: {{smtp}}. Mit ihm schließen wir einen Auftragsverarbeitungsvertrag. Es werden keine Widgets oder Dienste von Drittanbietern eingebunden.",
+        "p5": "Speicherdauer: Spätestens 90 Tage nach dem Reservierungsdatum anonymisieren wir Name, E-Mail-Adresse, Telefonnummer und Anmerkung unwiderruflich.",
+        "p6": "Spam-Schutz: Wir verwenden ein verstecktes Formularfeld und eine Begrenzung der Anfragen pro Zeitraum. Dafür werden keine Cookies und kein Tracking eingesetzt; die IP-Adresse wird nur kurzzeitig im Arbeitsspeicher für die Begrenzung genutzt."
       },
       "rights": {
         "title": "Ihre Rechte",
