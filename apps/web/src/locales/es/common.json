@@ -8,7 +8,7 @@
     "lead": "Ceviche, lomo saltado, causa y tamales, preparados al momento como se comen en el Perú.",
     "seeMenu": "Ver la carta",
     "photos": {
-      "mesaSurtida": "Una mesa llena de platos peruanos: causa, ceviche, lomo saltado y ajíes frescos",
+      "mesaSurtida": "Una mesa servida con platos peruanos: lomo saltado, chicharrón, ensaladas y cancha",
       "localInterior": "El comedor con barra, mesas de madera y decoración colorida",
       "cocinera": "Nuestra cocinera con sombrero tradicional"
     },
@@ -673,13 +673,15 @@
       "cocinera": "Retrato de una cocinera con sombrero tradicional",
       "equipo": "El equipo del restaurante reunido en el comedor",
       "vertical": "Vista del comedor con decoración en las paredes",
-      "mesaSurtida": "Una mesa llena de platos peruanos sobre una manta andina de colores",
-      "tamal": "Un tamal en hoja de plátano servido en el plato",
-      "empanadas": "Empanadas doradas",
-      "causa": "Causa limeña en capas de crema de papa y relleno",
-      "mariscos": "Mariscos fritos con limón",
-      "ensalada": "Ensalada mixta de colores",
-      "quinua": "Ensalada de quinua con verduras frescas"
+      "mesaSurtida": "Una mesa servida con platos y bebidas peruanas",
+      "tamal": "Tamales en hoja de plátano junto a aceitunas, ají y pasas",
+      "empanadas": "Empanadas doradas sobre hoja de plátano",
+      "causa": "Causa de langostinos en capas de crema de papa",
+      "mariscos": "Jalea: mariscos fritos con yuca y salsa criolla",
+      "quinua": "Ensalada de quinua con hierbas frescas",
+      "huancaina": "Papa a la huancaína con huevo y aceitunas",
+      "maizMorado": "Mazorcas de maíz morado",
+      "mercado": "Productos andinos como oca, frijoles y cereales sobre mantas de colores"
     }
   },
   "contact": {

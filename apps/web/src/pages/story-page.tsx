@@ -60,12 +60,12 @@ export function StoryPage() {
         media={
           <>
             <Photo
-              photo="mesaSurtida"
+              photo="stockFestin"
               alt={t('story.photos.mesaSurtida')}
               sizes="(min-width: 768px) 30vw, 60vw"
             />
             <Photo
-              photo="tamal"
+              photo="stockTamales"
               alt={t('story.photos.tamal')}
               sizes="(min-width: 768px) 20vw, 40vw"
             />

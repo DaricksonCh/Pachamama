@@ -9,23 +9,12 @@ import { usePublicMenu } from '@/features/menu/public-api';
 /**
  * The three house classics shown on the home page. Prices come from the live menu, matched by
  * the German dish name (ignoring case); if a dish is renamed or hidden in /admin, its card simply shows no price.
- * Ceviche and Lomo Saltado have no photo of their own yet: until the professional photos arrive
- * they use a close crop of the "mesa surtida" photo, where both dishes appear (docs/pendientes.md).
+ * The photos are provisional stock photos until the professional ones arrive (docs/pendientes.md).
  */
 const FEATURED = [
-  {
-    key: 'ceviche',
-    menuName: 'Ceviche Clásico',
-    photo: 'mesaSurtida',
-    crop: 'origin-[47%_62%] scale-[2.2]',
-  },
-  {
-    key: 'lomo',
-    menuName: 'Lomo Saltado de Carne o Pollo',
-    photo: 'mesaSurtida',
-    crop: 'object-[100%_30%] origin-[60%_30%] scale-[2.2]',
-  },
-  { key: 'causa', menuName: 'Causa Limeña', photo: 'causa', crop: 'object-[50%_70%]' },
+  { key: 'ceviche', menuName: 'Ceviche Clásico', photo: 'stockCeviche', crop: 'object-[50%_55%]' },
+  { key: 'lomo', menuName: 'Lomo Saltado de Carne o Pollo', photo: 'stockLomo', crop: '' },
+  { key: 'causa', menuName: 'Causa Limeña', photo: 'stockCausa', crop: '' },
 ] as const;
 
 const sameName = (a: string, b: string) =>

@@ -13,6 +13,20 @@ const PHOTOS = {
   empanadas: { name: 'empanadas', widths: [640], ratio: 640 / 328 },
   ensaladaMixta: { name: 'ensalada-mixta', widths: [640], ratio: 640 / 486 },
   mariscosFritos: { name: 'mariscos-fritos', widths: [640], ratio: 640 / 418 },
+  // Provisional stock photos (Pexels) until the restaurant's professional photos arrive.
+  // Sources and authors: docs/creditos-fotos.md.
+  stockFestin: { name: 'stock-festin-peruano', widths: [640, 1280, 1920], ratio: 3 / 2 },
+  stockCeviche: { name: 'stock-ceviche', widths: [640, 1280], ratio: 2 / 3 },
+  stockLomo: { name: 'stock-lomo-saltado', widths: [640, 1280], ratio: 1280 / 853 },
+  stockCausa: { name: 'stock-causa-rellena', widths: [640, 1280], ratio: 1280 / 853 },
+  stockCausaLangostinos: { name: 'stock-causa-langostinos', widths: [640, 1280], ratio: 2 / 3 },
+  stockTamales: { name: 'stock-tamales', widths: [640, 1280], ratio: 4 / 5 },
+  stockEmpanadas: { name: 'stock-empanadas', widths: [640, 1280], ratio: 1280 / 853 },
+  stockJalea: { name: 'stock-jalea-mixta', widths: [640, 1280], ratio: 1280 / 853 },
+  stockQuinua: { name: 'stock-ensalada-quinua', widths: [640, 1280], ratio: 2 / 3 },
+  stockHuancaina: { name: 'stock-papa-huancaina', widths: [640, 1280], ratio: 1280 / 853 },
+  stockMaizMorado: { name: 'stock-maiz-morado', widths: [640, 1280], ratio: 1280 / 853 },
+  stockMercadoAndino: { name: 'stock-mercado-andino', widths: [640, 1280], ratio: 1280 / 872 },
 } as const;
 
 export type PhotoKey = keyof typeof PHOTOS;

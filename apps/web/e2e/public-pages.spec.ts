@@ -173,26 +173,26 @@ test('la galería de Historia avanza con las flechas y los puntos', async ({ pag
   const gallery = page.getByRole('region', { name: 'Momentos' });
   await gallery.scrollIntoViewIfNeeded();
   const live = gallery.locator('[aria-live]');
-  await expect(live).toHaveText('Foto 1 de 6');
+  await expect(live).toHaveText('Foto 1 de 8');
 
   await gallery.getByRole('button', { name: 'Foto siguiente' }).click();
-  await expect(live).toHaveText('Foto 2 de 6');
+  await expect(live).toHaveText('Foto 2 de 8');
   await expect(gallery.getByRole('button', { name: 'Ir a la foto 2' })).toHaveAttribute(
     'aria-current',
     'true',
   );
 
   await gallery.getByRole('button', { name: 'Ir a la foto 5' }).click();
-  await expect(live).toHaveText('Foto 5 de 6');
+  await expect(live).toHaveText('Foto 5 de 8');
   await expect(gallery.getByRole('img', { name: /quinua/i })).toBeInViewport();
 
   // From the last photo the next arrow wraps to the first; each move lands on its photo.
-  await gallery.getByRole('button', { name: 'Ir a la foto 6' }).click();
+  await gallery.getByRole('button', { name: 'Ir a la foto 8' }).click();
   await gallery.getByRole('button', { name: 'Foto siguiente' }).click();
-  await expect(live).toHaveText('Foto 1 de 6');
+  await expect(live).toHaveText('Foto 1 de 8');
   await expect(gallery.getByRole('img', { name: /Vista del comedor/ })).toBeInViewport();
   await gallery.getByRole('button', { name: 'Ir a la foto 3' }).click();
-  await expect(live).toHaveText('Foto 3 de 6');
+  await expect(live).toHaveText('Foto 3 de 8');
   // The third slide is aligned with the start of the track (horizontal position only:
   // clicking a dot may scroll the page vertically and crop the photo at the bottom).
   await expect

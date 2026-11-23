@@ -18,20 +18,20 @@ describe('story gallery', () => {
     render(<StoryGallery />);
     const region = screen.getByRole('region', { name: 'Einblicke' });
     expect(region).toHaveAttribute('aria-roledescription', 'Karussell');
-    expect(screen.getAllByRole('listitem')).toHaveLength(6);
+    expect(screen.getAllByRole('listitem')).toHaveLength(8);
     for (const img of screen.getAllByRole('img')) expect(img).toHaveAccessibleName();
-    expect(screen.getByText('Foto 1 von 6', { selector: '[aria-live]' })).toBeInTheDocument();
+    expect(screen.getByText('Foto 1 von 8', { selector: '[aria-live]' })).toBeInTheDocument();
   });
 
   it('moves with the arrows and wraps around', () => {
     render(<StoryGallery />);
     fireEvent.click(screen.getByRole('button', { name: 'Nächstes Foto' }));
     expect(currentDot()).toHaveAccessibleName('Zu Foto 2');
-    expect(screen.getByText('Foto 2 von 6', { selector: '[aria-live]' })).toBeInTheDocument();
+    expect(screen.getByText('Foto 2 von 8', { selector: '[aria-live]' })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Vorheriges Foto' }));
     fireEvent.click(screen.getByRole('button', { name: 'Vorheriges Foto' }));
-    expect(currentDot()).toHaveAccessibleName('Zu Foto 6');
+    expect(currentDot()).toHaveAccessibleName('Zu Foto 8');
   });
 
   it('jumps to a photo from its dot', () => {
