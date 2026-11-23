@@ -107,6 +107,8 @@ Antes de empezar una tarea, el agente **consulta (carga) las skills que le corre
 
 Todavía no hay diseño definitivo en Figma (plan gratuito, MCP muy limitado). El diseño puede crearse con la skill `frontend-design`, tomando como referencia webs que indique el usuario; si más adelante llega un Figma, este manda. Los tokens de diseño (colores, tipografías, espaciados) se centralizan en la configuración de Tailwind.
 
+**Páginas públicas por bloques (decidido por el usuario el 2026-11-23, ADR 0013):** cada bloque de una página tiene su propio toque (composición, fondo, detalle o animación) y no se repite la misma plantilla dos veces seguidas. Referencia de espíritu: muchosmas.eu, siempre con variaciones propias de Pachamama (paleta, manta, tipografías), nunca un calco. Todo movimiento respeta `prefers-reduced-motion` y el contenido se ve aunque no haya JavaScript de animación.
+
 ## Stack (decidido — no cambiar sin ADR nuevo)
 
 | Capa          | Tecnología                                                                                                       |

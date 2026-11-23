@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import '@fontsource-variable/fraunces/opsz.css';
 @import '@fontsource-variable/work-sans/index.css';
+@import '@fontsource/caveat/500.css';
 
 /*
  * Design tokens (M1, ADR 0010). Brand palette from the logo and the Andean textile in the photos:
@@ -82,16 +83,30 @@
   --color-papel: #f7f5ee;
   --color-tierra: #1f2a1d;
   --color-aji: #c8402a;
+  /* Darker ají for small text: ≥ 5:1 on papel and on the sand background (ADR 0013). */
+  --color-aji-deep: #a8331f;
   --color-chicha: #6b2d5c;
 
   --font-display: 'Fraunces Variable', Georgia, serif;
   --font-sans: 'Work Sans Variable', system-ui, sans-serif;
+  /* Handwritten accent (ADR 0013): short supporting phrases only, never a real heading. */
+  --font-script: 'Caveat', 'Segoe Script', cursive;
 
   /* Type scale 1.25 (major third) on a 1rem base */
   --text-display: clamp(2.75rem, 1.6rem + 4.6vw, 5.5rem);
   --text-display--line-height: 1;
 
   --animate-hero-in: hero-in 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-slow-zoom: slow-zoom 9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+
+  @keyframes slow-zoom {
+    from {
+      transform: scale(1.08);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
 
   @keyframes hero-in {
     from {
@@ -134,5 +149,23 @@
   h3 {
     font-optical-sizing: auto;
     text-wrap: balance;
+  }
+}
+
+/*
+ * Scroll reveal (ADR 0013). useReveal() sets data-reveal="pending" only when motion is allowed,
+ * so without JS or with prefers-reduced-motion the content is simply visible.
+ */
+@layer components {
+  [data-reveal] {
+    transition:
+      opacity 800ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      transform 800ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  [data-reveal='pending'] {
+    opacity: 0;
+    transform: translateY(14px);
   }
 }
