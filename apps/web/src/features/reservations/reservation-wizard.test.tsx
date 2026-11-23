@@ -330,7 +330,7 @@ describe('ReservationWizard', () => {
     await userEvent.type(screen.getByLabelText(/^Comentario/), 'Hola');
     expect(screen.getByText('4/500')).toBeVisible();
     expect(screen.getByLabelText(/^Comentario/)).toHaveAccessibleDescription(
-      /Indica solo lo necesario.*4/500/,
+      /Indica solo lo necesario.*4\/500/,
     );
   });
 
