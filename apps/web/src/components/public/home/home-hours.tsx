@@ -1,0 +1,139 @@
+import {
+  RESTAURANT_INFO,
+  groupWeek,
+  nextOpening,
+  openingStatus,
+  toRestaurantLocal,
+  upcomingClosure,
+  weekSchedule,
+  weekdayOfDate,
+  type PublicOpeningHours,
+} from '@pachamama/shared';
+import { useTranslation } from 'react-i18next';
+import { useOpeningHours } from '@/features/opening-hours/api';
+import { useNow } from '@/features/opening-hours/use-now';
+import { formatDayMonth, weekdayNames } from '@/features/opening-hours/weekday-names';
+import { cn } from '@/lib/utils';
+import { useLang } from '../use-lang';
+
+/** One status sentence for today: open until…, opens at…, rest day or closed until… */
+function useStatusText(data: PublicOpeningHours, now: Date): { text: string; open: boolean } {
+  const { t } = useTranslation();
+  const lang = useLang();
+  const status = openingStatus(now, data);
+
+  if (status.state === 'open')
+    return { open: true, text: t('home.visit.status.open', { time: status.closes }) };
+  if (status.state === 'opensLater')
+    return { open: false, text: t('home.visit.status.opensLater', { time: status.opens }) };
+  if (status.state === 'closure')
+    return {
+      open: false,
+      text: t('home.visit.status.closure', { date: formatDayMonth(lang, status.until) }),
+    };
+
+  const today = weekdayOfDate(toRestaurantLocal(now).date);
+  const restDay = weekSchedule(data.hours).find((d) => d.weekday === today)?.ranges.length === 0;
+  const next = nextOpening(now, data);
+  const base = restDay ? t('home.visit.status.restDay') : t('home.visit.status.closed');
+  if (!next) return { open: false, text: base };
+  const when =
+    next.daysAhead === 1
+      ? t('home.visit.status.tomorrow')
+      : weekdayNames(lang, 'long')[next.weekday];
+  return {
+    open: false,
+    text: t('home.visit.status.next', { base, when, time: next.opens }),
+  };
+}
+
+function Hours({ data }: { data: PublicOpeningHours }) {
+  const { t } = useTranslation();
+  const lang = useLang();
+  const now = useNow();
+  const { text, open } = useStatusText(data, now);
+  const today = weekdayOfDate(toRestaurantLocal(now).date);
+  const narrow = weekdayNames(lang, 'narrow');
+  // Capitalised: each summary line starts with a day name (es: "mar" → "Mar").
+  const short = weekdayNames(lang, 'short').map((d) => d.charAt(0).toUpperCase() + d.slice(1));
+  const closure = upcomingClosure(now, data);
+
+  return (
+    <>
+      <p className="flex items-start gap-2.5 font-semibold" data-testid="home-opening-status">
+        <span
+          aria-hidden="true"
+          className={cn(
+            'mt-2 size-2.5 shrink-0 rounded-full',
+            open
+              ? 'bg-[#3f9a4f] shadow-[0_0_0_4px_rgba(63,154,79,0.2)]'
+              : 'bg-aji shadow-[0_0_0_4px_rgba(200,64,42,0.18)]',
+          )}
+        />
+        {text}
+      </p>
+
+      {/* The week at a glance: today filled, rest days dashed. Decorative; the text below says it. */}
+      <ol aria-hidden="true" className="my-2.5 flex gap-1 sm:gap-1.5" data-testid="home-week">
+        {weekSchedule(data.hours).map((day) => {
+          const rest = day.ranges.length === 0;
+          const isToday = day.weekday === today;
+          return (
+            <li
+              key={day.weekday}
+              data-today={isToday || undefined}
+              data-rest={rest || undefined}
+              className={cn(
+                'grid size-7 place-items-center rounded-full border-[1.5px] text-xs font-semibold sm:size-8 sm:text-[0.8rem]',
+                rest
+                  ? 'border-dashed border-muted-foreground text-muted-foreground line-through'
+                  : 'border-selva text-selva',
+                isToday && (rest ? 'bg-muted-foreground text-papel' : 'bg-selva text-papel'),
+              )}
+            >
+              {narrow[day.weekday]}
+            </li>
+          );
+        })}
+      </ol>
+
+      <ul className="text-[0.95rem] tabular-nums" data-testid="home-hours-summary">
+        {groupWeek(data.hours).map((group) => {
+          const first = short[group.weekdays[0]!];
+          const last = short[group.weekdays.at(-1)!];
+          const days = group.weekdays.length > 1 ? `${first}–${last}` : first;
+          return (
+            <li key={group.weekdays.join()}>
+              {group.ranges.length === 0
+                ? t('home.visit.restDays', { days })
+                : `${days} ${group.ranges.map((r) => `${r.opens}–${r.closes}`).join(', ')}`}
+            </li>
+          );
+        })}
+      </ul>
+
+      {closure && (
+        <p className="mt-2 inline-block rounded bg-aji/10 px-2.5 py-0.5 text-sm font-semibold text-aji-deep">
+          {t('home.visit.closureAhead', {
+            from: formatDayMonth(lang, closure.from),
+            to: formatDayMonth(lang, closure.to),
+          })}
+        </p>
+      )}
+    </>
+  );
+}
+
+/**
+ * Opening hours on the home page (ADR 0015): what the staff keep in the panel, read for today.
+ * A status line, the week at a glance and one compact summary. Falls back to the fixed text.
+ */
+export function HomeHours() {
+  const { t } = useTranslation();
+  const lang = useLang();
+  const { data, isPending, isError } = useOpeningHours();
+
+  if (data) return <Hours data={data} />;
+  if (isPending) return <p className="text-muted-foreground">{t('contact.hoursBlock.loading')}</p>;
+  return isError ? <p>{RESTAURANT_INFO.openingHours[lang]}</p> : null;
+}

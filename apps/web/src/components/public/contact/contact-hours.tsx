@@ -6,31 +6,14 @@ import {
   weekdayOfDate,
   type PublicOpeningHours,
 } from '@pachamama/shared';
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useOpeningHours } from '@/features/opening-hours/api';
+import { useNow } from '@/features/opening-hours/use-now';
+import { formatDayMonth, weekdayNames } from '@/features/opening-hours/weekday-names';
 import { cn } from '@/lib/utils';
 import { useLang } from '../use-lang';
 import { useReveal } from '../use-reveal';
 import { Quipu } from './quipu';
-
-/** Weekday names indexed 0 = Sunday, from a known Sunday (2026-11-22) so no i18n keys are needed. */
-function weekdayNames(lang: string, width: 'long' | 'short'): string[] {
-  const fmt = new Intl.DateTimeFormat(lang, { weekday: width, timeZone: 'UTC' });
-  return Array.from({ length: 7 }, (_, i) =>
-    fmt.format(new Date(Date.UTC(2026, 10, 22 + i))).replace(/\.$/, ''),
-  );
-}
-
-/** Re-renders every minute so "open now" stays right while the page is open. */
-function useNow(): Date {
-  const [now, setNow] = useState(() => new Date());
-  useEffect(() => {
-    const id = window.setInterval(() => setNow(new Date()), 60_000);
-    return () => window.clearInterval(id);
-  }, []);
-  return now;
-}
 
 function StatusLine({ data, now }: { data: PublicOpeningHours; now: Date }) {
   const { t, i18n } = useTranslation();
@@ -41,11 +24,7 @@ function StatusLine({ data, now }: { data: PublicOpeningHours; now: Date }) {
   else if (status.state === 'opensLater')
     text = t('contact.hoursBlock.status.opensLater', { time: status.opens });
   else if (status.state === 'closure') {
-    const date = new Intl.DateTimeFormat(i18n.language, {
-      day: 'numeric',
-      month: 'long',
-      timeZone: 'UTC',
-    }).format(new Date(`${status.until}T00:00:00Z`));
+    const date = formatDayMonth(i18n.language, status.until);
     text = t('contact.hoursBlock.status.closure', { date });
   } else text = t('contact.hoursBlock.status.closed');
 

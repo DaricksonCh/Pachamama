@@ -3,7 +3,7 @@ import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
-import { KitchenSection } from './kitchen-section';
+import { HomeKitchen } from './home-kitchen';
 
 const dish = (id: number, nameDe: string, nameEs: string, price: number) => ({
   id,
@@ -39,7 +39,7 @@ function renderSection(path = '/de') {
   render(
     <QueryClientProvider client={queryClient}>
       <MemoryRouter initialEntries={[path]}>
-        <KitchenSection />
+        <HomeKitchen />
       </MemoryRouter>
     </QueryClientProvider>,
   );
@@ -62,7 +62,7 @@ describe('home kitchen section', () => {
     );
     renderSection();
 
-    expect(screen.getByRole('heading', { level: 2, name: 'Aus unserer Küche' })).toBeVisible();
+    expect(screen.getByRole('heading', { level: 2, name: 'Lorem ipsum dolor' })).toBeVisible();
     const names = screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent);
     expect(names).toEqual(['Ceviche Clásico', 'Lomo Saltado', 'Causa Limeña']);
 

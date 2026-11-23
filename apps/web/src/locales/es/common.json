@@ -8,26 +8,27 @@
     "lead": "Ceviche, lomo saltado, causa y tamales, preparados al momento como se comen en el Perú.",
     "seeMenu": "Ver la carta",
     "photos": {
-      "mesaSurtida": "Una mesa servida con platos peruanos: lomo saltado, chicharrón, ensaladas y cancha",
       "localInterior": "El comedor con barra, mesas de madera y decoración colorida",
-      "cocinera": "Nuestra cocinera con sombrero tradicional"
+      "cocinera": "Nuestra cocinera con sombrero tradicional",
+      "mercado": "Productos andinos como oca, frijoles y cereales sobre mantas de colores",
+      "equipo": "El equipo del restaurante reunido en el comedor"
     },
     "kitchen": {
-      "title": "De nuestra cocina",
-      "lead": "Tres clásicos para conocer el Perú en la mesa.",
+      "title": "Lorem ipsum dolor",
+      "lead": "Sed ut perspiciatis unde omnis iste natus error.",
       "link": "Ver toda la carta",
       "dishes": {
         "ceviche": {
           "name": "Ceviche clásico",
-          "text": "Perca del Nilo en jugo de limón con cebolla roja, ají limo, cilantro y camote."
+          "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do."
         },
         "lomo": {
           "name": "Lomo saltado",
-          "text": "Lomo de res o pollo salteado al wok con tomate y cebolla, con arroz y papas fritas."
+          "text": "Ut enim ad minim veniam, quis nostrud exercitation ullamco."
         },
         "causa": {
           "name": "Causa limeña",
-          "text": "Masa de papa con ají amarillo, pollo, palta, huevo y mayonesa."
+          "text": "Duis aute irure dolor in reprehenderit in voluptate velit."
         }
       }
     },
@@ -36,12 +37,33 @@
       "address": "Dirección",
       "hours": "Horario",
       "phone": "Teléfono",
-      "link": "Cómo llegar y contacto"
+      "link": "Cómo llegar y contacto",
+      "script": "Y luego, sobremesa",
+      "slow": "Quédate el tiempo que quieras.",
+      "restDays": "{{days}} cerrado",
+      "closureAhead": "Cerrado del {{from}} al {{to}}",
+      "status": {
+        "open": "Abierto ahora · hasta las {{time}}",
+        "opensLater": "Hoy abrimos a las {{time}}",
+        "closure": "Cerrado hasta el {{date}} incluido",
+        "restDay": "Hoy descansamos",
+        "closed": "Ahora cerrado",
+        "tomorrow": "mañana",
+        "next": "{{base}} · {{when}} desde las {{time}}"
+      }
     },
     "story": {
-      "title": "Pachamama significa Madre Tierra",
-      "text": "Maíz, papa, ají y pescado fresco: la cocina peruana vive de lo que da la tierra. Eso es lo que traemos a Bremen.",
+      "script": "lorem ipsum",
+      "title": "Lorem ipsum dolor sit amet",
+      "text": "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.",
+      "captions": {
+        "cocinera": "lorem ipsum",
+        "equipo": "dolor sit"
+      },
       "link": "Leer nuestra historia"
+    },
+    "hero": {
+      "caption": "todo empieza en la tierra"
     }
   },
   "nav": {
