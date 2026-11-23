@@ -8,7 +8,7 @@ import { PrivacyPage } from './privacy-page';
 import { ReservationsPage } from './reservations-page';
 import { StoryPage } from './story-page';
 
-/** Pages routed today. the link to `reservations` is switched on by RESERVATIONS_MODE. */
+/** Pages routed today. The header button reaches `reservations` because RESERVATIONS_MODE is 'form'. */
 const PAGES: Partial<Record<PublicPage, ComponentType>> = {
   menu: MenuPage,
   story: StoryPage,
