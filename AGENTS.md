@@ -27,7 +27,7 @@ Todo se paga **en el local** (sin pasarela de pagos). El personal gestiona todo 
 - No escribir código ni tocar la base de datos fuera de la fase aprobada.
 - Antes de una decisión técnica importante, proponer y esperar aprobación; después, registrarla en `docs/decisions/` (ADR).
 - Cada fase termina con: verificación → commit → push → actualizar `docs/roadmap.md`.
-- **No terminar hasta que todas las pruebas hayan sido superadas con éxito.** Ninguna tarea, fase o fusión se da por hecha hasta que `npm run check:all` está en verde (y `npm run db:check` si toca la BD). Si algo falla, se arregla la causa y se vuelve a ejecutar todo; nunca se borra, salta ni debilita un test para que pase. Cada cambio incluye los tests que exige [`docs/testing.md`](docs/testing.md).
+- **No terminar hasta que todas las pruebas hayan sido superadas con éxito.** Ninguna tarea, fase o fusión se da por hecha hasta que `npm run check:all` está en verde (y `npm run db:check` si toca la BD). Si algo falla, se arregla la causa y se vuelve a ejecutar todo; nunca se borra, salta ni debilita un test para que pase. Cada cambio incluye los tests que exige [`docs/testing.md`](docs/testing.md). **Excepción:** si un cambio solo toca documentación (archivos `.md`), basta con `npm run format:check` en verde.
 - Comunicación con el usuario en **español**. Código, nombres de variables y commits en **inglés**.
 
 ## Git: ramas y flujo
@@ -107,7 +107,32 @@ Antes de empezar una tarea, el agente **consulta (carga) las skills que le corre
 
 Todavía no hay diseño definitivo en Figma (plan gratuito, MCP muy limitado). El diseño puede crearse con la skill `frontend-design`, tomando como referencia webs que indique el usuario; si más adelante llega un Figma, este manda. Los tokens de diseño (colores, tipografías, espaciados) se centralizan en la configuración de Tailwind.
 
-**Páginas públicas por bloques (decidido por el usuario el 2026-11-23, ADR 0013):** cada bloque de una página tiene su propio toque (composición, fondo, detalle o animación) y no se repite la misma plantilla dos veces seguidas. Referencia de espíritu: muchosmas.eu, siempre con variaciones propias de Pachamama (paleta, manta, tipografías), nunca un calco. Todo movimiento respeta `prefers-reduced-motion` y el contenido se ve aunque no haya JavaScript de animación.
+### Cómo diseñar cualquier vista pública (obligatorio, haya o no referencias)
+
+Decidido por el usuario el 2026-11-23 (amplía el ADR 0013). Toda vista pública nueva o rediseñada debe tener **identidad** y **dinamismo**. Nunca se entrega una plantilla genérica.
+
+**Proceso**
+
+1. Cargar las skills de diseño de la tabla (`brainstorming`, `frontend-design`, `web-design-guidelines`, `accessibility`…).
+2. Referencias: si el usuario las da, se toman como espíritu, nunca como calco (por ejemplo muchosmas.eu). Si no las da, el agente busca por su cuenta 2–3 webs de buen nivel (restaurantes, gastronomía, marcas con carácter) y explica qué toma de cada una.
+3. Presentar **3–4 maquetas distintas** en el navegador, con nuestras fotos, colores, tipografías y textos reales. Cada una con su idea y la recomendación del agente. No se programa hasta que el usuario elija o mezcle.
+4. Después: plan → código → `npm run check:all` en verde → ADR.
+
+**Identidad**
+
+- Cada vista cuenta algo de Pachamama: Perú, la manta andina, la familia, la cocina, Bremen. Cada bloque debe responder a la pregunta «¿por qué esto es de Pachamama y no de cualquier restaurante?».
+- Se usan siempre nuestros recursos: la paleta, la franja de manta (`WovenStripe`), las tipografías y la fuente manuscrita para frases cortas. Los símbolos peruanos (quipu, chicha, sellos…) se usan con sentido, no como adorno.
+
+**Dinamismo**
+
+- La página se recorre como una historia, por bloques. Cada bloque tiene su toque (composición, fondo, detalle o animación) y no se repite la misma plantilla dos veces seguidas.
+- Movimiento con intención: aparición al hacer scroll (`useReveal`), hover y microinteracciones que acompañan el contenido.
+
+**Límites (no negociables)**
+
+- `prefers-reduced-motion` se respeta: con él activado, todo se ve sin animar. El contenido también se ve sin JavaScript de animación.
+- Nada avanza solo (WCAG 2.2.2), el contraste es AA, se diseña primero para móvil y todos los textos llevan i18n de/es.
+- Nada de librerías de animación pesadas sin ADR.
 
 ## Stack (decidido — no cambiar sin ADR nuevo)
 
