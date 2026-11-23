@@ -11,7 +11,8 @@ const { auth } = await import('../src/auth/auth');
 const { createStaffUser } = await import('../src/auth/create-staff-user');
 const { db } = await import('../src/db/database');
 const { migrateToLatest } = await import('../src/db/migrator');
-const { resetAuthTables, resetMenuTables } = await import('../src/test/db-helpers');
+const { resetAuthTables, resetMenuTables, resetReservationConfig, resetReservationTables } =
+  await import('../src/test/db-helpers');
 
 const users = [
   { prefix: 'E2E_ADMIN', role: 'admin' as const },
@@ -22,6 +23,8 @@ try {
   await migrateToLatest(db);
   await resetAuthTables();
   await resetMenuTables();
+  await resetReservationTables();
+  await resetReservationConfig();
   for (const { prefix, role } of users) {
     const email = process.env[`${prefix}_EMAIL`];
     const password = process.env[`${prefix}_PASSWORD`];
