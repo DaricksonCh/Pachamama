@@ -3,6 +3,7 @@ import {
   toRestaurantLocal,
   type Closure,
   type OpeningHours,
+  type PublicOpeningHours,
   type ReservationSettings,
 } from '@pachamama/shared';
 import { z } from 'zod';
@@ -42,9 +43,16 @@ export function createSettingsService(repo: SettingsRepository) {
     return { hours: await repo.getHours(), hoursConfirmed: await repo.getHoursConfirmed() };
   }
 
+  /** Weekly hours and upcoming closure dates for the public site (no closure reasons). */
+  async function getPublicHours(): Promise<PublicOpeningHours> {
+    const { hours, closures } = await getBookingContext();
+    return { hours, closures: closures.map(({ from, to }) => ({ from, to })) };
+  }
+
   return {
     invalidate,
     getBookingContext,
+    getPublicHours,
 
     getHours,
     async replaceHours(hours: OpeningHours) {

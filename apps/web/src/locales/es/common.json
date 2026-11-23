@@ -684,8 +684,6 @@
   },
   "contact": {
     "lead": "Será un placer recibirte.",
-    "address": "Dirección",
-    "hours": "Horario",
     "phone": "Teléfono",
     "email": "Correo electrónico",
     "mapAlt": "Mapa de los alrededores con una marca en el restaurante, Am Gaswerk 1, Bremen",
@@ -697,7 +695,26 @@
     "newTab": "(se abre en una pestaña nueva)",
     "howTitle": "Cómo llegar",
     "howText": "El restaurante está cerca de la estación de tren de Bremen-Neustadt.",
-    "mapNote": "El mapa es una imagen. Un servicio de mapas externo solo se abre si haces clic en un enlace."
+    "mapNote": "El mapa es una imagen. Un servicio de mapas externo solo se abre si haces clic en un enlace.",
+    "postcard": {
+      "photoAlt": "El colorido comedor de Pachamama",
+      "message": "Pásate cuando quieras: la mesa está puesta y las ollas, al fuego.",
+      "signature": "Un abrazo, el equipo de Pachamama"
+    },
+    "hoursBlock": {
+      "title": "Cuándo cocinamos para ti",
+      "script": "Los incas guardaban los números en nudos. Nosotros, nuestro horario.",
+      "legend": "Cada cordón es un día de la semana y cada nudo, una hora abierta.",
+      "loading": "Cargando el horario…",
+      "rest": "Descanso",
+      "status": {
+        "open": "Abierto ahora, hasta las {{time}}",
+        "opensLater": "Hoy abrimos a las {{time}}",
+        "closed": "Ahora cerrado",
+        "closure": "Cerrado hasta el {{date}} incluido"
+      }
+    },
+    "mapNoteScript": "¡Aquí estamos!"
   },
   "imprint": {
     "notice": "Aviso: este aviso legal aún no está completo. Los datos marcados con «[pendiente]» (y la dirección) deben ser confirmados por el titular; hasta entonces el texto es provisional.",

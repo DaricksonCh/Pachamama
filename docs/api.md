@@ -58,6 +58,14 @@ Requieren sesión. Las escrituras exigen `Origin` de la web y `Content-Type: app
 | PUT    | `/admin/menu/dishes/:id/image`                                         | admin                                           | multipart: `image` (JPEG/PNG/WebP, ≤10 MB) + `altDe` + `altEs`; WebP 400/800/1600 sin EXIF; 415 `UNSUPPORTED_IMAGE`, 413 `IMAGE_TOO_LARGE` |
 | DELETE | `/admin/menu/dishes/:id/image`                                         | admin                                           | Quita la foto y borra los archivos; las fotos se sirven en `/uploads/dishes/<key>-<w>.webp` (`UPLOADS_DIR`)                                |
 
+## Horario — público (`/api/v1/opening-hours`)
+
+Sin sesión, solo lectura (ADR 0014). Lo usa la página Contacto para el quipu y el estado «abierto ahora».
+
+| Método | Ruta             | Notas                                                                                                                                                                                                                                                                      |
+| ------ | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/opening-hours` | `{ hours: { weekday, opens, closes }[], closures: { from, to }[] }` (`publicOpeningHoursSchema`): horario semanal del panel (0 = domingo, `HH:mm` hora de Berlín, varios tramos por día posibles) y cierres que terminan hoy o después. Nunca incluye el motivo del cierre |
+
 ## Reservas — público (`/api/v1/reservations`)
 
 Sin sesión. Respuestas `{ data }`. Fechas `YYYY-MM-DD` y horas `HH:mm` en la zona del restaurante (Europe/Berlin); `startsAt` en ISO UTC. La respuesta nunca incluye email, teléfono, nombre ni comentario.

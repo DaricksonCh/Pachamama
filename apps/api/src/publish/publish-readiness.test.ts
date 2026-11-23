@@ -31,9 +31,23 @@ describe('collectPublishIssues', () => {
       expect.arrayContaining([
         expect.stringMatching(/provisional/),
         expect.stringMatching(/Impressum/),
-        expect.stringMatching(/Phone/),
-        expect.stringMatching(/Email/),
       ]),
+    );
+    // Phone and email were confirmed on 2026-11-23 (ADR 0014): no longer placeholders.
+    expect(issues).not.toEqual(expect.arrayContaining([expect.stringMatching(/Phone|Email/)]));
+  });
+
+  it('flags placeholder phone and email', () => {
+    const issues = collectPublishIssues({
+      ...ready,
+      info: {
+        ...ready.info,
+        phone: { e164: '+494210000000', display: '0421 000 000 0' },
+        email: 'info@example.com',
+      } as unknown as PublishInput['info'],
+    });
+    expect(issues).toEqual(
+      expect.arrayContaining([expect.stringMatching(/Phone/), expect.stringMatching(/Email/)]),
     );
   });
 

@@ -169,3 +169,23 @@
     transform: translateY(14px);
   }
 }
+
+/*
+ * Quipu on the contact page (ADR 0014): the knots tie on one after another when the cords scroll
+ * into view. Only while useReveal marks the block pending, so reduced motion shows them at once.
+ */
+@layer components {
+  .quipu-reveal[data-reveal] {
+    transform: none;
+    opacity: 1;
+  }
+
+  .quipu-reveal[data-reveal] .quipu-knot {
+    transition: scale 450ms cubic-bezier(0.3, 1.6, 0.5, 1);
+    transition-delay: calc(200ms + var(--knot-delay, 0ms));
+  }
+
+  .quipu-reveal[data-reveal='pending'] .quipu-knot {
+    scale: 0;
+  }
+}
