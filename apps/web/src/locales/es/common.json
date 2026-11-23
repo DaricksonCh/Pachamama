@@ -381,6 +381,7 @@
       "errors": {
         "loadFailed": "No se pudieron cargar las reservas.",
         "conflict": "La reserva ya había cambiado de estado. Se ha recargado.",
+        "RESEND_TOO_SOON": "Espera un minuto antes de reenviar el correo.",
         "saveFailed": "No se pudo guardar el cambio. Inténtalo de nuevo."
       },
       "actions": {

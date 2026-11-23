@@ -41,6 +41,7 @@ describe('env mail settings', () => {
     SMTP_HOST: 'smtp.provider.net',
     MAIL_FROM: 'Pachamama <reservierung@pachamama-bremen.de>',
     RESERVATIONS_NOTIFY_EMAIL: 'reservierung@pachamama-bremen.de',
+    SMTP_REQUIRE_TLS: 'true',
   };
   const issuePaths = (input: Record<string, string>) => {
     const r = envSchema.safeParse(input);
@@ -77,6 +78,18 @@ describe('env mail settings', () => {
 
   it('parses SMTP_SECURE from a string', () => {
     expect(envSchema.parse({ ...base, SMTP_SECURE: 'true' }).SMTP_SECURE).toBe(true);
+  });
+
+  it('requires TLS for SMTP in production (SMTP_SECURE or SMTP_REQUIRE_TLS)', () => {
+    expect(issuePaths({ ...prod, SMTP_REQUIRE_TLS: 'false' })).toContain('SMTP_REQUIRE_TLS');
+    expect(issuePaths({ ...prod, SMTP_REQUIRE_TLS: '' })).toContain('SMTP_REQUIRE_TLS');
+    expect(issuePaths({ ...prod, SMTP_REQUIRE_TLS: 'false', SMTP_SECURE: 'true' })).toEqual([]);
+  });
+
+  it('defaults SMTP_REQUIRE_TLS to false in development', () => {
+    expect(envSchema.parse(base).SMTP_REQUIRE_TLS).toBe(false);
+    expect(envSchema.parse({ ...base, SMTP_REQUIRE_TLS: '' }).SMTP_REQUIRE_TLS).toBe(false);
+    expect(envSchema.parse({ ...base, SMTP_REQUIRE_TLS: 'true' }).SMTP_REQUIRE_TLS).toBe(true);
   });
 
   it('accepts a valid production config', () => {

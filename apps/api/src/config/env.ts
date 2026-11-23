@@ -60,6 +60,13 @@ export const envSchema = z
         .default('false')
         .transform((value) => value === 'true'),
     ),
+    /** Exige STARTTLS cuando SMTP_SECURE=false. En producción: SMTP_SECURE o SMTP_REQUIRE_TLS. */
+    SMTP_REQUIRE_TLS: unsetIfEmpty(
+      z
+        .enum(['true', 'false'])
+        .default('false')
+        .transform((value) => value === 'true'),
+    ),
     // Un valor vacío en .env equivale a no definirlo.
     SMTP_USER: emptyToUndefined,
     SMTP_PASS: emptyToUndefined,
@@ -106,6 +113,13 @@ export const envSchema = z
         code: 'custom',
         path: ['SMTP_HOST'],
         message: 'SMTP_HOST no puede ser localhost en producción',
+      });
+    }
+    if (!env.SMTP_SECURE && !env.SMTP_REQUIRE_TLS) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['SMTP_REQUIRE_TLS'],
+        message: 'En producción define SMTP_SECURE=true o SMTP_REQUIRE_TLS=true (correo con TLS)',
       });
     }
     for (const key of ['MAIL_FROM', 'RESERVATIONS_NOTIFY_EMAIL'] as const) {

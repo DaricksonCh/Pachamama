@@ -20,6 +20,9 @@ type Row = NonNullable<Awaited<ReturnType<ReservationsRepository['getById']>>>;
 const isDecision = (s: ReservationStatus): s is MessageTemplateKind & ReservationStatus =>
   (DECISION_STATUSES as readonly string[]).includes(s);
 
+/** Minimum gap between two resends (and after the decision mail) of one reservation. */
+const RESEND_COOLDOWN_MS = 60_000;
+
 const notFound = () => new AppError(404, 'NOT_FOUND', 'Reservation not found');
 
 function present(r: Row) {
@@ -127,12 +130,13 @@ export function createAdminReservationsService(repo: ReservationsRepository, mai
       const { status, message, subject } = input;
       const notify = input.notify ?? true;
       const decision = isDecision(status);
-      if ((!decision || !notify) && (message !== undefined || subject !== undefined)) {
-        throw new AppError(400, 'VALIDATION_ERROR', 'Invalid input', {
+      const noMailPayload = () =>
+        new AppError(400, 'VALIDATION_ERROR', 'Invalid input', {
           message: ['validation.notDecision'],
         });
+      if ((!decision || !notify) && (message !== undefined || subject !== undefined)) {
+        throw noMailPayload();
       }
-      const send = decision && notify;
 
       const result = await withDeadlockRetry(() =>
         repo.transaction(async (tx) => {
@@ -141,6 +145,10 @@ export function createAdminReservationsService(repo: ReservationsRepository, mai
           if (!canTransition(locked.status as ReservationStatus, status)) {
             throw new AppError(409, 'INVALID_TRANSITION', 'Status change not allowed');
           }
+          // Anonymized rows have no address left: never attempt a mail (DSGVO), treat as notify=false.
+          const anonymized = locked.anonymizedAt !== null;
+          if (anonymized && (message !== undefined || subject !== undefined)) throw noMailPayload();
+          const send = decision && notify && !anonymized;
           // Staff text is final (the preview already filled the variables); else the template.
           let finalSubject: string | null = null;
           let finalBody: string | null = null;
@@ -169,12 +177,12 @@ export function createAdminReservationsService(repo: ReservationsRepository, mai
             // Pessimistic: a crash before the mail leaves 'failed', never null.
             emailStatus: send ? 'failed' : decision ? 'skipped' : null,
           });
-          return { row: { ...locked, status } as Row, eventId, finalSubject, finalBody };
+          return { row: { ...locked, status } as Row, eventId, finalSubject, finalBody, send };
         }),
       );
 
-      let emailStatus: EmailStatus | null = decision && !notify ? 'skipped' : null;
-      if (send) {
+      let emailStatus: EmailStatus | null = decision && !result.send ? 'skipped' : null;
+      if (result.send) {
         const { finalSubject, finalBody } = result;
         emailStatus =
           finalSubject !== null && finalBody !== null
@@ -192,9 +200,16 @@ export function createAdminReservationsService(repo: ReservationsRepository, mai
         repo.transaction(async (tx) => {
           const row = await tx.lockById(id);
           if (!row) throw notFound();
+          if (row.anonymizedAt !== null) {
+            throw new AppError(409, 'NOTHING_TO_RESEND', 'No decision email to resend');
+          }
           const last = await tx.latestDecisionEvent(id);
           if (!last || last.message === null || last.toStatus !== row.status) {
             throw new AppError(409, 'NOTHING_TO_RESEND', 'No decision email to resend');
+          }
+          const sinceLastEventMs = await tx.msSinceLatestEvent(id);
+          if (sinceLastEventMs !== undefined && sinceLastEventMs < RESEND_COOLDOWN_MS) {
+            throw new AppError(429, 'RESEND_TOO_SOON', 'Wait a minute before resending');
           }
           const status = row.status as DecisionKind;
           // Old events (before the subject column) fall back to the template subject.

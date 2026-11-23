@@ -381,6 +381,7 @@
       "errors": {
         "loadFailed": "Die Reservierungen konnten nicht geladen werden.",
         "conflict": "Der Status der Reservierung hatte sich bereits geändert. Sie wurde neu geladen.",
+        "RESEND_TOO_SOON": "Bitte eine Minute warten, bevor die E-Mail erneut gesendet wird.",
         "saveFailed": "Die Änderung konnte nicht gespeichert werden. Bitte erneut versuchen."
       },
       "actions": {

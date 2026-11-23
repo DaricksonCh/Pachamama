@@ -103,9 +103,11 @@ function Loaded({ reservation }: { reservation: AdminReservationDetail }) {
     } catch (err) {
       toast.error(
         t(
-          err instanceof ApiError && err.status === 409
-            ? 'admin.reservations.resend.nothing'
-            : 'admin.reservations.resend.failed',
+          err instanceof ApiError && err.code === 'RESEND_TOO_SOON'
+            ? 'admin.reservations.errors.RESEND_TOO_SOON'
+            : err instanceof ApiError && err.status === 409
+              ? 'admin.reservations.resend.nothing'
+              : 'admin.reservations.resend.failed',
         ),
       );
       void refetchDetail();

@@ -15,6 +15,8 @@ export interface SmtpConfig {
   host: string;
   port: number;
   secure: boolean;
+  /** STARTTLS obligatorio cuando `secure` es false (sin él, nunca se envía en claro). */
+  requireTls?: boolean | undefined;
   user?: string | undefined;
   pass?: string | undefined;
   from: string;
@@ -30,6 +32,7 @@ export function createSmtpMailer(config: SmtpConfig): Mailer {
     host: config.host,
     port: config.port,
     secure: config.secure,
+    ...(!config.secure && config.requireTls ? { requireTLS: true } : {}),
     ...(config.user && config.pass ? { auth: { user: config.user, pass: config.pass } } : {}),
   });
   return {

@@ -1,5 +1,6 @@
 import { toRestaurantLocal, toUtc } from '@pachamama/shared';
 import request from 'supertest';
+import { sql } from 'kysely';
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { createApp } from '../../app';
 import { db } from '../../db/database';
@@ -55,6 +56,13 @@ const events = (id: number) =>
     .selectAll()
     .where('reservationId', '=', id)
     .orderBy('id')
+    .execute();
+/** Makes the existing events look old enough to pass the resend cooldown. */
+const backdate = (id: number) =>
+  db
+    .updateTable('reservationEvents')
+    .set({ createdAt: sql<Date>`created_at - INTERVAL 5 MINUTE` })
+    .where('reservationId', '=', id)
     .execute();
 const lastEmailFailed = async () =>
   ((await get(`?date=${DAY}`)).body.data as { lastEmailFailed: boolean }[])[0]?.lastEmailFailed;
@@ -282,6 +290,7 @@ describe('PATCH /:id/status', () => {
     expect((await events(id))[0]?.emailStatus).toBe('failed');
     expect(await lastEmailFailed()).toBe(true);
 
+    await backdate(id);
     const again = await resend(id);
     expect(again.status).toBe(200);
     expect(again.body.data.emailStatus).toBe('sent');
@@ -315,6 +324,65 @@ describe('POST /:id/resend-email', () => {
   it('404 for unknown id', async () => {
     expect((await resend(999999)).status).toBe(404);
   });
+  it('429 RESEND_TOO_SOON within 60 s of the latest event; sends no second mail', async () => {
+    const id = await seed();
+    testMailer.failNext();
+    await patchStatus(id, { status: 'confirmed' });
+    await backdate(id);
+    expect((await resend(id)).status).toBe(200);
+    expect(testMailer.sent).toHaveLength(1);
+
+    const again = await resend(id);
+    expect(again.status).toBe(429);
+    expect(again.body.error.code).toBe('RESEND_TOO_SOON');
+    expect(testMailer.sent).toHaveLength(1);
+    expect(await events(id)).toHaveLength(2);
+
+    await backdate(id);
+    expect((await resend(id)).status).toBe(200);
+    expect(testMailer.sent).toHaveLength(2);
+  });
+});
+
+describe('anonymized reservations', () => {
+  const anonymize = (id: number) =>
+    db
+      .updateTable('reservations')
+      .set({ anonymizedAt: new Date(), email: 'anonymized@invalid', name: 'Anonymized' })
+      .where('id', '=', id)
+      .execute();
+
+  it('decision on an anonymized reservation never mails: emailStatus skipped', async () => {
+    const id = await seed({ status: 'confirmed' });
+    await anonymize(id);
+    const res = await patchStatus(id, { status: 'cancelled' });
+    expect(res.status).toBe(200);
+    expect(res.body.data.emailStatus).toBe('skipped');
+    expect(testMailer.sent).toHaveLength(0);
+    expect((await events(id)).at(-1)?.emailStatus).toBe('skipped');
+  });
+
+  it('400 VALIDATION_ERROR when a message or subject is sent for an anonymized reservation', async () => {
+    const id = await seed({ status: 'confirmed' });
+    await anonymize(id);
+    for (const extra of [{ message: 'x' }, { subject: 'y' }]) {
+      const res = await patchStatus(id, { status: 'cancelled', ...extra });
+      expect(res.status).toBe(400);
+      expect(res.body.error.code).toBe('VALIDATION_ERROR');
+    }
+    expect(testMailer.sent).toHaveLength(0);
+    expect((await get(`/${id}`)).body.data.status).toBe('confirmed');
+  });
+
+  it('resend on an anonymized reservation → 409 NOTHING_TO_RESEND', async () => {
+    const id = await seed();
+    await patchStatus(id, { status: 'confirmed' });
+    await backdate(id);
+    await anonymize(id);
+    testMailer.sent.length = 0;
+    expect((await resend(id)).status).toBe(409);
+    expect(testMailer.sent).toHaveLength(0);
+  });
 });
 
 describe('fix round: subject storage, validation, fallbacks', () => {
@@ -332,6 +400,7 @@ describe('fix round: subject storage, validation, fallbacks', () => {
       message: 'Cuerpo editado',
       emailStatus: 'failed',
     });
+    await backdate(id);
     expect((await resend(id)).body.data.emailStatus).toBe('sent');
     expect(testMailer.sent[0]?.subject).toBe('Asunto editado');
     expect(testMailer.sent[0]?.text).toContain('Cuerpo editado');
@@ -347,6 +416,7 @@ describe('fix round: subject storage, validation, fallbacks', () => {
         toStatus: 'confirmed',
         message: 'Viejo',
         emailStatus: 'failed',
+        createdAt: sql<Date>`CURRENT_TIMESTAMP(3) - INTERVAL 5 MINUTE`,
       })
       .execute();
     expect((await resend(id)).status).toBe(200);

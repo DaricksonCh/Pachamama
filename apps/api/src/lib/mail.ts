@@ -11,6 +11,7 @@ export const mailer: Mailer =
         host: env.SMTP_HOST,
         port: env.SMTP_PORT,
         secure: env.SMTP_SECURE,
+        requireTls: env.SMTP_REQUIRE_TLS,
         user: env.SMTP_USER,
         pass: env.SMTP_PASS,
         from: env.MAIL_FROM,

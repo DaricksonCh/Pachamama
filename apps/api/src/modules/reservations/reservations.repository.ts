@@ -5,7 +5,7 @@ import {
   type MessageTemplateKind,
   type ReservationStatus,
 } from '@pachamama/shared';
-import { type Kysely, type Transaction } from 'kysely';
+import { sql, type Kysely, type Transaction } from 'kysely';
 import type { Database } from '../../db/types';
 
 export type NewReservation = {
@@ -85,6 +85,26 @@ export function createReservationTx(trx: Transaction<Database>) {
         .orderBy('id', 'desc')
         .limit(1)
         .executeTakeFirst();
+    },
+
+    /**
+     * Milliseconds since the newest event of a reservation (any kind), or undefined if none.
+     * Measured in SQL: created_at defaults to the server clock, so JS-side maths would skew
+     * whenever the MySQL time zone is not UTC.
+     */
+    async msSinceLatestEvent(reservationId: number): Promise<number | undefined> {
+      const row = await trx
+        .selectFrom('reservationEvents')
+        .select(
+          sql<
+            string | number
+          >`TIMESTAMPDIFF(MICROSECOND, created_at, CURRENT_TIMESTAMP(3)) / 1000`.as('ms'),
+        )
+        .where('reservationId', '=', reservationId)
+        .orderBy('id', 'desc')
+        .limit(1)
+        .executeTakeFirst();
+      return row ? Number(row.ms) : undefined;
     },
 
     async applyStatus(id: number, status: ReservationStatus, decidedBy: string | null) {
