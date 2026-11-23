@@ -20,12 +20,11 @@ export const RESTAURANT_INFO = {
     de: 'Di–So 13:00–22:00 · Mo Ruhetag',
     es: 'Mar–Dom 13:00–22:00 · Lunes cerrado',
   },
-  /** False while phone and email are placeholders; pages then mark them as provisional. */
-  contactConfirmed: false,
-  /** PROVISIONAL: E.164 for `tel:` links, plus the display form. */
-  phone: { e164: '+494210000000', display: '0421 000 000 0' },
-  /** PROVISIONAL */
-  email: 'info@example.com',
+  /** Phone and email confirmed by the restaurant (2026-11-23); while false, pages mark them as provisional. */
+  contactConfirmed: true,
+  /** E.164 for `tel:` links, plus the display form. */
+  phone: { e164: '+4915214982818', display: '+49 1521 4982818' },
+  email: 'pachamamarestaurantperu@gmail.com',
   /** Official social media profiles (plain links, no embeds). */
   social: {
     instagram: 'https://www.instagram.com/pachamamarestaurantebremen/',
@@ -59,7 +58,7 @@ export const RESTAURANT_INFO = {
     mailboxRetention: LEGAL_PLACEHOLDER,
   },
   isProvisional: true,
-  provisionalFields: ['openingHours', 'phone', 'email', 'legal'],
+  provisionalFields: ['openingHours', 'legal'],
 } as const;
 
 /** True while phone and email are placeholders the restaurant has not confirmed. */

@@ -21,9 +21,12 @@ describe('RESTAURANT_INFO.legal', () => {
 });
 
 describe('contact and legal helpers', () => {
-  it('flags the placeholder contact data as provisional', () => {
-    expect(RESTAURANT_INFO.contactConfirmed).toBe(false);
-    expect(contactIsProvisional()).toBe(true);
+  it('uses the confirmed phone and email, so they are no longer provisional', () => {
+    expect(RESTAURANT_INFO.contactConfirmed).toBe(true);
+    expect(contactIsProvisional()).toBe(false);
+    expect(RESTAURANT_INFO.provisionalFields).not.toContain('phone');
+    expect(RESTAURANT_INFO.provisionalFields).not.toContain('email');
+    expect(RESTAURANT_INFO.phone.e164).toMatch(/^\+49\d{9,13}$/);
   });
 
   it('keeps the new legal fields pending until the owner confirms them', () => {

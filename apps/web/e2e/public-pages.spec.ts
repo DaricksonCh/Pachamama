@@ -54,6 +54,29 @@ test.describe('páginas públicas: Geschichte/Historia y Kontakt/Contacto', () =
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Contacto y cómo llegar');
   });
 
+  test('/de/kontakt muestra el horario del panel con quipu, estado y datos de contacto', async ({
+    page,
+  }) => {
+    const hours = page.waitForResponse((r) => r.url().endsWith('/api/v1/opening-hours'));
+    await page.goto('/de/kontakt');
+    expect((await hours).status()).toBe(200);
+
+    const block = page.getByRole('region', { name: 'Wann wir für Sie kochen' });
+    await block.scrollIntoViewIfNeeded();
+    await expect(block.getByTestId('opening-status')).toHaveText(
+      /Jetzt geöffnet|Heute ab|Gerade geschlossen|Geschlossen bis/,
+    );
+    await expect(block.getByText('Montag', { exact: true })).toBeVisible();
+    await expect(block.getByTestId('quipu')).toBeVisible();
+    await expect(block.getByRole('link', { name: /\+49 1521 4982818/ })).toHaveAttribute(
+      'href',
+      'tel:+4915214982818',
+    );
+    await expect(
+      block.getByRole('link', { name: /pachamamarestaurantperu@gmail\.com/ }),
+    ).toBeVisible();
+  });
+
   test('/de/kontakt no hace peticiones a terceros (DSGVO)', async ({ page, baseURL }) => {
     const external: string[] = [];
     const origin = new URL(baseURL ?? 'http://localhost').origin;

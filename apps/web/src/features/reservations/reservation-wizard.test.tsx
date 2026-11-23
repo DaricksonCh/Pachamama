@@ -143,7 +143,7 @@ describe('ReservationWizard', () => {
     await screen.findByRole('radio', { name: '8 personas' });
     expect(screen.queryByRole('radio', { name: '9 personas' })).toBeNull();
     await userEvent.click(screen.getByRole('button', { name: /Más/ }));
-    expect(screen.getByText(/0421 000 000 0/)).toBeVisible();
+    expect(screen.getByText(/\+49 1521 4982818/)).toBeVisible();
   });
 
   it('keeps Next disabled until a party size is chosen', async () => {

@@ -684,8 +684,6 @@
   },
   "contact": {
     "lead": "Wir freuen uns auf Ihren Besuch.",
-    "address": "Adresse",
-    "hours": "Öffnungszeiten",
     "phone": "Telefon",
     "email": "E-Mail",
     "mapAlt": "Karte der Umgebung mit Markierung am Restaurant, Am Gaswerk 1, Bremen",
@@ -697,7 +695,26 @@
     "newTab": "(öffnet in neuem Tab)",
     "howTitle": "So finden Sie uns",
     "howText": "Das Restaurant liegt in der Nähe des Bahnhofs Bremen-Neustadt.",
-    "mapNote": "Die Karte ist ein Bild. Erst beim Klick auf einen Link wird ein externer Kartendienst geöffnet."
+    "mapNote": "Die Karte ist ein Bild. Erst beim Klick auf einen Link wird ein externer Kartendienst geöffnet.",
+    "postcard": {
+      "photoAlt": "Der bunte Gastraum von Pachamama",
+      "message": "Kommen Sie vorbei – der Tisch ist gedeckt, die Töpfe dampfen.",
+      "signature": "Herzlich, Ihr Pachamama-Team"
+    },
+    "hoursBlock": {
+      "title": "Wann wir für Sie kochen",
+      "script": "Die Inka hielten Zahlen in Knoten fest. Wir unsere Öffnungszeiten.",
+      "legend": "Jeder Faden ein Wochentag, jeder Knoten eine geöffnete Stunde.",
+      "loading": "Öffnungszeiten werden geladen …",
+      "rest": "Ruhetag",
+      "status": {
+        "open": "Jetzt geöffnet – bis {{time}} Uhr",
+        "opensLater": "Heute ab {{time}} Uhr geöffnet",
+        "closed": "Gerade geschlossen",
+        "closure": "Geschlossen bis einschließlich {{date}}"
+      }
+    },
+    "mapNoteScript": "Hier sind wir!"
   },
   "imprint": {
     "notice": "Hinweis: Dieses Impressum ist noch nicht vollständig. Mit „[ausstehend]“ gekennzeichnete Angaben (und die Anschrift) muss der Betreiber noch bestätigen; bis dahin ist der Text vorläufig.",
