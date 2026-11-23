@@ -8,26 +8,27 @@
     "lead": "Ceviche, Lomo Saltado, Causa und Tamales – frisch zubereitet, so wie man sie in Peru isst.",
     "seeMenu": "Speisekarte ansehen",
     "photos": {
-      "mesaSurtida": "Ein gedeckter Tisch mit peruanischen Gerichten: Lomo Saltado, Chicharrón, Salate und Cancha",
       "localInterior": "Der Gastraum mit Bar, Holztischen und bunter Dekoration",
-      "cocinera": "Unsere Köchin mit traditionellem Hut"
+      "cocinera": "Unsere Köchin mit traditionellem Hut",
+      "mercado": "Andine Produkte wie Oca, Bohnen und Getreide auf bunten Tüchern",
+      "equipo": "Das Team des Restaurants im Gastraum"
     },
     "kitchen": {
-      "title": "Aus unserer Küche",
-      "lead": "Drei Klassiker, mit denen man Peru am besten kennenlernt.",
+      "title": "Lorem ipsum dolor",
+      "lead": "Sed ut perspiciatis unde omnis iste natus error.",
       "link": "Zur ganzen Speisekarte",
       "dishes": {
         "ceviche": {
           "name": "Ceviche Clásico",
-          "text": "Viktoriabarsch in Limettensaft mit roten Zwiebeln, Ají Limo, Koriander und Süßkartoffel."
+          "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do."
         },
         "lomo": {
           "name": "Lomo Saltado",
-          "text": "Rinderhüfte oder Hähnchen, im Wok flambiert mit Tomate und Zwiebel, dazu Reis und Pommes frites."
+          "text": "Ut enim ad minim veniam, quis nostrud exercitation ullamco."
         },
         "causa": {
           "name": "Causa Limeña",
-          "text": "Kartoffelteig mit gelbem Chili, Hähnchen, Avocado, Ei und Mayo."
+          "text": "Duis aute irure dolor in reprehenderit in voluptate velit."
         }
       }
     },
@@ -36,12 +37,33 @@
       "address": "Adresse",
       "hours": "Öffnungszeiten",
       "phone": "Telefon",
-      "link": "Anfahrt und Kontakt"
+      "link": "Anfahrt und Kontakt",
+      "script": "Und danach: Sobremesa",
+      "slow": "Bleiben Sie, so lange Sie möchten.",
+      "restDays": "{{days}} Ruhetag",
+      "closureAhead": "Geschlossen vom {{from}} bis {{to}}",
+      "status": {
+        "open": "Jetzt geöffnet · bis {{time}} Uhr",
+        "opensLater": "Heute ab {{time}} Uhr geöffnet",
+        "closure": "Geschlossen bis einschließlich {{date}}",
+        "restDay": "Heute Ruhetag",
+        "closed": "Gerade geschlossen",
+        "tomorrow": "morgen",
+        "next": "{{base}} · {{when}} ab {{time}} Uhr"
+      }
     },
     "story": {
-      "title": "Pachamama heißt Mutter Erde",
-      "text": "Mais, Kartoffeln, Ají und frischer Fisch: Die Küche Perus lebt von dem, was die Erde gibt. Genau das bringen wir nach Bremen.",
+      "script": "lorem ipsum",
+      "title": "Lorem ipsum dolor sit amet",
+      "text": "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.",
+      "captions": {
+        "cocinera": "lorem ipsum",
+        "equipo": "dolor sit"
+      },
       "link": "Unsere Geschichte lesen"
+    },
+    "hero": {
+      "caption": "alles beginnt mit der Erde"
     }
   },
   "nav": {

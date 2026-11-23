@@ -157,14 +157,33 @@ test('la portada muestra las secciones en orden: historia, cocina y visita', asy
   await page.goto('/de');
   const titles = page.locator('main h2');
   await expect(titles).toHaveText([
-    'Pachamama heißt Mutter Erde',
-    'Aus unserer Küche',
+    // Story and kitchen copy are placeholders until the real texts arrive (ADR 0015).
+    'Lorem ipsum dolor sit amet',
+    'Lorem ipsum dolor',
     'Besuchen Sie uns',
   ]);
+  await expect(page.getByRole('link', { name: 'Unsere Geschichte lesen' })).toHaveAttribute(
+    'href',
+    '/de/geschichte',
+  );
   await expect(page.getByRole('heading', { level: 3 })).toHaveText([
     'Ceviche Clásico',
     'Lomo Saltado',
     'Causa Limeña',
+  ]);
+});
+
+test('la portada muestra el horario del panel: estado de hoy y resumen de la semana', async ({
+  page,
+}) => {
+  // e2e:seed leaves Tuesday–Sunday 13:00–22:00 and no closures.
+  await page.goto('/de');
+  await expect(page.getByTestId('home-opening-status')).toHaveText(
+    /^(Jetzt geöffnet|Heute ab|Heute Ruhetag|Gerade geschlossen)/,
+  );
+  await expect(page.getByTestId('home-hours-summary').getByRole('listitem')).toHaveText([
+    'Di–So 13:00–22:00',
+    'Mo Ruhetag',
   ]);
 });
 

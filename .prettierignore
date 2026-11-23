@@ -7,3 +7,4 @@ skills-lock.json
 
 # Espacio de trabajo local de los agentes (ignorado por git)
 .superpowers/
+.local/

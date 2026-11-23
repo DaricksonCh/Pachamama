@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { openingStatus, publicOpeningHoursSchema, weekSchedule } from './opening-status';
+import {
+  groupWeek,
+  nextOpening,
+  openingStatus,
+  publicOpeningHoursSchema,
+  upcomingClosure,
+  weekSchedule,
+} from './opening-status';
 import { toUtc } from './slots';
 
 // 2026-11-24 is a Tuesday, 2026-11-23 a Monday.
@@ -62,5 +69,75 @@ describe('publicOpeningHoursSchema', () => {
     expect(
       publicOpeningHoursSchema.safeParse({ ...split, closures: [{ from: 'x', to: TUE }] }).success,
     ).toBe(false);
+  });
+});
+
+describe('nextOpening', () => {
+  const week = {
+    hours: [2, 3, 4, 5, 6, 0].map((weekday) => ({ weekday, opens: '13:00', closes: '22:00' })),
+    closures: [] as { from: string; to: string }[],
+  };
+
+  it('is tomorrow when the restaurant rests today', () => {
+    expect(nextOpening(at(MON, '15:00'), week)).toEqual({
+      date: TUE,
+      weekday: 2,
+      daysAhead: 1,
+      opens: '13:00',
+    });
+  });
+
+  it('skips the rest day and closures', () => {
+    // Sunday night → Monday rests → Tuesday.
+    expect(nextOpening(at('2026-11-22', '23:00'), week)?.date).toBe(TUE);
+    const closed = { ...week, closures: [{ from: TUE, to: '2026-11-25' }] };
+    expect(nextOpening(at(MON, '15:00'), closed)).toMatchObject({
+      date: '2026-11-26',
+      daysAhead: 3,
+    });
+  });
+
+  it('takes the first shift of a split day and gives up without any hours', () => {
+    expect(nextOpening(at(MON, '10:00'), split)?.opens).toBe('12:00');
+    expect(nextOpening(at(MON, '10:00'), { hours: [], closures: [] })).toBeNull();
+  });
+});
+
+describe('groupWeek', () => {
+  it('joins consecutive days with the same hours and puts rest days last', () => {
+    const hours = [2, 3, 4, 5, 6, 0].map((weekday) => ({
+      weekday,
+      opens: '13:00',
+      closes: '22:00',
+    }));
+    expect(groupWeek(hours)).toEqual([
+      { weekdays: [2, 3, 4, 5, 6, 0], ranges: [{ opens: '13:00', closes: '22:00' }] },
+      { weekdays: [1], ranges: [] },
+    ]);
+  });
+
+  it('starts a new group when the hours change, also for split shifts', () => {
+    const groups = groupWeek(split.hours);
+    expect(groups.map((g) => g.weekdays)).toEqual([[2], [0], [1], [3, 4, 5, 6]]);
+    expect(groups[0]?.ranges).toHaveLength(2);
+  });
+});
+
+describe('upcomingClosure', () => {
+  const data = (closures: { from: string; to: string }[]) => ({ hours: split.hours, closures });
+
+  it('returns the nearest closure that starts after today', () => {
+    const c = [
+      { from: '2026-12-24', to: '2026-12-26' },
+      { from: '2026-12-01', to: '2026-12-02' },
+    ];
+    expect(upcomingClosure(at(MON, '12:00'), data(c))).toEqual(c[1]);
+  });
+
+  it('ignores a closure running today and those too far ahead', () => {
+    expect(upcomingClosure(at(MON, '12:00'), data([{ from: MON, to: TUE }]))).toBeNull();
+    expect(
+      upcomingClosure(at(MON, '12:00'), data([{ from: '2027-02-01', to: '2027-02-02' }])),
+    ).toBeNull();
   });
 });

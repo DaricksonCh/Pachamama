@@ -22,3 +22,4 @@ Cada decisión técnica importante se registra aquí: qué se decidió, por qué
 | 0012 | [Reservas de mesa propias](0012-reservations.md)                                  | Aceptada |
 | 0013 | [Historia por bloques y animación](0013-story-blocks-and-motion.md)               | Aceptada |
 | 0014 | [Contacto: postal, quipu y horario del panel](0014-contact-postcard-and-quipu.md) | Aceptada |
+| 0015 | [Inicio por bloques y horario vivo](0015-home-blocks-and-live-hours.md)           | Aceptada |

@@ -189,3 +189,42 @@
     scale: 0;
   }
 }
+
+/*
+ * Home (ADR 0015): zigzag seams like the edge of the woven manta, in the colour of the block
+ * next door (--seam), and photos cut as the manta's diamonds.
+ */
+@layer components {
+  .zigzag-seams {
+    position: relative;
+  }
+
+  .zigzag-seams::before,
+  .zigzag-seams::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 16px;
+    pointer-events: none;
+  }
+
+  .zigzag-seams::before {
+    top: -1px;
+    background:
+      linear-gradient(135deg, var(--seam) 25%, transparent 25%) -16px 0 / 32px 32px,
+      linear-gradient(225deg, var(--seam) 25%, transparent 25%) -16px 0 / 32px 32px;
+  }
+
+  .zigzag-seams::after {
+    bottom: -1px;
+    background:
+      linear-gradient(315deg, var(--seam) 25%, transparent 25%) -16px 0 / 32px 32px,
+      linear-gradient(45deg, var(--seam) 25%, transparent 25%) -16px 0 / 32px 32px;
+  }
+}
+
+/* Diamond crop (a @utility so variants like before: work). */
+@utility diamond {
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
