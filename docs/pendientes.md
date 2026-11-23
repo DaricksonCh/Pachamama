@@ -78,10 +78,10 @@ Dudas encontradas al pasar la carta a la base de datos (`npm run db:seed:menu`).
 
 ## Diseño y PDF (anotado por el usuario el 2026-11-22)
 
-| Tarea                          | Detalle                                                                                                                                                                                                                                                                                                                                                                   | Estado |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| PDF de la carta sin fotos      | No cargar las fotos de los platos en el PDF: rompen el diseño (se montan unas sobre otras) y suponen un gasto innecesario de generación y peso.                                                                                                                                                                                                                           | ⏳     |
-| Revisar diseño en dispositivos | Revisar la web en distintos dispositivos; el diseño actual no resulta muy agradable y puede cambiar. Idea de referencia: [muchosmas.eu/la-historia](https://www.muchosmas.eu/la-historia): bloques alternos en bucle (texto a la izquierda y foto a la derecha; debajo, foto a la izquierda y texto a la derecha), con texto principal (lorem por ahora) y foto de fondo. | ⏳     |
+| Tarea                          | Detalle                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Estado |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| PDF de la carta sin fotos      | No cargar las fotos de los platos en el PDF: rompen el diseño (se montan unas sobre otras) y suponen un gasto innecesario de generación y peso.                                                                                                                                                                                                                                                                                                                                                | ⏳     |
+| Revisar diseño en dispositivos | Revisar la web en distintos dispositivos; el diseño actual no resulta muy agradable y puede cambiar. Idea de referencia: [muchosmas.eu/la-historia](https://www.muchosmas.eu/la-historia): bloques alternos en bucle (texto a la izquierda y foto a la derecha; debajo, foto a la izquierda y texto a la derecha), con texto principal (lorem por ahora) y foto de fondo. **Historia rediseñada el 23.11.2026 (ADR 0013, maqueta D)**; faltan las demás páginas con la misma regla de bloques. | ⏳     |
 
 ## Fase 7 — mejoras menores
 
@@ -105,3 +105,8 @@ Hallazgos de las revisiones que no se corrigieron en el momento (ni seguridad ni
 - La guarda de publicación comprueba la subcadena `/example/`.
 - La retención usa una lista IN sin límite si hay un atraso enorme.
 - `createMemoryMailer` vive en un archivo de producción.
+
+## Historia (ADR 0013) — mejoras menores
+
+- Pista de teclado (`aria-describedby`) en la pista de fotos de la galería.
+- El bloque del nombre se lee «Pacha igual tierra»: valorar una lista de definiciones o un `aria-label`.

@@ -20,3 +20,4 @@ Cada decisión técnica importante se registra aquí: qué se decidió, por qué
 | 0010 | [Sistema de diseño de la web pública](0010-public-design-system.md)  | Aceptada |
 | 0011 | [Mapa de Contacto sin terceros](0011-map-without-third-parties.md)   | Aceptada |
 | 0012 | [Reservas de mesa propias](0012-reservations.md)                     | Aceptada |
+| 0013 | [Historia por bloques y animación](0013-story-blocks-and-motion.md)  | Aceptada |

@@ -10,9 +10,12 @@ const PHOTOS = {
   equipo: { name: 'equipo', widths: [640, 1280], ratio: 1280 / 1091 },
   localVertical: { name: 'local-vertical', widths: [640], ratio: 640 / 1138 },
   cocinera: { name: 'cocinera-retrato', widths: [640, 1280], ratio: 1280 / 1707 },
+  empanadas: { name: 'empanadas', widths: [640], ratio: 640 / 328 },
+  ensaladaMixta: { name: 'ensalada-mixta', widths: [640], ratio: 640 / 486 },
+  mariscosFritos: { name: 'mariscos-fritos', widths: [640], ratio: 640 / 418 },
 } as const;
 
-type PhotoKey = keyof typeof PHOTOS;
+export type PhotoKey = keyof typeof PHOTOS;
 
 interface PhotoProps {
   photo: PhotoKey;

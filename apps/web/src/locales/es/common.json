@@ -620,20 +620,66 @@
     "close": "Cerrar"
   },
   "story": {
+    "script": "del Perú a Bremen",
     "lead": "Cocina peruana que une la tierra y las personas.",
     "notice": "Aviso: este texto es provisional. La historia completa de Pachamama se publicará muy pronto.",
-    "originTitle": "De dónde venimos",
-    "p1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
-    "p2": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.",
-    "p3": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
-    "houseTitle": "Nuestra casa",
-    "visitTitle": "Te esperamos",
+    "chapters": {
+      "origin": {
+        "eyebrow": "01 · El origen",
+        "title": "Recetas de familia",
+        "p1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+        "p2": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim."
+      },
+      "family": {
+        "eyebrow": "02 · La familia",
+        "title": "Un equipo, una casa",
+        "p1": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+        "signature": "— el equipo de Pachamama"
+      },
+      "kitchen": {
+        "eyebrow": "03 · La cocina",
+        "title": "Del Perú, sin atajos",
+        "p1": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim."
+      }
+    },
+    "name": {
+      "title": "Qué significa nuestro nombre",
+      "pacha": "Pacha",
+      "pachaMeaning": "tierra",
+      "mama": "Mama",
+      "mamaMeaning": "madre",
+      "support": "En los Andes, este nombre honra a la tierra que nos lo da todo."
+    },
+    "manifesto": {
+      "title": "Te esperamos",
+      "lines": [
+        "¿Otro pisco sour? ¡Dale!",
+        "¿Otra ronda de causitas? ¡Pídela!",
+        "¿Sin prisa? Quédate el tiempo que quieras."
+      ],
+      "signoff": "nos vemos, familia"
+    },
     "seeMenu": "Ver la carta",
+    "gallery": {
+      "title": "Momentos",
+      "roledescription": "carrusel",
+      "prev": "Foto anterior",
+      "next": "Foto siguiente",
+      "slide": "Foto {{current}} de {{total}}",
+      "goTo": "Ir a la foto {{n}}"
+    },
     "photos": {
+      "interior": "El comedor con barra, mesas de madera y decoración colorida",
       "cocinera": "Retrato de una cocinera con sombrero tradicional",
       "equipo": "El equipo del restaurante reunido en el comedor",
-      "interior": "El comedor con barra, mesas de madera y decoración colorida",
-      "vertical": "Vista del comedor con decoración en las paredes"
+      "vertical": "Vista del comedor con decoración en las paredes",
+      "mesaSurtida": "Una mesa llena de platos peruanos sobre una manta andina de colores",
+      "tamal": "Un tamal en hoja de plátano servido en el plato",
+      "empanadas": "Empanadas doradas",
+      "causa": "Causa limeña en capas de crema de papa y relleno",
+      "mariscos": "Mariscos fritos con limón",
+      "ensalada": "Ensalada mixta de colores",
+      "quinua": "Ensalada de quinua con verduras frescas"
     }
   },
   "contact": {
