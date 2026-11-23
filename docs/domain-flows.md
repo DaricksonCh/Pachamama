@@ -27,7 +27,14 @@ pending ──► confirmed ──► completed
 | Contacto     | Nombre, email, teléfono                                 |
 | Comentario   | Opcional (alergias, ocasión…)                           |
 
-Pendiente de decidir: confirmación manual siempre o aforo automático por franja.
+**Decidido (ADR 0012):** confirmación manual **y** aforo por franja. Toda reserva entra como `pending`; el aforo (30 por franja por defecto) se comprueba al crearla y se serializa con `SELECT … FOR UPDATE` (409 `SLOT_FULL`). Franjas de 30 min en hora de Berlín, fechas en UTC.
+
+**Correos y mensaje al cliente:**
+
+1. Al crear la reserva: correo `received` al cliente (en su idioma) y aviso al personal. Un fallo de correo no anula la reserva.
+2. Al confirmar, rechazar o cancelar, el panel muestra el texto predeterminado (plantilla editable, variables `{name} {date} {time} {party}`); el personal puede cambiar asunto y cuerpo, o no enviar correo.
+3. Se guarda en el historial el asunto y el cuerpo enviados y el resultado (`sent`, `failed`, `skipped`). Si falló, se puede reenviar.
+4. Anonimización 90 días después de la fecha (`db:cleanup`).
 
 ## 2. Pedidos gastronómicos (para recoger)
 

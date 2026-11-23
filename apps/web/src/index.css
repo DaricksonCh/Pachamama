@@ -115,6 +115,16 @@
     scroll-padding-top: var(--site-header-h, 0px);
   }
 
+  /* Mobile booking bar (fixed, reservations page): reserve its height below the footer and keep focus clear of it. */
+  @media (max-width: 1023.98px) {
+    body:has([data-booking-bar]) {
+      padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+    }
+    html:has([data-booking-bar]) {
+      scroll-padding-bottom: calc(7rem + env(safe-area-inset-bottom));
+    }
+  }
+
   body {
     @apply bg-background font-sans text-foreground antialiased;
   }

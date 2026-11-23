@@ -87,6 +87,10 @@
     "privacy": {
       "title": "Política de privacidad",
       "description": "Cómo trata Pachamama Restaurant los datos personales en esta web."
+    },
+    "reservations": {
+      "title": "Reservar mesa",
+      "description": "Reserva tu mesa en Pachamama, Bremen: elige personas, día y hora en pocos pasos."
     }
   },
   "menu": {
@@ -176,7 +180,12 @@
       "open": "Abrir menú",
       "toggle": "Mostrar u ocultar el menú lateral",
       "mobileDescription": "Muestra el menú lateral en el móvil.",
-      "skipToContent": "Saltar al contenido"
+      "skipToContent": "Saltar al contenido",
+      "reservationsGroup": "Reservas",
+      "reservations": "Reservas",
+      "pending_one": "{{count}} pendiente",
+      "pending_other": "{{count}} pendientes",
+      "reservationSettings": "Ajustes de reservas"
     },
     "menu": {
       "categories": {
@@ -336,6 +345,252 @@
       "editNamed": "Editar {{name}}",
       "viewNamed": "Ver {{name}}",
       "restoreNamed": "Restaurar {{name}}"
+    },
+    "reservations": {
+      "title": "Reservas",
+      "date": "Fecha",
+      "prevDay": "Día anterior",
+      "nextDay": "Día siguiente",
+      "today": "Hoy",
+      "statusFilter": "Estado",
+      "allStatuses": "Todos los estados",
+      "empty": "No hay reservas para este día.",
+      "emptyFiltered": "No hay reservas con ese estado en este día.",
+      "emailFailed": "Error al enviar el correo",
+      "open": "Ver",
+      "openNamed": "Ver reserva de {{name}}",
+      "columns": {
+        "time": "Hora",
+        "name": "Nombre",
+        "party": "Personas",
+        "status": "Estado",
+        "actions": "Acciones"
+      },
+      "status": {
+        "pending": "Pendiente",
+        "confirmed": "Confirmada",
+        "rejected": "Rechazada",
+        "cancelled": "Cancelada",
+        "completed": "Completada",
+        "no_show": "No presentada"
+      },
+      "languages": {
+        "de": "alemán",
+        "es": "español"
+      },
+      "errors": {
+        "loadFailed": "No se pudieron cargar las reservas.",
+        "conflict": "La reserva ya había cambiado de estado. Se ha recargado.",
+        "RESEND_TOO_SOON": "Espera un minuto antes de reenviar el correo.",
+        "saveFailed": "No se pudo guardar el cambio. Inténtalo de nuevo."
+      },
+      "actions": {
+        "confirmed": "Confirmar",
+        "rejected": "Rechazar",
+        "cancelled": "Cancelar reserva",
+        "completed": "Marcar como completada",
+        "no_show": "Marcar como no presentada"
+      },
+      "detail": {
+        "back": "Volver a la lista",
+        "title": "Reserva de {{name}}",
+        "notFound": "No se encontró la reserva.",
+        "when": "Fecha y hora",
+        "party": "Personas",
+        "phone": "Teléfono",
+        "email": "Correo",
+        "language": "Idioma del cliente",
+        "comment": "Comentario",
+        "noComment": "Sin comentario",
+        "actions": "Acciones"
+      },
+      "history": {
+        "title": "Historial",
+        "online": "Reserva online",
+        "created": "Solicitud recibida",
+        "change": "{{from}} → {{to}}",
+        "email": {
+          "sent": "Correo enviado",
+          "failed": "Correo fallido",
+          "skipped": "Sin correo"
+        },
+        "subject": "Asunto"
+      },
+      "resend": {
+        "banner": "No se pudo enviar el correo",
+        "action": "Reenviar correo",
+        "sent": "Correo enviado.",
+        "failedAgain": "El correo sigue sin poder enviarse.",
+        "nothing": "No hay nada que reenviar.",
+        "failed": "No se pudo reenviar el correo."
+      },
+      "simple": {
+        "completed": {
+          "title": "Marcar como completada",
+          "description": "La reserva de {{name}} pasará a completada. No se envía ningún correo."
+        },
+        "no_show": {
+          "title": "Marcar como no presentada",
+          "description": "La reserva de {{name}} pasará a no presentada. No se envía ningún correo."
+        }
+      },
+      "decision": {
+        "description": "Reserva de {{name}}. El cliente recibirá un correo; puedes cambiar el texto o añadir algo antes de enviarlo.",
+        "loading": "Cargando el texto del correo …",
+        "previewFailed": "No se pudo cargar el texto predeterminado.",
+        "notify": "Enviar correo al cliente",
+        "language": "Idioma del cliente: {{language}}",
+        "subject": "Asunto",
+        "body": "Mensaje al cliente",
+        "counter": "{{count}} / {{max}}",
+        "restore": "Restaurar texto predeterminado",
+        "required": "El asunto y el mensaje no pueden estar vacíos.",
+        "preview": "Vista previa del correo",
+        "noEmail": "No se enviará ningún correo al cliente.",
+        "cancel": "Cancelar",
+        "saved": "Cambio guardado.",
+        "savedSent": "Cambio guardado y correo enviado.",
+        "savedEmailFailed": "Cambio guardado, pero no se pudo enviar el correo.",
+        "discard": {
+          "title": "Cambios sin guardar",
+          "description": "Has editado el texto del correo. Si cierras, se perderán los cambios.",
+          "stay": "Seguir editando",
+          "confirm": "Descartar cambios"
+        },
+        "confirmed": {
+          "title": "Confirmar reserva",
+          "submit": "Enviar y confirmar",
+          "submitNoMail": "Confirmar sin correo"
+        },
+        "rejected": {
+          "title": "Rechazar reserva",
+          "submit": "Enviar y rechazar",
+          "submitNoMail": "Rechazar sin correo"
+        },
+        "cancelled": {
+          "title": "Cancelar reserva",
+          "submit": "Enviar y cancelar",
+          "submitNoMail": "Cancelar sin correo"
+        },
+        "remaining": "Quedan {{count}} caracteres o menos",
+        "limit": "Límite de caracteres alcanzado"
+      }
+    },
+    "reservationSettings": {
+      "title": "Ajustes de reservas",
+      "intro": "Horario, cierres, límites y textos de los correos de las reservas.",
+      "noPermission": "No tienes permiso para ver esta página.",
+      "noPermissionHint": "Solo los administradores pueden cambiar los ajustes de reservas.",
+      "loadFailed": "No se pudieron cargar los ajustes.",
+      "saveFailed": "No se pudo guardar. Inténtalo de nuevo.",
+      "forbidden": "No tienes permiso para esta acción.",
+      "saving": "Guardando …",
+      "tabsLabel": "Secciones de los ajustes",
+      "tabs": {
+        "hours": "Horario",
+        "closures": "Cierres",
+        "settings": "Reservas",
+        "templates": "Textos de correo"
+      },
+      "weekdays": {
+        "0": "Domingo",
+        "1": "Lunes",
+        "2": "Martes",
+        "3": "Miércoles",
+        "4": "Jueves",
+        "5": "Viernes",
+        "6": "Sábado"
+      },
+      "hours": {
+        "title": "Horario de apertura",
+        "intro": "Los clientes solo pueden reservar dentro de estos tramos. Se guarda la semana completa.",
+        "provisional": "Horario provisional: guarda el horario real para poder publicar.",
+        "closed": "Cerrado",
+        "addRange": "Añadir tramo",
+        "addRangeNamed": "Añadir tramo el {{day}}",
+        "removeNamed": "Quitar el tramo {{n}} de {{day}}",
+        "opens": "{{day}}, apertura tramo {{n}}",
+        "closes": "{{day}}, cierre tramo {{n}}",
+        "opensShort": "Apertura",
+        "closesShort": "Cierre",
+        "save": "Guardar horario",
+        "saved": "Horario guardado.",
+        "summaryItem": "{{day}}, tramo {{n}}"
+      },
+      "closures": {
+        "title": "Cierres programados",
+        "intro": "Días en los que el restaurante no acepta reservas (vacaciones, eventos privados).",
+        "empty": "No hay cierres próximos.",
+        "period": "Del {{from}} al {{to}}",
+        "periodSingle": "{{from}}",
+        "noReason": "Sin motivo",
+        "deleteNamed": "Eliminar cierre del {{from}} al {{to}}",
+        "confirmTitle": "¿Eliminar este cierre?",
+        "confirmDescription": "Los días del {{from}} al {{to}} volverán a aceptar reservas. Esta acción no se puede deshacer.",
+        "confirm": "Eliminar",
+        "cancel": "Cancelar",
+        "deleted": "Cierre eliminado.",
+        "deleteFailed": "No se pudo eliminar el cierre.",
+        "newTitle": "Añadir un cierre",
+        "from": "Desde",
+        "to": "Hasta",
+        "reasonDe": "Motivo (alemán, opcional)",
+        "reasonEs": "Motivo (español, opcional)",
+        "add": "Añadir cierre",
+        "added": "Cierre añadido."
+      },
+      "settings": {
+        "title": "Reglas de reserva",
+        "intro": "Límites que se aplican a las reservas hechas desde la web.",
+        "slotMinutes": "Duración del tramo",
+        "slotMinutesValue": "30 min",
+        "slotMinutesHelp": "Las reservas se ofrecen cada 30 minutos (no se puede cambiar).",
+        "lastSlot": "Última hora antes del cierre (minutos)",
+        "lastSlotHelp": "Cuántos minutos antes del cierre se puede reservar por última vez.",
+        "partyMin": "Mínimo de personas",
+        "partyMax": "Máximo de personas",
+        "partyHelp": "Personas por reserva en línea.",
+        "capacity": "Capacidad por tramo (personas)",
+        "capacityHelp": "Suma máxima de personas aceptadas en un mismo tramo de 30 minutos.",
+        "minLead": "Antelación mínima (minutos)",
+        "minLeadHelp": "Con menos antelación no se puede reservar en línea.",
+        "maxAdvance": "Antelación máxima (días)",
+        "maxAdvanceHelp": "Hasta cuántos días por adelantado se puede reservar.",
+        "sameDay": "Permitir reservas en línea para el mismo día",
+        "save": "Guardar ajustes",
+        "saved": "Ajustes guardados."
+      },
+      "templates": {
+        "title": "Textos de correo",
+        "intro": "Los textos que reciben los clientes. Cada texto se guarda por separado, en alemán y en español.",
+        "receivedNote": "El texto «Solicitud recibida» se envía automáticamente al recibir una reserva. Los demás son los textos predeterminados: el personal puede editarlos antes de enviar la decisión.",
+        "variablesTitle": "Variables disponibles",
+        "variablesHint": "Se sustituyen al enviar el correo:",
+        "variables": {
+          "name": "nombre del cliente",
+          "date": "fecha de la reserva",
+          "time": "hora de la reserva",
+          "party": "número de personas"
+        },
+        "kinds": {
+          "received": "Solicitud recibida (automático)",
+          "confirmed": "Reserva confirmada",
+          "rejected": "Reserva rechazada",
+          "cancelled": "Reserva cancelada"
+        },
+        "languages": {
+          "de": "Alemán",
+          "es": "Español"
+        },
+        "subject": "Asunto",
+        "body": "Mensaje",
+        "counter": "{{count}} de {{max}} caracteres",
+        "preview": "Vista previa (con datos de ejemplo)",
+        "previewSubject": "Asunto:",
+        "save": "Guardar texto",
+        "saveNamed": "Guardar texto {{kind}} ({{lang}})",
+        "saved": "Texto guardado."
+      }
     }
   },
   "validation": {
@@ -348,7 +603,18 @@
     "invalidCategory": "Elige una categoría activa.",
     "noImage": "El plato no tiene foto.",
     "imageTooLarge": "La foto es demasiado grande (máx. 10 MB, 40 megapíxeles).",
-    "imageType": "Solo fotos en formato JPEG, PNG o WebP."
+    "imageType": "Solo fotos en formato JPEG, PNG o WebP.",
+    "date": "Elige una fecha válida.",
+    "time": "Elige una hora válida.",
+    "phone": "Introduce un teléfono válido (solo cifras, + y espacios).",
+    "language": "Idioma no válido.",
+    "privacy": "Debes aceptar la política de privacidad.",
+    "range": "El rango no es válido.",
+    "overlap": "Los tramos se solapan.",
+    "int": "Introduce un número entero.",
+    "partyMin": "Indica al menos una persona.",
+    "partyMax": "Demasiadas personas para reservar en línea.",
+    "partySizeRange": "Número de personas fuera del rango permitido."
   },
   "common": {
     "close": "Cerrar"
@@ -423,7 +689,7 @@
       "overview": {
         "title": "Resumen",
         "p1": "Esta web informa sobre el restaurante: carta, horario, historia y datos de contacto. Tratamos la menor cantidad posible de datos personales.",
-        "p2": "Por ahora esta web no tiene formularios ni cuentas de cliente."
+        "p2": "Para reservar mesa hay un formulario (ver más abajo). No hay cuentas de cliente."
       },
       "controller": {
         "title": "Responsable del tratamiento",
@@ -452,6 +718,16 @@
         "p1": "Si nos llama o nos escribe, tratamos sus datos (por ejemplo nombre, teléfono, correo electrónico y el contenido del mensaje) solo para atender su consulta. La base jurídica es el art. 6, apdo. 1, letra b RGPD si la consulta está relacionada con un contrato y, en los demás casos, el art. 6, apdo. 1, letra f RGPD (atención de consultas).",
         "p2": "Borramos los datos cuando ya no son necesarios para ello y no lo impide ninguna obligación legal de conservación."
       },
+      "reservations": {
+        "title": "Reservas de mesa",
+        "p1": "Finalidad: cuando solicita una mesa en línea, tratamos sus datos únicamente para gestionar, confirmar y llevar a cabo la reserva.",
+        "p2": "Datos: nombre, correo electrónico, teléfono, opcionalmente un comentario, fecha y hora, número de personas e idioma de la solicitud. Además registramos cuándo llegó la solicitud y cómo se gestionó (estado, correos enviados). En el comentario escriba solo lo necesario (por ejemplo, alergias). Los datos de salud que decida compartir allí los usamos únicamente para preparar su visita.",
+        "p3": "Base jurídica: art. 6, apdo. 1, letra b RGPD (medidas precontractuales y ejecución de la reserva). Los datos (salvo el comentario) son necesarios para tramitar la reserva; sin ellos no es posible reservar.",
+        "p4": "Destinatarios: solo el personal del restaurante ve los datos, en el área de gestión. Los correos que recibe (acuse de recibo y respuesta) se envían a través de un proveedor SMTP. Proveedor: {{smtp}}. Con él se celebrará un contrato de encargo de tratamiento. No se incorporan widgets ni servicios de terceros.",
+        "p5": "Plazo de conservación: como máximo 90 días después de la fecha de la reserva anonimizamos de forma irreversible en la base de datos el nombre, el correo, el teléfono y el comentario. Las copias en los correos de aviso del buzón del restaurante y en el proveedor de correo se eliminan según el plazo de conservación del buzón: {{mailbox}}.",
+        "p6": "Protección contra spam: usamos un campo de formulario oculto y un límite de solicitudes por período. No se usan cookies ni seguimiento; la dirección IP solo se usa brevemente en la memoria para aplicar el límite.",
+        "rightsLink": "Sus derechos (acceso, supresión, etc.)"
+      },
       "rights": {
         "title": "Sus derechos",
         "p1": "Usted tiene derecho de acceso (art. 15 RGPD), rectificación (art. 16), supresión (art. 17), limitación del tratamiento (art. 18), portabilidad (art. 20) y oposición (art. 21).",
@@ -466,6 +742,78 @@
         "title": "Fecha",
         "p1": "Fecha: {{date}}. Adaptamos esta política cuando cambie la web o la normativa."
       }
+    }
+  },
+  "reservations": {
+    "lead": "Elige personas, día y hora. Te confirmaremos la reserva por correo. Se paga en el local.",
+    "progress": "Pasos de la reserva",
+    "steps": {
+      "party": "Personas",
+      "date": "Fecha",
+      "time": "Hora",
+      "details": "Datos"
+    },
+    "next": "Siguiente",
+    "back": "Atrás",
+    "submit": "Enviar solicitud",
+    "sending": "Enviando …",
+    "retry": "Reintentar",
+    "summary": {
+      "title": "Tu reserva",
+      "pending": "aún sin elegir",
+      "hint": "Elige el número de personas"
+    },
+    "party": {
+      "heading": "¿Cuántas personas?",
+      "groupLabel": "Número de personas",
+      "option_one": "{{count}} persona",
+      "option_other": "{{count}} personas",
+      "more": "Más",
+      "moreText": "Para grupos de más de {{max}} personas, llámanos al",
+      "orContact": "o escríbenos desde la página de",
+      "contactLink": "contacto",
+      "loading": "Cargando …"
+    },
+    "date": {
+      "heading": "¿Qué día?",
+      "loading": "Cargando los días disponibles …",
+      "noDays": "No hay días disponibles este mes. Prueba con el mes siguiente.",
+      "sameDay": "Las reservas para el mismo día solo se hacen por teléfono:"
+    },
+    "time": {
+      "heading": "¿A qué hora?",
+      "lunch": "Mediodía",
+      "dinner": "Noche",
+      "full": "completo",
+      "loading": "Cargando las horas …",
+      "empty": "No hay horas disponibles ese día para tu grupo. Elige otro día."
+    },
+    "details": {
+      "heading": "Tus datos",
+      "requiredHint": "Los campos con * son obligatorios.",
+      "name": "Nombre",
+      "email": "Email",
+      "phone": "Teléfono",
+      "comment": "Comentario",
+      "optional": "opcional",
+      "privacyShort": "Privacidad",
+      "privacyBefore": "He leído y acepto la",
+      "privacyLink": "política de privacidad",
+      "privacyAfter": ".",
+      "newTab": "(se abre en una pestaña nueva)",
+      "commentHint": "Indica solo lo necesario (p. ej., alergias)."
+    },
+    "errors": {
+      "slotFull": "Esa hora ya no está disponible. Elige otra, por favor.",
+      "rateLimited": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
+      "network": "Sin conexión o el servidor no responde. Inténtalo de nuevo.",
+      "generic": "No se pudo enviar la solicitud. Revisa los datos e inténtalo de nuevo.",
+      "loadFailed": "No se pudo cargar la disponibilidad."
+    },
+    "success": {
+      "title": "Solicitud recibida",
+      "next": "Te responderemos por correo para confirmar la reserva. Revisa tu correo (y la carpeta de spam).",
+      "home": "Volver al inicio"
     }
   }
 }

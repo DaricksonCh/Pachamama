@@ -11,7 +11,7 @@ export const PUBLIC_PAGES = {
   contact: { de: 'kontakt', es: 'contacto' },
   imprint: { de: 'impressum', es: 'aviso-legal' },
   privacy: { de: 'datenschutz', es: 'privacidad' },
-  /** Reserved for phase 7 (reservations form). Not routed while RESERVATIONS_MODE is 'phone'. */
+  /** Reservations wizard (phase 7). The header button links here while RESERVATIONS_MODE is 'form'. */
   reservations: { de: 'reservieren', es: 'reservar' },
 } as const satisfies Record<string, Record<Language, string>>;
 
@@ -31,8 +31,8 @@ export function pageFromSlug(slug: string, lang: Language): PublicPage | undefin
 }
 
 /**
- * How the "Reserve" button works. 'phone' until phase 7 ships the reservations form; switching
- * to 'form' sends every button to `publicPath('reservations', lang)` without touching any page.
+ * How the "Reserve" button works. 'form' (phase 7) sends every button to
+ * `publicPath('reservations', lang)`; 'phone' is the fallback that calls the restaurant.
  */
 export type ReservationsMode = 'phone' | 'form';
-export const RESERVATIONS_MODE: ReservationsMode = 'phone';
+export const RESERVATIONS_MODE: ReservationsMode = 'form';

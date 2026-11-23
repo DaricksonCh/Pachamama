@@ -2,7 +2,7 @@
 
 Base: `/api/v1` (negocio) y `/api/auth` (Better Auth). Respuestas de error siempre con el formato `{ "error": { "code", "message", "details?" } }`.
 
-**Límite de peticiones** (por IP, 429 `RATE_LIMITED`, cabeceras `RateLimit`/`RateLimit-Policy`): `/api/v1` 300/min; `PUT /api/v1/admin/menu/dishes/:id/image` 30 por 10 min; `GET /api/v1/menu/pdf` 30/min. Configurable por entorno (`RATE_LIMIT_*`, ver `.env.example`).
+**Límite de peticiones** (por IP, 429 `RATE_LIMITED`, cabeceras `RateLimit`/`RateLimit-Policy`): `/api/v1` 300/min; `PUT /api/v1/admin/menu/dishes/:id/image` 30 por 10 min; `GET /api/v1/menu/pdf` 30/min; `POST /api/v1/reservations` 5 por 10 min. Configurable por entorno (`RATE_LIMIT_*`, ver `.env.example`).
 
 ## Autenticación (`/api/auth`, Better Auth)
 
@@ -58,18 +58,67 @@ Requieren sesión. Las escrituras exigen `Origin` de la web y `Content-Type: app
 | PUT    | `/admin/menu/dishes/:id/image`                                         | admin                                           | multipart: `image` (JPEG/PNG/WebP, ≤10 MB) + `altDe` + `altEs`; WebP 400/800/1600 sin EXIF; 415 `UNSUPPORTED_IMAGE`, 413 `IMAGE_TOO_LARGE` |
 | DELETE | `/admin/menu/dishes/:id/image`                                         | admin                                           | Quita la foto y borra los archivos; las fotos se sirven en `/uploads/dishes/<key>-<w>.webp` (`UPLOADS_DIR`)                                |
 
+## Reservas — público (`/api/v1/reservations`)
+
+Sin sesión. Respuestas `{ data }`. Fechas `YYYY-MM-DD` y horas `HH:mm` en la zona del restaurante (Europe/Berlin); `startsAt` en ISO UTC. La respuesta nunca incluye email, teléfono, nombre ni comentario.
+
+| Método | Ruta                                        | Notas                                                                                                                                                                                                                                                                                                 |
+| ------ | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/reservations/availability?month=YYYY-MM`  | `{ days: string[], partyMin, partyMax, sameDayOnline }`: días del mes con al menos una franja futura (el aforo no cuenta)                                                                                                                                                                             |
+| GET    | `/reservations/availability?date=…&party=N` | `{ slots: { time, startsAt, available }[] }` con el aforo aplicado para ese tamaño de grupo; `party` fuera de `partyMin..partyMax`, ambas formas a la vez o ninguna → 400 `VALIDATION_ERROR`                                                                                                          |
+| POST   | `/reservations`                             | Cuerpo `reservationRequestSchema` (`website` es el honeypot: relleno → 201 falso sin guardar ni enviar nada) → 201 `{ publicId, startsAt, partySize, status: 'pending' }`. Envía correo `received` al cliente y aviso al personal (un fallo de correo no anula la reserva). Límite: 5 por 10 min e IP |
+
+Errores de `POST`: `partySize` fuera de rango o cuerpo inválido → 400 `VALIDATION_ERROR`; franja inexistente, pasada, cerrada o fuera de plazo → 400 `SLOT_UNAVAILABLE`; sin aforo (también bajo concurrencia: la comprobación se serializa con un bloqueo de `reservation_settings`) → 409 `SLOT_FULL`; demasiadas solicitudes → 429 `RATE_LIMITED`.
+
+## Reservas — configuración (`/api/v1/admin/reservation-settings`)
+
+Requieren sesión; lectura para admin y staff, escritura solo admin. Las escrituras exigen `Origin` de la web y `Content-Type: application/json`. Respuestas `{ data }`. Días 0 = domingo; horas `HH:mm` en rejilla :00/:30; fechas `YYYY-MM-DD` (Europe/Berlin).
+
+| Método | Ruta                                                | Acceso       | Notas                                                                                                                                 |
+| ------ | --------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/admin/reservation-settings/hours`                 | admin, staff | `{ hours: OpeningHours, hoursConfirmed }`                                                                                             |
+| PUT    | `/admin/reservation-settings/hours`                 | admin        | `{ hours }`: reemplaza la semana entera en una transacción y marca `hoursConfirmed`; solape o rango inválido → 400 `VALIDATION_ERROR` |
+| GET    | `/admin/reservation-settings/closures`              | admin, staff | Cierres con `toDate` de hoy en adelante, por `fromDate`; cada uno con `id`                                                            |
+| POST   | `/admin/reservation-settings/closures`              | admin        | `{ from, to, reasonDe?, reasonEs? }` → 201; `from > to` → 400                                                                         |
+| DELETE | `/admin/reservation-settings/closures/:id`          | admin        | 204; 404 `NOT_FOUND`                                                                                                                  |
+| GET    | `/admin/reservation-settings/settings`              | admin, staff | `ReservationSettings`                                                                                                                 |
+| PATCH  | `/admin/reservation-settings/settings`              | admin        | Parcial; se fusiona con lo actual y se valida el conjunto (p. ej. `partyMin ≤ partyMax`); clave desconocida → 400                     |
+| GET    | `/admin/reservation-settings/templates`             | admin, staff | Las 8 plantillas `{ kind, lang, subject, body }`                                                                                      |
+| PUT    | `/admin/reservation-settings/templates/:kind/:lang` | admin        | `kind`: received, confirmed, rejected, cancelled; `lang`: de, es; `subject` ≤ 150, `body` ≤ 4000; kind o lang inválidos → 400         |
+
+## Reservas — gestión (`/api/v1/admin/reservations`)
+
+Todo para `admin` y `staff`. `:id` es el id numérico; inválido → 400 `VALIDATION_ERROR`.
+
+| Método | Ruta                                              | Descripción                                                                                                                                                                                                                                                                                                                                                                      |
+| ------ | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/admin/reservations?date=&status=`               | Reservas del día local (`date` obligatorio, `YYYY-MM-DD`, hora de Berlín) por hora; `status` opcional. Cada una: `id, publicId, startsAt, partySize, name, phone, email, comment, lang, status, decidedAt, lastEmailFailed`                                                                                                                                                      |
+| GET    | `/admin/reservations/pending-count`               | `{ count }`: pendientes con `startsAt` futuro                                                                                                                                                                                                                                                                                                                                    |
+| GET    | `/admin/reservations/:id`                         | La reserva + `events: [{ id, fromStatus, toStatus, actorName, subject, message, emailStatus, createdAt }]`; 404 `NOT_FOUND`                                                                                                                                                                                                                                                      |
+| GET    | `/admin/reservations/:id/message-preview?status=` | `status`: confirmed, rejected o cancelled (otro → 400). `{ subject, body, lang }`: plantilla del idioma del cliente ya rellenada                                                                                                                                                                                                                                                 |
+| PATCH  | `/admin/reservations/:id/status`                  | Cuerpo `reservationStatusChangeSchema`: `{ status, message? ≤2000, subject? ≤150, notify? = true }` → `{ reservation, emailStatus }`. `message`/`subject` solo con confirmed, rejected o cancelled (si no, 400). En una reserva ya anonimizada nunca se envía correo (`emailStatus: skipped`; con `message`/`subject` → 400). Transición no permitida → 409 `INVALID_TRANSITION` |
+| POST   | `/admin/reservations/:id/resend-email`            | Reenvía el último mensaje de decisión (si el estado actual sigue siendo ese) y añade un evento; si no hay nada que reenviar → 409 `NOTHING_TO_RESEND`; si el último evento tiene menos de 60 s → 429 `RESEND_TOO_SOON`                                                                                                                                                           |
+
+Al decidir (confirmed, rejected, cancelled) con `notify` el cliente recibe un correo: asunto y texto salen de la plantilla de su idioma, salvo que el personal envíe `subject`/`message` (se envían tal cual, sin rellenar variables: la vista previa ya lo hizo). Se guarda el texto enviado en el evento. `emailStatus`: `sent`, `failed` (el cambio de estado **no** se revierte; usar `resend-email`), `skipped` (`notify: false`) o `null` (completed, no_show). Se guardan `decidedBy` y `decidedAt`.
+
 ## Códigos de error
 
-| Código                | HTTP | Cuándo                                           |
-| --------------------- | ---- | ------------------------------------------------ |
-| `UNAUTHORIZED`        | 401  | Sin sesión o sesión caducada                     |
-| `FORBIDDEN`           | 403  | Rol insuficiente o cuenta bloqueada              |
-| `NOT_FOUND`           | 404  | Ruta inexistente                                 |
-| `INVALID_JSON`        | 400  | Cuerpo JSON mal formado                          |
-| `VALIDATION_ERROR`    | 400  | Entrada inválida; `details` = errores por campo  |
-| `INVALID_CATEGORY`    | 400  | El plato apunta a una categoría inexistente      |
-| `INVALID_ORDER`       | 400  | La lista de orden incluye ids desconocidos       |
-| `NO_IMAGE`            | 400  | Texto alternativo de un plato sin foto           |
-| `CATEGORY_HAS_DISHES` | 409  | Archivar una categoría con platos no archivados  |
-| `PAYLOAD_TOO_LARGE`   | 413  | Cuerpo de más de 100 kB                          |
-| `INTERNAL_ERROR`      | 500  | Error no controlado (sin detalles en producción) |
+| Código                | HTTP | Cuándo                                                  |
+| --------------------- | ---- | ------------------------------------------------------- |
+| `UNAUTHORIZED`        | 401  | Sin sesión o sesión caducada                            |
+| `FORBIDDEN`           | 403  | Rol insuficiente o cuenta bloqueada                     |
+| `NOT_FOUND`           | 404  | Ruta inexistente                                        |
+| `INVALID_JSON`        | 400  | Cuerpo JSON mal formado                                 |
+| `VALIDATION_ERROR`    | 400  | Entrada inválida; `details` = errores por campo         |
+| `SLOT_UNAVAILABLE`    | 400  | Franja de reserva inexistente, pasada o cerrada         |
+| `SLOT_FULL`           | 409  | La franja ya no tiene aforo para el grupo               |
+| `INVALID_TRANSITION`  | 409  | Cambio de estado de reserva no permitido                |
+| `NOTHING_TO_RESEND`   | 409  | No hay mensaje de decisión que reenviar                 |
+| `RESEND_TOO_SOON`     | 429  | Reenvío a menos de 60 s del último evento de la reserva |
+| `RATE_LIMITED`        | 429  | Demasiadas peticiones desde la misma IP                 |
+| `INVALID_CATEGORY`    | 400  | El plato apunta a una categoría inexistente             |
+| `INVALID_ORDER`       | 400  | La lista de orden incluye ids desconocidos              |
+| `NO_IMAGE`            | 400  | Texto alternativo de un plato sin foto                  |
+| `CATEGORY_HAS_DISHES` | 409  | Archivar una categoría con platos no archivados         |
+| `PAYLOAD_TOO_LARGE`   | 413  | Cuerpo de más de 100 kB                                 |
+| `INTERNAL_ERROR`      | 500  | Error no controlado (sin detalles en producción)        |

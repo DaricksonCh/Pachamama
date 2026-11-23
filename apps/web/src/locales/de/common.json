@@ -87,6 +87,10 @@
     "privacy": {
       "title": "Datenschutzerklärung",
       "description": "Wie Pachamama Restaurant personenbezogene Daten auf dieser Website verarbeitet."
+    },
+    "reservations": {
+      "title": "Tisch reservieren",
+      "description": "Reservieren Sie Ihren Tisch bei Pachamama in Bremen: Personen, Tag und Uhrzeit in wenigen Schritten."
     }
   },
   "menu": {
@@ -176,7 +180,12 @@
       "open": "Menü öffnen",
       "toggle": "Seitenmenü ein-/ausklappen",
       "mobileDescription": "Zeigt das Seitenmenü auf dem Handy.",
-      "skipToContent": "Zum Inhalt springen"
+      "skipToContent": "Zum Inhalt springen",
+      "reservationsGroup": "Reservierungen",
+      "reservations": "Reservierungen",
+      "pending_one": "{{count}} offen",
+      "pending_other": "{{count}} offen",
+      "reservationSettings": "Reservierungseinstellungen"
     },
     "menu": {
       "categories": {
@@ -336,6 +345,252 @@
       "editNamed": "{{name}} bearbeiten",
       "viewNamed": "{{name}} ansehen",
       "restoreNamed": "{{name}} wiederherstellen"
+    },
+    "reservations": {
+      "title": "Reservierungen",
+      "date": "Datum",
+      "prevDay": "Vorheriger Tag",
+      "nextDay": "Nächster Tag",
+      "today": "Heute",
+      "statusFilter": "Status",
+      "allStatuses": "Alle Status",
+      "empty": "Für diesen Tag gibt es keine Reservierungen.",
+      "emptyFiltered": "Für diesen Tag gibt es keine Reservierungen mit diesem Status.",
+      "emailFailed": "E-Mail konnte nicht gesendet werden",
+      "open": "Ansehen",
+      "openNamed": "Reservierung von {{name}} ansehen",
+      "columns": {
+        "time": "Uhrzeit",
+        "name": "Name",
+        "party": "Personen",
+        "status": "Status",
+        "actions": "Aktionen"
+      },
+      "status": {
+        "pending": "Offen",
+        "confirmed": "Bestätigt",
+        "rejected": "Abgelehnt",
+        "cancelled": "Storniert",
+        "completed": "Abgeschlossen",
+        "no_show": "Nicht erschienen"
+      },
+      "languages": {
+        "de": "Deutsch",
+        "es": "Spanisch"
+      },
+      "errors": {
+        "loadFailed": "Die Reservierungen konnten nicht geladen werden.",
+        "conflict": "Der Status der Reservierung hatte sich bereits geändert. Sie wurde neu geladen.",
+        "RESEND_TOO_SOON": "Bitte eine Minute warten, bevor die E-Mail erneut gesendet wird.",
+        "saveFailed": "Die Änderung konnte nicht gespeichert werden. Bitte erneut versuchen."
+      },
+      "actions": {
+        "confirmed": "Bestätigen",
+        "rejected": "Ablehnen",
+        "cancelled": "Reservierung stornieren",
+        "completed": "Als abgeschlossen markieren",
+        "no_show": "Als nicht erschienen markieren"
+      },
+      "detail": {
+        "back": "Zurück zur Liste",
+        "title": "Reservierung von {{name}}",
+        "notFound": "Reservierung nicht gefunden.",
+        "when": "Datum und Uhrzeit",
+        "party": "Personen",
+        "phone": "Telefon",
+        "email": "E-Mail",
+        "language": "Sprache des Gastes",
+        "comment": "Kommentar",
+        "noComment": "Kein Kommentar",
+        "actions": "Aktionen"
+      },
+      "history": {
+        "title": "Verlauf",
+        "online": "Online-Reservierung",
+        "created": "Anfrage eingegangen",
+        "change": "{{from}} → {{to}}",
+        "email": {
+          "sent": "E-Mail gesendet",
+          "failed": "E-Mail fehlgeschlagen",
+          "skipped": "Ohne E-Mail"
+        },
+        "subject": "Betreff"
+      },
+      "resend": {
+        "banner": "Die E-Mail konnte nicht gesendet werden",
+        "action": "E-Mail erneut senden",
+        "sent": "E-Mail gesendet.",
+        "failedAgain": "Die E-Mail konnte weiterhin nicht gesendet werden.",
+        "nothing": "Es gibt nichts erneut zu senden.",
+        "failed": "Die E-Mail konnte nicht erneut gesendet werden."
+      },
+      "simple": {
+        "completed": {
+          "title": "Als abgeschlossen markieren",
+          "description": "Die Reservierung von {{name}} wird als abgeschlossen markiert. Es wird keine E-Mail gesendet."
+        },
+        "no_show": {
+          "title": "Als nicht erschienen markieren",
+          "description": "Die Reservierung von {{name}} wird als nicht erschienen markiert. Es wird keine E-Mail gesendet."
+        }
+      },
+      "decision": {
+        "description": "Reservierung von {{name}}. Der Gast erhält eine E-Mail; Sie können den Text vor dem Senden ändern oder ergänzen.",
+        "loading": "E-Mail-Text wird geladen …",
+        "previewFailed": "Der Standardtext konnte nicht geladen werden.",
+        "notify": "E-Mail an den Gast senden",
+        "language": "Sprache des Gastes: {{language}}",
+        "subject": "Betreff",
+        "body": "Nachricht an den Gast",
+        "counter": "{{count}} / {{max}}",
+        "restore": "Standardtext wiederherstellen",
+        "required": "Betreff und Nachricht dürfen nicht leer sein.",
+        "preview": "Vorschau der E-Mail",
+        "noEmail": "Es wird keine E-Mail an den Gast gesendet.",
+        "cancel": "Abbrechen",
+        "saved": "Änderung gespeichert.",
+        "savedSent": "Änderung gespeichert und E-Mail gesendet.",
+        "savedEmailFailed": "Änderung gespeichert, aber die E-Mail konnte nicht gesendet werden.",
+        "discard": {
+          "title": "Ungespeicherte Änderungen",
+          "description": "Sie haben den E-Mail-Text bearbeitet. Wenn Sie schließen, gehen die Änderungen verloren.",
+          "stay": "Weiter bearbeiten",
+          "confirm": "Änderungen verwerfen"
+        },
+        "confirmed": {
+          "title": "Reservierung bestätigen",
+          "submit": "Senden und bestätigen",
+          "submitNoMail": "Ohne E-Mail bestätigen"
+        },
+        "rejected": {
+          "title": "Reservierung ablehnen",
+          "submit": "Senden und ablehnen",
+          "submitNoMail": "Ohne E-Mail ablehnen"
+        },
+        "cancelled": {
+          "title": "Reservierung stornieren",
+          "submit": "Senden und stornieren",
+          "submitNoMail": "Ohne E-Mail stornieren"
+        },
+        "remaining": "Noch höchstens {{count}} Zeichen",
+        "limit": "Zeichenlimit erreicht"
+      }
+    },
+    "reservationSettings": {
+      "title": "Reservierungseinstellungen",
+      "intro": "Öffnungszeiten, Schließzeiten, Limits und E-Mail-Texte der Reservierungen.",
+      "noPermission": "Sie haben keine Berechtigung für diese Seite.",
+      "noPermissionHint": "Nur Administratoren können die Reservierungseinstellungen ändern.",
+      "loadFailed": "Die Einstellungen konnten nicht geladen werden.",
+      "saveFailed": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
+      "forbidden": "Sie haben keine Berechtigung für diese Aktion.",
+      "saving": "Wird gespeichert …",
+      "tabsLabel": "Bereiche der Einstellungen",
+      "tabs": {
+        "hours": "Öffnungszeiten",
+        "closures": "Schließzeiten",
+        "settings": "Reservierungen",
+        "templates": "E-Mail-Texte"
+      },
+      "weekdays": {
+        "0": "Sonntag",
+        "1": "Montag",
+        "2": "Dienstag",
+        "3": "Mittwoch",
+        "4": "Donnerstag",
+        "5": "Freitag",
+        "6": "Samstag"
+      },
+      "hours": {
+        "title": "Öffnungszeiten",
+        "intro": "Gäste können nur innerhalb dieser Zeiträume reservieren. Es wird immer die ganze Woche gespeichert.",
+        "provisional": "Vorläufige Öffnungszeiten: Speichern Sie die echten Zeiten, um die Seite veröffentlichen zu können.",
+        "closed": "Geschlossen",
+        "addRange": "Zeitraum hinzufügen",
+        "addRangeNamed": "Zeitraum am {{day}} hinzufügen",
+        "removeNamed": "Zeitraum {{n}} am {{day}} entfernen",
+        "opens": "{{day}}, Öffnung Zeitraum {{n}}",
+        "closes": "{{day}}, Schließung Zeitraum {{n}}",
+        "opensShort": "Öffnung",
+        "closesShort": "Schließung",
+        "save": "Öffnungszeiten speichern",
+        "saved": "Öffnungszeiten gespeichert.",
+        "summaryItem": "{{day}}, Zeitraum {{n}}"
+      },
+      "closures": {
+        "title": "Geplante Schließzeiten",
+        "intro": "Tage, an denen keine Reservierungen angenommen werden (Urlaub, private Feiern).",
+        "empty": "Keine bevorstehenden Schließzeiten.",
+        "period": "Vom {{from}} bis {{to}}",
+        "periodSingle": "{{from}}",
+        "noReason": "Ohne Grund",
+        "deleteNamed": "Schließzeit vom {{from}} bis {{to}} löschen",
+        "confirmTitle": "Diese Schließzeit löschen?",
+        "confirmDescription": "Vom {{from}} bis {{to}} werden wieder Reservierungen angenommen. Das kann nicht rückgängig gemacht werden.",
+        "confirm": "Löschen",
+        "cancel": "Abbrechen",
+        "deleted": "Schließzeit gelöscht.",
+        "deleteFailed": "Die Schließzeit konnte nicht gelöscht werden.",
+        "newTitle": "Schließzeit hinzufügen",
+        "from": "Von",
+        "to": "Bis",
+        "reasonDe": "Grund (Deutsch, optional)",
+        "reasonEs": "Grund (Spanisch, optional)",
+        "add": "Schließzeit hinzufügen",
+        "added": "Schließzeit hinzugefügt."
+      },
+      "settings": {
+        "title": "Reservierungsregeln",
+        "intro": "Limits für Reservierungen über die Website.",
+        "slotMinutes": "Dauer eines Zeitfensters",
+        "slotMinutesValue": "30 Min.",
+        "slotMinutesHelp": "Reservierungen gibt es alle 30 Minuten (nicht änderbar).",
+        "lastSlot": "Letzte Zeit vor Schließung (Minuten)",
+        "lastSlotHelp": "Wie viele Minuten vor Schließung zuletzt reserviert werden kann.",
+        "partyMin": "Mindestanzahl Personen",
+        "partyMax": "Höchstanzahl Personen",
+        "partyHelp": "Personen pro Online-Reservierung.",
+        "capacity": "Kapazität pro Zeitfenster (Personen)",
+        "capacityHelp": "Höchstzahl an Personen in einem 30-Minuten-Zeitfenster.",
+        "minLead": "Mindestvorlauf (Minuten)",
+        "minLeadHelp": "Kurzfristiger kann nicht online reserviert werden.",
+        "maxAdvance": "Maximaler Vorlauf (Tage)",
+        "maxAdvanceHelp": "Wie viele Tage im Voraus reserviert werden kann.",
+        "sameDay": "Online-Reservierungen für denselben Tag erlauben",
+        "save": "Einstellungen speichern",
+        "saved": "Einstellungen gespeichert."
+      },
+      "templates": {
+        "title": "E-Mail-Texte",
+        "intro": "Die Texte, die Gäste erhalten. Jeder Text wird einzeln gespeichert, auf Deutsch und auf Spanisch.",
+        "receivedNote": "Der Text „Anfrage erhalten“ wird automatisch beim Eingang einer Reservierung gesendet. Die anderen sind Standardtexte: Das Personal kann sie vor dem Senden der Entscheidung bearbeiten.",
+        "variablesTitle": "Verfügbare Variablen",
+        "variablesHint": "Sie werden beim Versand ersetzt:",
+        "variables": {
+          "name": "Name des Gastes",
+          "date": "Datum der Reservierung",
+          "time": "Uhrzeit der Reservierung",
+          "party": "Anzahl der Personen"
+        },
+        "kinds": {
+          "received": "Anfrage erhalten (automatisch)",
+          "confirmed": "Reservierung bestätigt",
+          "rejected": "Reservierung abgelehnt",
+          "cancelled": "Reservierung storniert"
+        },
+        "languages": {
+          "de": "Deutsch",
+          "es": "Spanisch"
+        },
+        "subject": "Betreff",
+        "body": "Nachricht",
+        "counter": "{{count}} von {{max}} Zeichen",
+        "preview": "Vorschau (mit Beispieldaten)",
+        "previewSubject": "Betreff:",
+        "save": "Text speichern",
+        "saveNamed": "Text {{kind}} ({{lang}}) speichern",
+        "saved": "Text gespeichert."
+      }
     }
   },
   "validation": {
@@ -348,7 +603,18 @@
     "invalidCategory": "Bitte eine aktive Kategorie wählen.",
     "noImage": "Das Gericht hat kein Foto.",
     "imageTooLarge": "Das Foto ist zu groß (max. 10 MB, 40 Megapixel).",
-    "imageType": "Nur Fotos im Format JPEG, PNG oder WebP."
+    "imageType": "Nur Fotos im Format JPEG, PNG oder WebP.",
+    "date": "Bitte ein gültiges Datum wählen.",
+    "time": "Bitte eine gültige Uhrzeit wählen.",
+    "phone": "Bitte eine gültige Telefonnummer eingeben (nur Ziffern, + und Leerzeichen).",
+    "language": "Ungültige Sprache.",
+    "privacy": "Bitte die Datenschutzerklärung akzeptieren.",
+    "range": "Der Bereich ist ungültig.",
+    "overlap": "Die Zeiträume überschneiden sich.",
+    "int": "Bitte eine ganze Zahl eingeben.",
+    "partyMin": "Bitte mindestens eine Person angeben.",
+    "partyMax": "Zu viele Personen für eine Online-Reservierung.",
+    "partySizeRange": "Personenzahl außerhalb des erlaubten Bereichs."
   },
   "common": {
     "close": "Schließen"
@@ -423,7 +689,7 @@
       "overview": {
         "title": "Überblick",
         "p1": "Diese Website informiert über das Restaurant: Speisekarte, Öffnungszeiten, Geschichte und Kontaktdaten. Wir verarbeiten dabei so wenige personenbezogene Daten wie möglich.",
-        "p2": "Auf dieser Website gibt es derzeit keine Formulare und keine Kundenkonten."
+        "p2": "Für Tischreservierungen gibt es ein Formular (siehe unten). Kundenkonten gibt es nicht."
       },
       "controller": {
         "title": "Verantwortlicher",
@@ -452,6 +718,16 @@
         "p1": "Wenn Sie uns anrufen oder schreiben, verarbeiten wir Ihre Angaben (zum Beispiel Name, Telefonnummer, E-Mail-Adresse und den Inhalt Ihrer Nachricht) nur, um Ihre Anfrage zu bearbeiten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, wenn die Anfrage mit einem Vertrag zusammenhängt, sonst Art. 6 Abs. 1 lit. f DSGVO (Bearbeitung von Anfragen).",
         "p2": "Wir löschen die Daten, sobald sie dafür nicht mehr erforderlich sind und keine gesetzlichen Aufbewahrungspflichten entgegenstehen."
       },
+      "reservations": {
+        "title": "Tischreservierungen",
+        "p1": "Zweck: Wenn Sie online einen Tisch anfragen, verarbeiten wir Ihre Angaben ausschließlich, um die Reservierung zu bearbeiten, zu bestätigen und durchzuführen.",
+        "p2": "Daten: Name, E-Mail-Adresse, Telefonnummer, optional eine Anmerkung, Datum und Uhrzeit, Personenzahl sowie die Sprache Ihrer Anfrage. Außerdem protokollieren wir, wann die Anfrage eingegangen ist und wie sie bearbeitet wurde (Status, gesendete E-Mails). Bitte tragen Sie in die Anmerkung nur das Nötigste ein (zum Beispiel Allergien). Gesundheitsbezogene Angaben, die Sie dort freiwillig machen, nutzen wir ausschließlich, um Ihren Besuch vorzubereiten.",
+        "p3": "Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen und Durchführung der Reservierung). Die Angaben (außer der Anmerkung) sind für die Bearbeitung der Reservierung erforderlich; ohne sie ist keine Reservierung möglich.",
+        "p4": "Empfänger: Die Angaben sehen nur die Mitarbeitenden des Restaurants im Verwaltungsbereich. Die E-Mails an Sie (Eingangsbestätigung und Antwort) werden über einen SMTP-Anbieter versendet. Anbieter: {{smtp}}. Mit ihm wird ein Auftragsverarbeitungsvertrag geschlossen. Es werden keine Widgets oder Dienste von Drittanbietern eingebunden.",
+        "p5": "Speicherdauer: Spätestens 90 Tage nach dem Reservierungsdatum anonymisieren wir Name, E-Mail-Adresse, Telefonnummer und Anmerkung in der Datenbank unwiderruflich. Kopien in den Benachrichtigungs-E-Mails im Postfach des Restaurants und beim E-Mail-Anbieter löschen wir nach der dort festgelegten Aufbewahrungsfrist: {{mailbox}}.",
+        "p6": "Spam-Schutz: Wir verwenden ein verstecktes Formularfeld und eine Begrenzung der Anfragen pro Zeitraum. Dafür werden keine Cookies und kein Tracking eingesetzt; die IP-Adresse wird nur kurzzeitig im Arbeitsspeicher für die Begrenzung genutzt.",
+        "rightsLink": "Ihre Rechte (Auskunft, Löschung u. a.)"
+      },
       "rights": {
         "title": "Ihre Rechte",
         "p1": "Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21).",
@@ -466,6 +742,78 @@
         "title": "Stand",
         "p1": "Stand: {{date}}. Wir passen diese Erklärung an, wenn sich die Website oder die Rechtslage ändert."
       }
+    }
+  },
+  "reservations": {
+    "lead": "Wählen Sie Personen, Tag und Uhrzeit. Wir bestätigen Ihre Reservierung per E-Mail. Bezahlt wird im Restaurant.",
+    "progress": "Schritte der Reservierung",
+    "steps": {
+      "party": "Personen",
+      "date": "Datum",
+      "time": "Uhrzeit",
+      "details": "Angaben"
+    },
+    "next": "Weiter",
+    "back": "Zurück",
+    "submit": "Anfrage senden",
+    "sending": "Wird gesendet …",
+    "retry": "Erneut versuchen",
+    "summary": {
+      "title": "Ihre Reservierung",
+      "pending": "noch nicht gewählt",
+      "hint": "Wählen Sie die Personenzahl"
+    },
+    "party": {
+      "heading": "Wie viele Personen?",
+      "groupLabel": "Anzahl der Personen",
+      "option_one": "{{count}} Person",
+      "option_other": "{{count}} Personen",
+      "more": "Mehr",
+      "moreText": "Für Gruppen mit mehr als {{max}} Personen rufen Sie uns bitte an unter",
+      "orContact": "oder schreiben Sie uns über die",
+      "contactLink": "Kontaktseite",
+      "loading": "Wird geladen …"
+    },
+    "date": {
+      "heading": "Welcher Tag?",
+      "loading": "Freie Tage werden geladen …",
+      "noDays": "In diesem Monat sind keine Tage frei. Versuchen Sie den nächsten Monat.",
+      "sameDay": "Reservierungen für denselben Tag nehmen wir nur telefonisch an:"
+    },
+    "time": {
+      "heading": "Welche Uhrzeit?",
+      "lunch": "Mittag",
+      "dinner": "Abend",
+      "full": "ausgebucht",
+      "loading": "Uhrzeiten werden geladen …",
+      "empty": "An diesem Tag sind für Ihre Gruppe keine Uhrzeiten frei. Bitte einen anderen Tag wählen."
+    },
+    "details": {
+      "heading": "Ihre Angaben",
+      "requiredHint": "Felder mit * sind Pflichtfelder.",
+      "name": "Name",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "comment": "Anmerkung",
+      "optional": "optional",
+      "privacyShort": "Datenschutz",
+      "privacyBefore": "Ich habe die",
+      "privacyLink": "Datenschutzerklärung",
+      "privacyAfter": " gelesen und akzeptiere sie.",
+      "newTab": "(öffnet in neuem Tab)",
+      "commentHint": "Bitte nur das Nötigste angeben (z. B. Allergien)."
+    },
+    "errors": {
+      "slotFull": "Diese Uhrzeit ist leider nicht mehr frei. Bitte wählen Sie eine andere.",
+      "rateLimited": "Zu viele Versuche. Bitte warten Sie einige Minuten und versuchen Sie es erneut.",
+      "network": "Keine Verbindung oder der Server antwortet nicht. Bitte erneut versuchen.",
+      "generic": "Die Anfrage konnte nicht gesendet werden. Bitte Angaben prüfen und erneut versuchen.",
+      "loadFailed": "Die Verfügbarkeit konnte nicht geladen werden."
+    },
+    "success": {
+      "title": "Anfrage erhalten",
+      "next": "Wir antworten Ihnen per E-Mail und bestätigen die Reservierung. Bitte prüfen Sie Ihr Postfach (auch den Spam-Ordner).",
+      "home": "Zur Startseite"
     }
   }
 }

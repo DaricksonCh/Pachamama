@@ -54,11 +54,33 @@ describe('legalHasPlaceholders with not-applicable fields', () => {
       contentResponsible: 'F',
       hostingProvider: 'G',
       logRetention: 'H',
+      smtpProvider: 'I',
+      mailboxRetention: 'J',
       addressConfirmed: true,
     });
     expect(legalHasPlaceholders()).toBe(false);
 
     legal.commercialRegister = LEGAL_PLACEHOLDER;
     expect(legalHasPlaceholders()).toBe(true);
+  });
+
+  it('keeps blocking while the mailbox retention is still a placeholder', () => {
+    Object.assign(legal, {
+      operatorName: 'A',
+      legalForm: 'B',
+      representative: 'C',
+      vatId: 'D',
+      economicId: null,
+      commercialRegister: null,
+      supervisoryAuthority: 'E',
+      contentResponsible: 'F',
+      hostingProvider: 'G',
+      logRetention: 'H',
+      smtpProvider: 'I',
+      addressConfirmed: true,
+    });
+    expect(legalHasPlaceholders()).toBe(true);
+    legal.mailboxRetention = '30 Tage';
+    expect(legalHasPlaceholders()).toBe(false);
   });
 });

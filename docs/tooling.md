@@ -82,6 +82,9 @@ Criterio de selección: fuente oficial (Anthropic, el fabricante de la herramien
 | Programa          | Estado                  |
 | ----------------- | ----------------------- |
 | GitHub CLI (`gh`) | Instalado y autenticado |
+| Mailpit           | Solo desarrollo local   |
+
+**Mailpit** (servidor SMTP de pruebas que captura los correos sin enviarlos): SMTP en el puerto **1025**, interfaz web en http://localhost:8025. Se instala a mano desde las releases oficiales de GitHub (`axllent/mailpit`); no es una dependencia del proyecto y nunca se usa en producción.
 
 ## Opcionales
 

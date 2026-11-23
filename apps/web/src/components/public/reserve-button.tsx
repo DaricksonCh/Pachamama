@@ -27,8 +27,9 @@ interface ReserveButtonProps {
 }
 
 /**
- * The single "Reserve a table" call to action. Until phase 7 it opens a phone call; with
- * `RESERVATIONS_MODE = 'form'` every instance links to the reservations page instead.
+ * The single "Reserve a table" call to action. With
+ * `RESERVATIONS_MODE = 'form'` (phase 7) every instance links to the reservations page; the
+ * 'phone' mode opens a phone call instead.
  */
 export function ReserveButton({
   tone = 'onLight',

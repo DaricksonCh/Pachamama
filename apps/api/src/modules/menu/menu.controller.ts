@@ -10,21 +10,8 @@ import {
 import type { Request, RequestHandler } from 'express';
 import { z } from 'zod';
 import { AppError } from '../../lib/app-error';
+import { parseOrThrow } from '../../lib/parse';
 import type { MenuService } from './menu.service';
-
-/** Valida con Zod; en error → 400 con el detalle por campo para el formulario. */
-function parse<T extends z.ZodType>(schema: T, input: unknown): z.output<T> {
-  const result = schema.safeParse(input);
-  if (!result.success) {
-    throw new AppError(
-      400,
-      'VALIDATION_ERROR',
-      'Invalid input',
-      z.flattenError(result.error).fieldErrors,
-    );
-  }
-  return result.data;
-}
 
 const idParam = z.coerce.number().int().positive();
 const flag = z.enum(['true', 'false']).transform((v) => v === 'true');
@@ -38,7 +25,7 @@ const dishQuerySchema = z.object({
 });
 const categoryQuerySchema = z.object({ status: z.enum(MENU_STATUSES).optional() });
 
-const id = (req: Request) => parse(idParam, req.params.id);
+const id = (req: Request) => parseOrThrow(idParam, req.params.id);
 
 export function createMenuController(service: MenuService) {
   const summary: RequestHandler = async (_req, res) => {
@@ -46,42 +33,45 @@ export function createMenuController(service: MenuService) {
   };
 
   const listCategories: RequestHandler = async (req, res) => {
-    const { status } = parse(categoryQuerySchema, req.query);
+    const { status } = parseOrThrow(categoryQuerySchema, req.query);
     res.json({ data: await service.listCategories(status) });
   };
   const getCategory: RequestHandler = async (req, res) => {
     res.json({ data: await service.getCategory(id(req)) });
   };
   const createCategory: RequestHandler = async (req, res) => {
-    const data = await service.createCategory(parse(categoryInputSchema, req.body));
+    const data = await service.createCategory(parseOrThrow(categoryInputSchema, req.body));
     res.status(201).json({ data });
   };
   const updateCategory: RequestHandler = async (req, res) => {
-    const data = await service.updateCategory(id(req), parse(categoryUpdateSchema, req.body));
+    const data = await service.updateCategory(
+      id(req),
+      parseOrThrow(categoryUpdateSchema, req.body),
+    );
     res.json({ data });
   };
   const reorderCategories: RequestHandler = async (req, res) => {
-    await service.reorderCategories(parse(reorderSchema, req.body).ids);
+    await service.reorderCategories(parseOrThrow(reorderSchema, req.body).ids);
     res.status(204).end();
   };
 
   const listDishes: RequestHandler = async (req, res) => {
-    res.json({ data: await service.listDishes(parse(dishQuerySchema, req.query)) });
+    res.json({ data: await service.listDishes(parseOrThrow(dishQuerySchema, req.query)) });
   };
   const getDish: RequestHandler = async (req, res) => {
     res.json({ data: await service.getDish(id(req)) });
   };
   const createDish: RequestHandler = async (req, res) => {
-    const data = await service.createDish(parse(dishInputSchema, req.body));
+    const data = await service.createDish(parseOrThrow(dishInputSchema, req.body));
     res.status(201).json({ data });
   };
   const updateDish: RequestHandler = async (req, res) => {
     const role = res.locals.session?.user.role;
-    const data = await service.updateDish(id(req), parse(dishUpdateSchema, req.body), role);
+    const data = await service.updateDish(id(req), parseOrThrow(dishUpdateSchema, req.body), role);
     res.json({ data });
   };
   const setDishImage: RequestHandler = async (req, res) => {
-    const alt = parse(imageAltSchema, req.body);
+    const alt = parseOrThrow(imageAltSchema, req.body);
     if (!req.file) {
       throw new AppError(400, 'VALIDATION_ERROR', 'Image file required', {
         image: ['validation.required'],
@@ -93,7 +83,7 @@ export function createMenuController(service: MenuService) {
     res.json({ data: await service.removeDishImage(id(req)) });
   };
   const reorderDishes: RequestHandler = async (req, res) => {
-    await service.reorderDishes(parse(reorderSchema, req.body).ids);
+    await service.reorderDishes(parseOrThrow(reorderSchema, req.body).ids);
     res.status(204).end();
   };
 

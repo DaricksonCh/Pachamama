@@ -54,12 +54,12 @@ test.describe('flujo de usuario: idioma y navegación', () => {
     await expect(page).toHaveURL(/\/es$/);
   });
 
-  test('el botón Reservar llama al restaurante', async ({ page }) => {
+  test('el botón Reservar de la portada lleva al asistente de reservas', async ({ page }) => {
     await page.goto('/de');
     const hero = page.getByRole('region', { name: TITLE_DE });
     await expect(hero.getByRole('link', { name: /Tisch reservieren/ })).toHaveAttribute(
       'href',
-      /^tel:\+49/,
+      '/de/reservieren',
     );
   });
 

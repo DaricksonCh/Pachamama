@@ -14,13 +14,23 @@ if (!process.env.VITEST) {
   }
 }
 
+/** Un valor vacío en .env (`CLAVE=`) equivale a no definirlo: aplica el valor por defecto. */
+const unsetIfEmpty = <T extends z.ZodType>(schema: T) =>
+  z.preprocess((value) => (value === '' ? undefined : value), schema);
+
 /** `trust proxy` de Express: número de saltos, lista de IPs/subredes o palabras como `loopback`. */
 const trustProxySchema = z
   .string()
   .default('loopback')
   .transform((value) => (/^\d+$/.test(value) ? Number(value) : value));
 
-const envSchema = z
+const emptyToUndefined = z
+  .string()
+  .optional()
+  .transform((value) => (value === '' ? undefined : value));
+
+/** Exportado solo para poder probar las reglas de producción. */
+export const envSchema = z
   .object({
     NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
     API_PORT: z.coerce.number().int().positive().default(3000),
@@ -40,8 +50,40 @@ const envSchema = z
     RATE_LIMIT_API_PER_MIN: z.coerce.number().int().positive().default(300),
     RATE_LIMIT_IMAGE_PER_10MIN: z.coerce.number().int().positive().default(30),
     RATE_LIMIT_PDF_PER_MIN: z.coerce.number().int().positive().default(30),
+    RATE_LIMIT_RESERVATION_PER_10MIN: z.coerce.number().int().positive().default(5),
+    /** Correo (SMTP). En desarrollo: Mailpit en localhost:1025 (ver docs/tooling.md). */
+    SMTP_HOST: unsetIfEmpty(z.string().min(1).default('localhost')),
+    SMTP_PORT: unsetIfEmpty(z.coerce.number().int().positive().default(1025)),
+    SMTP_SECURE: unsetIfEmpty(
+      z
+        .enum(['true', 'false'])
+        .default('false')
+        .transform((value) => value === 'true'),
+    ),
+    /** Exige STARTTLS cuando SMTP_SECURE=false. En producción: SMTP_SECURE o SMTP_REQUIRE_TLS. */
+    SMTP_REQUIRE_TLS: unsetIfEmpty(
+      z
+        .enum(['true', 'false'])
+        .default('false')
+        .transform((value) => value === 'true'),
+    ),
+    // Un valor vacío en .env equivale a no definirlo.
+    SMTP_USER: emptyToUndefined,
+    SMTP_PASS: emptyToUndefined,
+    MAIL_FROM: unsetIfEmpty(z.string().min(1).default('Pachamama <reservierung@localhost>')),
+    /** Dirección del personal que recibe el aviso de cada solicitud de reserva. */
+    RESERVATIONS_NOTIFY_EMAIL: unsetIfEmpty(z.string().min(1).default('reservierung@localhost')),
+    /** Días tras la fecha de la reserva antes de anonimizarla (DSGVO; lo aplica `npm run db:cleanup`). */
+    RESERVATIONS_RETENTION_DAYS: unsetIfEmpty(z.coerce.number().int().min(30).default(90)),
   })
   .superRefine((env, ctx) => {
+    if (Boolean(env.SMTP_USER) !== Boolean(env.SMTP_PASS)) {
+      ctx.addIssue({
+        code: 'custom',
+        path: [env.SMTP_USER ? 'SMTP_PASS' : 'SMTP_USER'],
+        message: 'SMTP_USER y SMTP_PASS deben definirse juntos',
+      });
+    }
     if (env.NODE_ENV !== 'production') return;
     // En producción no se aceptan valores de desarrollo ni marcadores sin rellenar.
     for (const key of ['WEB_ORIGIN', 'BETTER_AUTH_URL'] as const) {
@@ -59,6 +101,33 @@ const envSchema = z
           code: 'custom',
           path: [key],
           message: `${key} sigue con el valor de ejemplo`,
+        });
+      }
+    }
+    const smtpHost = env.SMTP_HOST.trim().toLowerCase();
+    if (
+      ['localhost', '127.0.0.1', '::1', '[::1]', '0.0.0.0'].includes(smtpHost) ||
+      smtpHost.endsWith('.localhost')
+    ) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['SMTP_HOST'],
+        message: 'SMTP_HOST no puede ser localhost en producción',
+      });
+    }
+    if (!env.SMTP_SECURE && !env.SMTP_REQUIRE_TLS) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['SMTP_REQUIRE_TLS'],
+        message: 'En producción define SMTP_SECURE=true o SMTP_REQUIRE_TLS=true (correo con TLS)',
+      });
+    }
+    for (const key of ['MAIL_FROM', 'RESERVATIONS_NOTIFY_EMAIL'] as const) {
+      if (/localhost|example/i.test(env[key])) {
+        ctx.addIssue({
+          code: 'custom',
+          path: [key],
+          message: `${key} sigue con un valor de ejemplo`,
         });
       }
     }

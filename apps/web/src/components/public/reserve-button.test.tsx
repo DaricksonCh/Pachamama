@@ -20,7 +20,7 @@ describe('ReserveButton', () => {
     );
   });
 
-  it('links to the localized reservations page in form mode (phase 7)', async () => {
+  it('links to the localized reservations page in form mode', async () => {
     await i18n.changeLanguage('es');
     render(<ReserveButton mode="form" />, { wrapper: MemoryRouter });
 
