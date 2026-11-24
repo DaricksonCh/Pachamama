@@ -31,7 +31,7 @@ let registered = false;
 
 /**
  * Registra las fuentes incrustadas (OFL, archivos locales: nunca se piden a internet).
- * Fraunces (serif display) y Work Sans (sans de lectura), subconjunto latino de @fontsource
+ * Fraunces (serif display), Work Sans (sans de lectura) y Caveat (manuscrita), subconjunto latino de @fontsource
  * (U+0000–00FF, €, comillas y guiones): cubre alemán y español (ä ö ü ß ñ á « » – €).
  */
 function registerPdfFonts() {
@@ -54,6 +54,11 @@ function registerPdfFonts() {
       { src: file('work-sans-latin-600-normal.ttf'), fontWeight: 600 },
     ],
   });
+  // Caveat (manuscrita, OFL): solo frases cortas, como en la web.
+  Font.register({
+    family: fonts.script,
+    fonts: [{ src: file('caveat-latin-500-normal.woff'), fontWeight: 500 }],
+  });
   // Sin diccionarios de guionado para estas fuentes: nunca partir palabras.
   Font.registerHyphenationCallback((word) => [word]);
 }
@@ -61,7 +66,7 @@ function registerPdfFonts() {
 /** Descarta las fuentes ya cargadas: el siguiente render las vuelve a leer del disco. */
 function unloadPdfFonts() {
   const families = Font.getRegisteredFonts();
-  for (const family of [fonts.display, fonts.body]) {
+  for (const family of Object.values(fonts)) {
     for (const source of families[family]?.sources ?? []) {
       source.data = null;
       source.loadResultPromise = null;

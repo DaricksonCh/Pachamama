@@ -75,7 +75,7 @@ Por endpoint: caso feliz, validación (400), no encontrado (404), permisos (401/
 - Los **e2e levantan su propia API (3100) y web (5174)** contra `pachamama_test` (nunca reutilizan `npm run dev`) y cargan usuarios de prueba con `e2e:seed`.
 - En la CI, un contenedor MySQL 8.4 desechable (`TEST_DATABASE_URL`).
 - `e2e:seed` vacía también la carta y las reservas y deja la configuración de reservas en sus valores sembrados (horario martes–domingo 13:00–22:00, ajustes por defecto, 8 plantillas, sin cierres): cada ejecución de e2e empieza limpia.
-- Carta (fase 5): reglas y permisos (`menu.rules.test.ts`, `menu.admin.test.ts`), fotos con sharp (`images.test.ts`: formatos, límites, EXIF, path traversal), carta pública y PDF (`public-menu*.test.ts`: ETag, idiomas, glifos), seed (`menu-seed.test.ts`).
+- Carta (fase 5): reglas y permisos (`menu.rules.test.ts`, `menu.admin.test.ts`), fotos con sharp (`images.test.ts`: formatos, límites, EXIF, path traversal), carta pública y PDF (`public-menu*.test.ts`: ETag, idiomas, glifos, descripción y foto de cada plato; `pdf/layout.test.ts` y `pdf/photos.test.ts`: rejilla, colores y miniaturas), seed (`menu-seed.test.ts`).
 - En Windows con Node 24.15 había un cierre aleatorio de los workers por conexiones TCP (nodejs/node#62991): `src/test/supertest-keep-alive.ts` reutiliza conexiones. Usar Node ≥ 24.16.
 
 ### Frontend

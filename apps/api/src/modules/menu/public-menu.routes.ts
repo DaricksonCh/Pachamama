@@ -8,7 +8,7 @@ import type { MenuService } from './menu.service';
 import { pdfLabels } from './pdf/labels';
 import { renderMenuPdf } from './pdf/menu-pdf';
 import { createPdfCache, type PdfCache } from './pdf/pdf-cache';
-import { loadCategoryPhotos } from './pdf/photos';
+import { loadDishPhotos } from './pdf/photos';
 
 /**
  * Carta pública: datos sin información personal → se puede cachear, pero siempre revalidando
@@ -49,7 +49,7 @@ export const menuPdfCache = createPdfCache({
   onMenuChanged: menuEvents.onMenuChanged,
   async render(lang) {
     const menu = await menuService.publicMenu();
-    const photos = await loadCategoryPhotos(menu, env.UPLOADS_DIR);
+    const photos = await loadDishPhotos(menu, env.UPLOADS_DIR);
     return renderMenuPdf({ menu, lang, photos });
   },
 });
