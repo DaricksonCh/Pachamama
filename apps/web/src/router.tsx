@@ -49,7 +49,7 @@ const pageRoutes: RouteObject[] = [
   { path: '*', element: <Navigate to={`/${DEFAULT_LANGUAGE}`} replace /> },
 ];
 
-// Pathless root: every page shares ScrollRestoration (new page → top, back/forward → restored).
+// Pathless root: every new page opens at the top (back/forward left to the browser).
 export const routes: RouteObject[] = [{ element: <RootLayout />, children: pageRoutes }];
 
 export const router = createBrowserRouter(routes);
