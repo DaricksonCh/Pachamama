@@ -35,7 +35,7 @@ afterEach(() => {
 });
 
 describe('home opening hours', () => {
-  it('says it is open now and until when, with a one-line weekly summary', async () => {
+  it("says it is open now and until when, and shows only today's hours at first", async () => {
     mockHours({ hours: WEEK, closures: [] });
     // Tuesday 2026-11-24, 14:00 in Bremen.
     renderAt('2026-11-24T13:00:00Z');
@@ -43,12 +43,9 @@ describe('home opening hours', () => {
     expect(await screen.findByTestId('home-opening-status')).toHaveTextContent(
       'Abierto ahora · hasta las 22:00',
     );
-    const summary = screen.getByTestId('home-hours-summary');
-    expect(
-      within(summary)
-        .getAllByRole('listitem')
-        .map((li) => li.textContent),
-    ).toEqual(['Mar–Dom 13:00–22:00', 'Lun cerrado']);
+    // No whole-week list any more: the day buttons are the way to see the other days.
+    expect(screen.queryByTestId('home-hours-summary')).not.toBeInTheDocument();
+    expect(screen.queryByText(/Mar–Dom/)).not.toBeInTheDocument();
     // The week strip marks today (Tuesday) and the rest day (Monday), and today starts chosen.
     const days = within(
       screen.getByRole('group', { name: 'Ver el horario de un día' }),
@@ -74,16 +71,16 @@ describe('home opening hours', () => {
     const detail = screen.getByTestId('home-day-hours');
 
     fireEvent.click(screen.getByRole('button', { name: 'viernes' }));
-    expect(detail).toHaveTextContent('viernes · 12:00–23:00');
+    expect(detail).toHaveTextContent('Viernes · 12:00–23:00');
     expect(screen.getByRole('button', { name: 'viernes' })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByRole('button', { name: 'martes' })).toHaveAttribute('aria-pressed', 'false');
 
     fireEvent.click(screen.getByRole('button', { name: 'lunes' }));
-    expect(detail).toHaveTextContent('lunes · cerrado');
+    expect(detail).toHaveTextContent('Lunes · cerrado');
 
     // Thursday falls on a closure this week.
     fireEvent.click(screen.getByRole('button', { name: 'jueves' }));
-    expect(detail).toHaveTextContent('jueves · cerrado (26 de noviembre)');
+    expect(detail).toHaveTextContent('Jueves · cerrado (26 de noviembre)');
   });
 
   it('on the rest day says when it opens next', async () => {

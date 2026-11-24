@@ -40,7 +40,6 @@
       "link": "Cómo llegar y contacto",
       "script": "Y luego, sobremesa",
       "slow": "Quédate el tiempo que quieras.",
-      "restDays": "{{days}} cerrado",
       "closureAhead": "Cerrado del {{from}} al {{to}}",
       "pickDay": "Ver el horario de un día",
       "todayLabel": "Hoy, {{day}}",

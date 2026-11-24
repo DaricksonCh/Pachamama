@@ -40,7 +40,6 @@
       "link": "Anfahrt und Kontakt",
       "script": "Und danach: Sobremesa",
       "slow": "Bleiben Sie, so lange Sie möchten.",
-      "restDays": "{{days}} Ruhetag",
       "closureAhead": "Geschlossen vom {{from}} bis {{to}}",
       "pickDay": "Öffnungszeiten eines Tages anzeigen",
       "todayLabel": "Heute, {{day}}",

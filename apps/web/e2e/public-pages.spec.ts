@@ -173,7 +173,7 @@ test('la portada muestra las secciones en orden: historia, cocina y visita', asy
   ]);
 });
 
-test('la portada muestra el horario del panel: estado de hoy y resumen de la semana', async ({
+test('la portada muestra el horario del panel: estado de hoy y el día que se elija', async ({
   page,
 }) => {
   // e2e:seed leaves Tuesday–Sunday 13:00–22:00 and no closures.
@@ -181,10 +181,9 @@ test('la portada muestra el horario del panel: estado de hoy y resumen de la sem
   await expect(page.getByTestId('home-opening-status')).toHaveText(
     /^(Jetzt geöffnet|Heute ab|Heute Ruhetag|Gerade geschlossen)/,
   );
-  await expect(page.getByTestId('home-hours-summary').getByRole('listitem')).toHaveText([
-    'Di–So 13:00–22:00',
-    'Mo Ruhetag',
-  ]);
+  // Only today's hours show at first; the old whole-week list is gone.
+  await expect(page.getByTestId('home-day-hours')).toHaveText(/^Heute, /);
+  await expect(page.getByTestId('home-hours-summary')).toHaveCount(0);
   // Any day can be picked to see its hours.
   await page.getByRole('button', { name: 'Freitag' }).click();
   await expect(page.getByRole('button', { name: 'Freitag' })).toHaveAttribute(

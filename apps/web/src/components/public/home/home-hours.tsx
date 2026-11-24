@@ -1,7 +1,6 @@
 import {
   RESTAURANT_INFO,
   addDays,
-  groupWeek,
   nextOpening,
   openingStatus,
   toRestaurantLocal,
@@ -56,9 +55,9 @@ function Hours({ data }: { data: PublicOpeningHours }) {
   const { text, open } = useStatusText(data, now);
   const today = weekdayOfDate(toRestaurantLocal(now).date);
   const narrow = weekdayNames(lang, 'narrow');
-  // Capitalised: each summary line starts with a day name (es: "mar" → "Mar").
-  const short = weekdayNames(lang, 'short').map((d) => d.charAt(0).toUpperCase() + d.slice(1));
   const long = weekdayNames(lang, 'long');
+  // The day line starts with the day's name, capitalised (es: "viernes" → "Viernes").
+  const capitalise = (s = '') => s.charAt(0).toUpperCase() + s.slice(1);
   const closure = upcomingClosure(now, data);
   const week = weekSchedule(data.hours);
   const [selected, setSelected] = useState(today);
@@ -126,7 +125,7 @@ function Hours({ data }: { data: PublicOpeningHours }) {
         <span className="font-semibold">
           {selected === today
             ? t('home.visit.todayLabel', { day: long[selected] })
-            : long[selected]}
+            : capitalise(long[selected])}
         </span>
         {' · '}
         {dayClosed
@@ -135,21 +134,6 @@ function Hours({ data }: { data: PublicOpeningHours }) {
             ? t('home.visit.dayRest')
             : selectedRanges.map((r) => `${r.opens}–${r.closes}`).join(', ')}
       </p>
-
-      <ul className="text-[0.95rem] tabular-nums" data-testid="home-hours-summary">
-        {groupWeek(data.hours).map((group) => {
-          const first = short[group.weekdays[0]!];
-          const last = short[group.weekdays.at(-1)!];
-          const days = group.weekdays.length > 1 ? `${first}–${last}` : first;
-          return (
-            <li key={group.weekdays.join()}>
-              {group.ranges.length === 0
-                ? t('home.visit.restDays', { days })
-                : `${days} ${group.ranges.map((r) => `${r.opens}–${r.closes}`).join(', ')}`}
-            </li>
-          );
-        })}
-      </ul>
 
       {closure && (
         <p className="mt-2 inline-block rounded bg-aji/10 px-2.5 py-0.5 text-sm font-semibold text-aji-deep">
@@ -165,7 +149,7 @@ function Hours({ data }: { data: PublicOpeningHours }) {
 
 /**
  * Opening hours on the home page (ADR 0015): what the staff keep in the panel, read for today.
- * A status line, the week as day buttons (the chosen day's hours below) and one compact summary. Falls back to the fixed text.
+ * A status line and the week as day buttons; the chosen day's hours (today at first) show below. Falls back to the fixed text.
  */
 export function HomeHours() {
   const { t } = useTranslation();
