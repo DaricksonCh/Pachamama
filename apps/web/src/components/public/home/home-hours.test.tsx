@@ -1,6 +1,6 @@
 import { RESTAURANT_INFO } from '@pachamama/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
@@ -35,7 +35,7 @@ afterEach(() => {
 });
 
 describe('home opening hours', () => {
-  it('says it is open now and until when, with a one-line weekly summary', async () => {
+  it("says it is open now and until when, and shows only today's hours at first", async () => {
     mockHours({ hours: WEEK, closures: [] });
     // Tuesday 2026-11-24, 14:00 in Bremen.
     renderAt('2026-11-24T13:00:00Z');
@@ -43,19 +43,44 @@ describe('home opening hours', () => {
     expect(await screen.findByTestId('home-opening-status')).toHaveTextContent(
       'Abierto ahora · hasta las 22:00',
     );
-    const summary = screen.getByTestId('home-hours-summary');
-    expect(
-      within(summary)
-        .getAllByRole('listitem')
-        .map((li) => li.textContent),
-    ).toEqual(['Mar–Dom 13:00–22:00', 'Lun cerrado']);
-    // The week strip marks today (Tuesday) and the rest day (Monday); it is hidden from AT.
-    const week = screen.getByTestId('home-week');
-    expect(week).toHaveAttribute('aria-hidden', 'true');
-    const days = week.querySelectorAll('li');
+    // No whole-week list any more: the day buttons are the way to see the other days.
+    expect(screen.queryByTestId('home-hours-summary')).not.toBeInTheDocument();
+    expect(screen.queryByText(/Mar–Dom/)).not.toBeInTheDocument();
+    // The week strip marks today (Tuesday) and the rest day (Monday), and today starts chosen.
+    const days = within(
+      screen.getByRole('group', { name: 'Ver el horario de un día' }),
+    ).getAllByRole('button');
     expect(days).toHaveLength(7);
     expect(days[1]).toHaveAttribute('data-today');
+    expect(days[1]).toHaveAttribute('aria-pressed', 'true');
     expect(days[0]).toHaveAttribute('data-rest');
+    expect(screen.getByTestId('home-day-hours')).toHaveTextContent('Hoy, martes · 13:00–22:00');
+  });
+
+  it('shows the hours of any day the visitor picks', async () => {
+    mockHours({
+      hours: [
+        ...WEEK.filter((r) => r.weekday !== 5),
+        { weekday: 5, opens: '12:00', closes: '23:00' },
+      ],
+      closures: [{ from: '2026-11-26', to: '2026-11-26' }],
+    });
+    // Tuesday 2026-11-24, 14:00 in Bremen.
+    renderAt('2026-11-24T13:00:00Z');
+    await screen.findByTestId('home-opening-status');
+    const detail = screen.getByTestId('home-day-hours');
+
+    fireEvent.click(screen.getByRole('button', { name: 'viernes' }));
+    expect(detail).toHaveTextContent('Viernes · 12:00–23:00');
+    expect(screen.getByRole('button', { name: 'viernes' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'martes' })).toHaveAttribute('aria-pressed', 'false');
+
+    fireEvent.click(screen.getByRole('button', { name: 'lunes' }));
+    expect(detail).toHaveTextContent('Lunes · cerrado');
+
+    // Thursday falls on a closure this week.
+    fireEvent.click(screen.getByRole('button', { name: 'jueves' }));
+    expect(detail).toHaveTextContent('Jueves · cerrado (26 de noviembre)');
   });
 
   it('on the rest day says when it opens next', async () => {
