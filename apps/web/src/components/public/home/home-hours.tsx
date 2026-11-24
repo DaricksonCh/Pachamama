@@ -1,5 +1,6 @@
 import {
   RESTAURANT_INFO,
+  addDays,
   groupWeek,
   nextOpening,
   openingStatus,
@@ -9,6 +10,7 @@ import {
   weekdayOfDate,
   type PublicOpeningHours,
 } from '@pachamama/shared';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useOpeningHours } from '@/features/opening-hours/api';
 import { useNow } from '@/features/opening-hours/use-now';
@@ -56,7 +58,14 @@ function Hours({ data }: { data: PublicOpeningHours }) {
   const narrow = weekdayNames(lang, 'narrow');
   // Capitalised: each summary line starts with a day name (es: "mar" → "Mar").
   const short = weekdayNames(lang, 'short').map((d) => d.charAt(0).toUpperCase() + d.slice(1));
+  const long = weekdayNames(lang, 'long');
   const closure = upcomingClosure(now, data);
+  const week = weekSchedule(data.hours);
+  const [selected, setSelected] = useState(today);
+  // The next date that falls on the chosen weekday (today included), to catch a closure on it.
+  const selectedDate = addDays(toRestaurantLocal(now).date, (selected - today + 7) % 7);
+  const dayClosed = data.closures.some((c) => c.from <= selectedDate && selectedDate <= c.to);
+  const selectedRanges = week.find((d) => d.weekday === selected)?.ranges ?? [];
 
   return (
     <>
@@ -73,29 +82,59 @@ function Hours({ data }: { data: PublicOpeningHours }) {
         {text}
       </p>
 
-      {/* The week at a glance: today filled, rest days dashed. Decorative; the text below says it. */}
-      <ol aria-hidden="true" className="my-2.5 flex gap-1 sm:gap-1.5" data-testid="home-week">
-        {weekSchedule(data.hours).map((day) => {
+      {/* The week as day buttons: today filled, rest days dashed, the chosen day ringed. */}
+      <div
+        role="group"
+        aria-label={t('home.visit.pickDay')}
+        className="my-2.5 flex gap-1 sm:gap-1.5"
+        data-testid="home-week"
+      >
+        {week.map((day) => {
           const rest = day.ranges.length === 0;
           const isToday = day.weekday === today;
+          const isSelected = day.weekday === selected;
           return (
-            <li
+            <button
               key={day.weekday}
+              type="button"
+              aria-pressed={isSelected}
+              aria-label={long[day.weekday]}
+              title={long[day.weekday]}
+              onClick={() => setSelected(day.weekday)}
               data-today={isToday || undefined}
               data-rest={rest || undefined}
               className={cn(
-                'grid size-7 place-items-center rounded-full border-[1.5px] text-xs font-semibold sm:size-8 sm:text-[0.8rem]',
+                'grid size-9 cursor-pointer place-items-center rounded-full border-[1.5px] text-xs font-semibold transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-selva motion-reduce:transition-none motion-reduce:hover:translate-y-0 sm:size-10 sm:text-[0.8rem]',
                 rest
                   ? 'border-dashed border-muted-foreground text-muted-foreground line-through'
                   : 'border-selva text-selva',
                 isToday && (rest ? 'bg-muted-foreground text-papel' : 'bg-selva text-papel'),
+                isSelected && 'ring-2 ring-chicha ring-offset-2 ring-offset-background',
               )}
             >
-              {narrow[day.weekday]}
-            </li>
+              <span aria-hidden="true">{narrow[day.weekday]}</span>
+            </button>
           );
         })}
-      </ol>
+      </div>
+
+      <p
+        className="mb-2 text-[0.95rem] tabular-nums"
+        aria-live="polite"
+        data-testid="home-day-hours"
+      >
+        <span className="font-semibold">
+          {selected === today
+            ? t('home.visit.todayLabel', { day: long[selected] })
+            : long[selected]}
+        </span>
+        {' · '}
+        {dayClosed
+          ? t('home.visit.dayClosed', { date: formatDayMonth(lang, selectedDate) })
+          : selectedRanges.length === 0
+            ? t('home.visit.dayRest')
+            : selectedRanges.map((r) => `${r.opens}–${r.closes}`).join(', ')}
+      </p>
 
       <ul className="text-[0.95rem] tabular-nums" data-testid="home-hours-summary">
         {groupWeek(data.hours).map((group) => {
@@ -126,7 +165,7 @@ function Hours({ data }: { data: PublicOpeningHours }) {
 
 /**
  * Opening hours on the home page (ADR 0015): what the staff keep in the panel, read for today.
- * A status line, the week at a glance and one compact summary. Falls back to the fixed text.
+ * A status line, the week as day buttons (the chosen day's hours below) and one compact summary. Falls back to the fixed text.
  */
 export function HomeHours() {
   const { t } = useTranslation();

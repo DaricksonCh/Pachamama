@@ -185,6 +185,15 @@ test('la portada muestra el horario del panel: estado de hoy y resumen de la sem
     'Di–So 13:00–22:00',
     'Mo Ruhetag',
   ]);
+  // Any day can be picked to see its hours.
+  await page.getByRole('button', { name: 'Freitag' }).click();
+  await expect(page.getByRole('button', { name: 'Freitag' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await expect(page.getByTestId('home-day-hours')).toHaveText(/Freitag · 13:00–22:00$/);
+  await page.getByRole('button', { name: 'Montag' }).click();
+  await expect(page.getByTestId('home-day-hours')).toHaveText(/Montag · Ruhetag$/);
 });
 
 test('la galería de Historia avanza con las flechas y los puntos', async ({ page }) => {
