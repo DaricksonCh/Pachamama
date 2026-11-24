@@ -71,12 +71,24 @@ export function MenuLoom({ categories, lang }: { categories: Category[]; lang: L
                 aria-current={isActive ? 'true' : undefined}
                 style={{ '--band': bandTone(index).band } as CSSProperties}
                 className="group block min-h-11 rounded-sm pt-1 pb-1.5 text-sm leading-tight font-medium text-muted-foreground hover:text-tierra focus-visible:outline-2 focus-visible:outline-offset-2 aria-[current]:font-semibold aria-[current]:text-tierra"
-                onClick={() => {
+                onClick={(event) => {
+                  const anchor = categoryAnchor(category.id);
+                  const section = document.getElementById(anchor);
+                  const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
+                  if (section && !modified) {
+                    // Glide to the section like a mouse-wheel scroll instead of jumping; reduced
+                    // motion keeps the instant jump. scroll-padding/-margin still clear the bars.
+                    event.preventDefault();
+                    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+                    section.scrollIntoView({
+                      behavior: reduce ? 'auto' : 'smooth',
+                      block: 'start',
+                    });
+                    window.history.pushState(window.history.state, '', `#${anchor}`);
+                  }
                   // Move focus to the heading so keyboard and screen reader users land on the section.
                   requestAnimationFrame(() =>
-                    document
-                      .getElementById(`${categoryAnchor(category.id)}-title`)
-                      ?.focus({ preventScroll: true }),
+                    document.getElementById(`${anchor}-title`)?.focus({ preventScroll: true }),
                   );
                 }}
               >

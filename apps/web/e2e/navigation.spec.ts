@@ -35,6 +35,23 @@ test.describe('flujo de usuario: idioma y navegación', () => {
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(TITLE_DE);
   });
 
+  test('cada vista nueva se abre arriba aunque la anterior estuviera bajada', async ({
+    page,
+    isMobile,
+  }) => {
+    await page.goto('/de');
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+
+    if (isMobile) await page.getByRole('button', { name: 'Menü öffnen' }).click();
+    await page
+      .getByRole('link', { name: 'Geschichte', exact: true })
+      .filter({ visible: true })
+      .click();
+    await expect(page).toHaveURL(/\/de\/geschichte$/);
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+  });
+
   test('el cambio de idioma funciona solo con teclado', async ({ page, isMobile }) => {
     test.skip(isMobile, 'Navegación con teclado: solo escritorio');
     await page.goto('/de');

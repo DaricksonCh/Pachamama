@@ -1,6 +1,6 @@
 # Estrategia de pruebas — Pachamama
 
-> **Regla obligatoria:** ninguna tarea, fase o fusión se da por terminada hasta que **todas las pruebas pasen** (`npm run check:all` en verde, y `npm run db:check` si la tarea toca la BD). Si una prueba falla, se arregla la causa; nunca se borra, se salta ni se debilita un test para que pase.
+> **Regla obligatoria:** ningún módulo, fase, push o fusión se da por terminado hasta que **todas las pruebas pasen** (`npm run check:all` en verde, y `npm run db:check` si toca la BD). Durante el trabajo, cada tarea se verifica solo con lo que toca: `npm run typecheck`, los tests del paquete afectado y el spec e2e afectado. Si una prueba falla, se arregla la causa; nunca se borra, se salta ni se debilita un test para que pase.
 
 ## Comandos
 
@@ -10,7 +10,7 @@
 | `npm run test:e2e`  | Flujos de usuario en navegador real, escritorio y móvil           | Local + CI  |
 | `npm run db:check`  | Que la BD existe, es MySQL 8.4, utf8mb4 y tiene mínimo privilegio | Solo local  |
 | `npm run check`     | typecheck + lint + formato + tests unitarios                      | Local + CI  |
-| `npm run check:all` | `check` + build + e2e: **lo que hay que pasar antes de cerrar**   | Local + CI  |
+| `npm run check:all` | `check` + build + e2e: **al cerrar módulo/fase y antes de push**  | Local + CI  |
 
 `test:e2e` arranca API y web solo si no están ya en marcha. La primera vez hay que instalar el navegador: `npx -w @pachamama/web playwright install chromium`.
 
