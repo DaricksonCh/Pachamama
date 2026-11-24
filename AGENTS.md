@@ -134,6 +134,17 @@ Decidido por el usuario el 2026-11-23 (amplía el ADR 0013). Toda vista pública
 - Nada avanza solo (WCAG 2.2.2), el contraste es AA, se diseña primero para móvil y todos los textos llevan i18n de/es.
 - Nada de librerías de animación pesadas sin ADR.
 
+### Cómo diseñar un PDF o impreso (carta, folletos…)
+
+Decidido por el usuario el 2026-11-24. Se sigue el **mismo proceso** que en las vistas públicas (skills, referencias, 3–4 maquetas con contenido real, elegir antes de programar, plan → código → `check:all` → ADR), con estas diferencias:
+
+- **Skills:** además de las de diseño, `react-pdf` (el PDF se genera con `@react-pdf/renderer`, ADR 0009).
+- **Maquetas:** páginas A4 a tamaño real en el navegador (portada + al menos una página de platos y una de categoría corta), con nuestras fotos y la carta real de la BD.
+- **Identidad sin calco:** se puede partir de la web (bandas de la manta, ADR 0016), pero el PDF es un objeto de papel: se diseña para leerse impreso y en el móvil, no se copia la página.
+- **La carta lleva fotos de los platos** (decidido el 2026-11-24): cada foto con su hueco fijo en la maquetación (nunca se montan unas sobre otras) y con la resolución justa para su hueco (miniaturas de ~400 px, fotos grandes de ~800 px, en JPEG) para que el PDF pese poco.
+- **Lo que react-pdf permite:** solo flexbox y posición absoluta (sin CSS grid, sin `clip-path`, sin filtros), SVG propio para los adornos y fuentes locales incrustadas (incluida la manuscrita si se usa). Nada se diseña que no se pueda generar.
+- **Imprimible:** contraste AA, texto mínimo de 8 pt, márgenes seguros de impresión y ningún dato que dependa del color (alérgenos y dieta también con letra o texto). Todo en alemán y español.
+
 ## Stack (decidido — no cambiar sin ADR nuevo)
 
 | Capa          | Tecnología                                                                                                       |
