@@ -195,6 +195,21 @@ test('la portada muestra el horario del panel: estado de hoy y el día que se el
   await expect(page.getByTestId('home-day-hours')).toHaveText(/Montag · Ruhetag$/);
 });
 
+test('la portada con el horario cargado no se sale de la pantalla en horizontal (WCAG 1.4.10)', async ({
+  page,
+}) => {
+  await page.goto('/de');
+  await expect(page.getByTestId('home-week')).toBeVisible();
+  // A wider-than-screen block makes mobile browsers zoom out and hides parts of the page.
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      ),
+    )
+    .toBe(0);
+});
+
 test('la galería de Historia avanza con las flechas y los puntos', async ({ page }) => {
   await page.goto('/es/historia');
   const gallery = page.getByRole('region', { name: 'Momentos' });
