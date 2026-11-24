@@ -42,7 +42,7 @@ describe('renderMenuPdf: varios PDF en el mismo proceso', () => {
     const es = await renderMenuPdf({ menu, lang: 'es' });
     const text = await compactText(es);
     expect(text).toContain('HORARIO');
-    expect(text).toContain('VEGETARIANO');
+    expect(text).toContain('vegetariano');
     expect(text).toContain('Ocopa');
   });
 });

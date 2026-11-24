@@ -173,7 +173,7 @@ test('la portada muestra las secciones en orden: historia, cocina y visita', asy
   ]);
 });
 
-test('la portada muestra el horario del panel: estado de hoy y resumen de la semana', async ({
+test('la portada muestra el horario del panel: estado de hoy y el día que se elija', async ({
   page,
 }) => {
   // e2e:seed leaves Tuesday–Sunday 13:00–22:00 and no closures.
@@ -181,10 +181,33 @@ test('la portada muestra el horario del panel: estado de hoy y resumen de la sem
   await expect(page.getByTestId('home-opening-status')).toHaveText(
     /^(Jetzt geöffnet|Heute ab|Heute Ruhetag|Gerade geschlossen)/,
   );
-  await expect(page.getByTestId('home-hours-summary').getByRole('listitem')).toHaveText([
-    'Di–So 13:00–22:00',
-    'Mo Ruhetag',
-  ]);
+  // Only today's hours show at first; the old whole-week list is gone.
+  await expect(page.getByTestId('home-day-hours')).toHaveText(/^Heute, /);
+  await expect(page.getByTestId('home-hours-summary')).toHaveCount(0);
+  // Any day can be picked to see its hours.
+  await page.getByRole('button', { name: 'Freitag' }).click();
+  await expect(page.getByRole('button', { name: 'Freitag' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await expect(page.getByTestId('home-day-hours')).toHaveText(/Freitag · 13:00–22:00$/);
+  await page.getByRole('button', { name: 'Montag' }).click();
+  await expect(page.getByTestId('home-day-hours')).toHaveText(/Montag · Ruhetag$/);
+});
+
+test('la portada con el horario cargado no se sale de la pantalla en horizontal (WCAG 1.4.10)', async ({
+  page,
+}) => {
+  await page.goto('/de');
+  await expect(page.getByTestId('home-week')).toBeVisible();
+  // A wider-than-screen block makes mobile browsers zoom out and hides parts of the page.
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      ),
+    )
+    .toBe(0);
 });
 
 test('la galería de Historia avanza con las flechas y los puntos', async ({ page }) => {

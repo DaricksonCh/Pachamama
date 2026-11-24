@@ -39,7 +39,9 @@ export function HomeVisit() {
             {t('home.visit.title')}
           </h2>
           <p className="mt-2 mb-6 font-script text-3xl text-chicha">{t('home.visit.slow')}</p>
-          <dl className="mb-8 grid grid-cols-[auto_1fr] gap-x-6 gap-y-3">
+          {/* Phones stack each label above its value: beside the label, the seven day buttons
+              would push the block wider than the screen (WCAG 1.4.10). */}
+          <dl className="mb-8 grid grid-cols-1 gap-y-1 sm:grid-cols-[auto_1fr] sm:gap-x-6 sm:gap-y-3 [&>dt:not(:first-child)]:max-sm:mt-3">
             <dt className="font-semibold">{t('home.visit.address')}</dt>
             <dd>
               {address.street}, {address.postalCode} {address.city}

@@ -2,6 +2,7 @@ import { DEFAULT_LANGUAGE } from '@pachamama/shared';
 import { createBrowserRouter, Navigate, type RouteObject } from 'react-router';
 import { AdminLayout } from '@/layouts/admin-layout';
 import { LanguageLayout } from '@/layouts/language-layout';
+import { RootLayout } from '@/layouts/root-layout';
 import { DashboardPage } from '@/pages/admin/dashboard-page';
 import { LoginPage } from '@/pages/admin/login-page';
 import { CategoriesPage } from '@/pages/admin/menu/categories-page';
@@ -14,7 +15,7 @@ import { ReservationSettingsPage } from '@/pages/admin/reservations/settings-pag
 import { HomePage } from '@/pages/home-page';
 import { PublicPageRoute } from '@/pages/public-page-route';
 
-export const routes: RouteObject[] = [
+const pageRoutes: RouteObject[] = [
   { path: '/', element: <Navigate to={`/${DEFAULT_LANGUAGE}`} replace /> },
   // Panel del personal (sin prefijo de idioma; usa el idioma activo de i18n).
   { path: '/admin/login', element: <LoginPage /> },
@@ -47,5 +48,8 @@ export const routes: RouteObject[] = [
   },
   { path: '*', element: <Navigate to={`/${DEFAULT_LANGUAGE}`} replace /> },
 ];
+
+// Pathless root: every new page opens at the top (back/forward left to the browser).
+export const routes: RouteObject[] = [{ element: <RootLayout />, children: pageRoutes }];
 
 export const router = createBrowserRouter(routes);

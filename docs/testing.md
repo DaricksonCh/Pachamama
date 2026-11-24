@@ -1,6 +1,6 @@
 # Estrategia de pruebas — Pachamama
 
-> **Regla obligatoria:** ninguna tarea, fase o fusión se da por terminada hasta que **todas las pruebas pasen** (`npm run check:all` en verde, y `npm run db:check` si la tarea toca la BD). Si una prueba falla, se arregla la causa; nunca se borra, se salta ni se debilita un test para que pase.
+> **Regla obligatoria:** ningún módulo, fase, push o fusión se da por terminado hasta que **todas las pruebas pasen** (`npm run check:all` en verde, y `npm run db:check` si toca la BD). Durante el trabajo, cada tarea se verifica solo con lo que toca: `npm run typecheck`, los tests del paquete afectado y el spec e2e afectado. Si una prueba falla, se arregla la causa; nunca se borra, se salta ni se debilita un test para que pase.
 
 ## Comandos
 
@@ -10,7 +10,7 @@
 | `npm run test:e2e`  | Flujos de usuario en navegador real, escritorio y móvil           | Local + CI  |
 | `npm run db:check`  | Que la BD existe, es MySQL 8.4, utf8mb4 y tiene mínimo privilegio | Solo local  |
 | `npm run check`     | typecheck + lint + formato + tests unitarios                      | Local + CI  |
-| `npm run check:all` | `check` + build + e2e: **lo que hay que pasar antes de cerrar**   | Local + CI  |
+| `npm run check:all` | `check` + build + e2e: **al cerrar módulo/fase y antes de push**  | Local + CI  |
 
 `test:e2e` arranca API y web solo si no están ya en marcha. La primera vez hay que instalar el navegador: `npx -w @pachamama/web playwright install chromium`.
 
@@ -75,7 +75,7 @@ Por endpoint: caso feliz, validación (400), no encontrado (404), permisos (401/
 - Los **e2e levantan su propia API (3100) y web (5174)** contra `pachamama_test` (nunca reutilizan `npm run dev`) y cargan usuarios de prueba con `e2e:seed`.
 - En la CI, un contenedor MySQL 8.4 desechable (`TEST_DATABASE_URL`).
 - `e2e:seed` vacía también la carta y las reservas y deja la configuración de reservas en sus valores sembrados (horario martes–domingo 13:00–22:00, ajustes por defecto, 8 plantillas, sin cierres): cada ejecución de e2e empieza limpia.
-- Carta (fase 5): reglas y permisos (`menu.rules.test.ts`, `menu.admin.test.ts`), fotos con sharp (`images.test.ts`: formatos, límites, EXIF, path traversal), carta pública y PDF (`public-menu*.test.ts`: ETag, idiomas, glifos), seed (`menu-seed.test.ts`).
+- Carta (fase 5): reglas y permisos (`menu.rules.test.ts`, `menu.admin.test.ts`), fotos con sharp (`images.test.ts`: formatos, límites, EXIF, path traversal), carta pública y PDF (`public-menu*.test.ts`: ETag, idiomas, glifos, descripción y foto de cada plato; `pdf/layout.test.ts` y `pdf/photos.test.ts`: rejilla, colores y miniaturas), seed (`menu-seed.test.ts`).
 - En Windows con Node 24.15 había un cierre aleatorio de los workers por conexiones TCP (nodejs/node#62991): `src/test/supertest-keep-alive.ts` reutiliza conexiones. Usar Node ≥ 24.16.
 
 ### Frontend

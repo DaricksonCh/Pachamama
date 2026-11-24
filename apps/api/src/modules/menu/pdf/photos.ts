@@ -3,31 +3,35 @@ import { basename, join } from 'node:path';
 import type { PublicMenu } from '@pachamama/shared';
 import sharp from 'sharp';
 import { logger } from '../../../lib/logger';
-import type { CategoryPhotos } from './menu-pdf';
 
-/** Solo nombres generados por el servidor (`<uuid>-800.webp`): nunca rutas arbitrarias. */
-const SAFE_FILE = /^[0-9a-f-]{36}-800\.webp$/;
+/** Foto de cada plato (JPEG pequeño), por id del plato. */
+export type DishPhotos = Map<number, Buffer>;
+
+/** Solo nombres generados por el servidor (`<uuid>-400.webp`): nunca rutas arbitrarias. */
+const SAFE_FILE = /^[0-9a-f-]{36}-400\.webp$/;
+
+/** Ancho de la miniatura: el hueco de la foto mide ~225 pt, así que ~1,6 px por punto. */
+export const PDF_PHOTO_WIDTH = 360;
 
 /**
- * Una foto por categoría (la del primer plato que tenga): se lee la versión de 800 px de
- * `UPLOADS_DIR` y se pasa a JPEG, porque react-pdf no admite WebP.
- * Si falta un archivo, la categoría queda sin foto (el PDF se genera igual).
+ * Foto de todos los platos que tengan una (ADR 0017): se lee la versión de 400 px de
+ * `UPLOADS_DIR` y se pasa a JPEG de 360 px, porque react-pdf no admite WebP y así el PDF
+ * pesa poco. Si falta un archivo, el plato queda sin foto (el PDF se genera igual).
  */
-export async function loadCategoryPhotos(
-  menu: PublicMenu,
-  uploadsDir: string,
-): Promise<CategoryPhotos> {
-  const photos: CategoryPhotos = new Map();
+export async function loadDishPhotos(menu: PublicMenu, uploadsDir: string): Promise<DishPhotos> {
+  const photos: DishPhotos = new Map();
+  const dishes = menu.categories.flatMap((c) => c.dishes).filter((d) => d.image);
   await Promise.all(
-    menu.categories.map(async (category) => {
-      const dish = category.dishes.find((d) => d.image);
-      if (!dish?.image) return;
-      const file = basename(dish.image.url.w800);
+    dishes.map(async (dish) => {
+      const file = basename(dish.image!.url.w400);
       if (!SAFE_FILE.test(file)) return;
       try {
         const webp = await readFile(join(uploadsDir, 'dishes', file));
-        const data = await sharp(webp).jpeg({ quality: 78, mozjpeg: true }).toBuffer();
-        photos.set(category.id, { dishId: dish.id, data });
+        const data = await sharp(webp)
+          .resize({ width: PDF_PHOTO_WIDTH, withoutEnlargement: true })
+          .jpeg({ quality: 72, mozjpeg: true })
+          .toBuffer();
+        photos.set(dish.id, data);
       } catch (err) {
         logger.warn({ err, dishId: dish.id }, 'Menu PDF: dish photo not available');
       }

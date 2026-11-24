@@ -203,31 +203,53 @@ describe('GET /api/v1/menu/pdf', () => {
     expect(text).not.toContain('13,00 €');
   });
 
-  it('con una foto pesa menos de 3 MB', async () => {
+  it('incluye siempre la descripción de cada plato, en el idioma pedido', async () => {
+    const de = await binary(request(app).get('/api/v1/menu/pdf?lang=de'));
+    expect(await pdfText(de.body as Buffer)).toContain('Kartoffelterrine mit Hähnchen');
+    const es = await binary(request(app).get('/api/v1/menu/pdf?lang=es'));
+    expect(await pdfText(es.body as Buffer)).toContain('Terrina de papa con pollo');
+  });
+
+  it('incrusta la foto de cada plato (no una por categoría) y pesa menos de 3 MB', async () => {
+    /** Fotos incrustadas en el PDF (objetos de imagen; el logo también cuenta). */
+    const images = (pdf: Buffer) =>
+      pdf.toString('latin1').match(/\/Subtype\s*\/Image/g)?.length ?? 0;
     const without = await binary(request(app).get('/api/v1/menu/pdf?lang=de'));
-    const sizeWithout = (without.body as Buffer).length;
+    const base = images(without.body as Buffer);
 
-    // Foto con ruido (se comprime mal, como una foto real).
-    const noise = Buffer.alloc(2400 * 1600 * 3);
-    for (let i = 0; i < noise.length; i++) noise[i] = (i * 2654435761) >>> 24;
-    const jpeg = await sharp(noise, { raw: { width: 2400, height: 1600, channels: 3 } })
-      .jpeg({ quality: 92 })
-      .toBuffer();
-    const up = await request(app)
-      .put(`${ADMIN_BASE}/dishes/${causaId}/image`)
-      .set('Origin', ORIGIN)
-      .set('Cookie', adminCookie)
-      .field('altDe', 'Causa')
-      .field('altEs', 'Causa')
-      .attach('image', jpeg, { filename: 'causa.jpg', contentType: 'image/jpeg' });
-    expect(up.status).toBe(200);
+    // Foto grande con ruido (se comprime mal, como una foto real). Cada una distinta:
+    // react-pdf reutiliza las imágenes idénticas.
+    const noisyJpeg = (seed: number) => {
+      const noise = Buffer.alloc(2400 * 1600 * 3);
+      for (let i = 0; i < noise.length; i++) noise[i] = ((i + seed) * 2654435761) >>> 24;
+      return sharp(noise, { raw: { width: 2400, height: 1600, channels: 3 } })
+        .jpeg({ quality: 92 })
+        .toBuffer();
+    };
+    const upload = async (dishId: number) => {
+      const up = await request(app)
+        .put(`${ADMIN_BASE}/dishes/${dishId}/image`)
+        .set('Origin', ORIGIN)
+        .set('Cookie', adminCookie)
+        .field('altDe', 'Foto')
+        .field('altEs', 'Foto')
+        .attach('image', await noisyJpeg(dishId), {
+          filename: 'foto.jpg',
+          contentType: 'image/jpeg',
+        });
+      expect(up.status).toBe(200);
+    };
 
-    const res = await binary(request(app).get('/api/v1/menu/pdf?lang=de'));
-    expect(res.status).toBe(200);
-    const size = (res.body as Buffer).length;
-    expect(size).toBeLessThan(3 * 1024 * 1024);
-    // La foto está incrustada: el PDF crece respecto al de sin foto.
-    expect(size).toBeGreaterThan(sizeWithout + 20 * 1024);
+    await upload(causaId);
+    const one = await binary(request(app).get('/api/v1/menu/pdf?lang=de'));
+    expect(images(one.body as Buffer)).toBe(base + 1);
+
+    // Otro plato de la misma categoría también lleva su foto.
+    await upload(await makeDish(visibleCat, { nameDe: 'Tiradito', nameEs: 'Tiradito' }));
+    const two = await binary(request(app).get('/api/v1/menu/pdf?lang=de'));
+    expect(two.status).toBe(200);
+    expect(images(two.body as Buffer)).toBe(base + 2);
+    expect((two.body as Buffer).length).toBeLessThan(3 * 1024 * 1024);
   });
 });
 

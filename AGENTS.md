@@ -27,7 +27,7 @@ Todo se paga **en el local** (sin pasarela de pagos). El personal gestiona todo 
 - No escribir código ni tocar la base de datos fuera de la fase aprobada.
 - Antes de una decisión técnica importante, proponer y esperar aprobación; después, registrarla en `docs/decisions/` (ADR).
 - Cada fase termina con: verificación → commit → push → actualizar `docs/roadmap.md`.
-- **No terminar hasta que todas las pruebas hayan sido superadas con éxito.** Ninguna tarea, fase o fusión se da por hecha hasta que `npm run check:all` está en verde (y `npm run db:check` si toca la BD). Si algo falla, se arregla la causa y se vuelve a ejecutar todo; nunca se borra, salta ni debilita un test para que pase. Cada cambio incluye los tests que exige [`docs/testing.md`](docs/testing.md). **Excepción:** si un cambio solo toca documentación (archivos `.md`), basta con `npm run format:check` en verde.
+- **No terminar hasta que todas las pruebas hayan sido superadas con éxito.** Durante el trabajo (decidido por el usuario el 2026-11-24), cada tarea se verifica solo con lo que toca el cambio: `npm run typecheck`, los tests del paquete afectado y el spec e2e afectado. **`npm run check:all` en verde es obligatorio al cerrar un módulo o fase y siempre antes de cada push o PR** (y `npm run db:check` si toca la BD). Si algo falla, se arregla la causa y se vuelve a ejecutar todo; nunca se borra, salta ni debilita un test para que pase. Cada cambio incluye los tests que exige [`docs/testing.md`](docs/testing.md). **Excepción:** si un cambio solo toca documentación (archivos `.md`), basta con `npm run format:check` en verde.
 - Comunicación con el usuario en **español**. Código, nombres de variables y commits en **inglés**.
 
 ## Git: ramas y flujo
@@ -75,7 +75,7 @@ Reglas: un subagente que **escribe** código nunca comparte archivos con otro en
 - **E2e:** una vez por línea de trabajo al final, no tras cada tarea.
 - **Informes al usuario:** cortos; solo al terminar una tarea o cuando haga falta una decisión.
 - **Si tras 3 intentos distintos no se avanza**, o el fallo no parece causado por el cambio, se para, se resume lo probado y se pregunta.
-- **Sin cambios:** `npm run check:all` en verde antes de cerrar una fase y nunca debilitar ni borrar tests.
+- **Sin cambios:** `npm run check:all` en verde antes de cerrar un módulo o fase y antes de cada push o PR, y nunca debilitar ni borrar tests.
 - **Contexto:** `/clear` (o chat nuevo) al cerrar cada fase; a mitad de fase, `/compact` si el contexto crece.
 
 ## Skills obligatorias por tipo de tarea
@@ -134,6 +134,17 @@ Decidido por el usuario el 2026-11-23 (amplía el ADR 0013). Toda vista pública
 - Nada avanza solo (WCAG 2.2.2), el contraste es AA, se diseña primero para móvil y todos los textos llevan i18n de/es.
 - Nada de librerías de animación pesadas sin ADR.
 
+### Cómo diseñar un PDF o impreso (carta, folletos…)
+
+Decidido por el usuario el 2026-11-24. Se sigue el **mismo proceso** que en las vistas públicas (skills, referencias, 3–4 maquetas con contenido real, elegir antes de programar, plan → código → `check:all` → ADR), con estas diferencias:
+
+- **Skills:** además de las de diseño, `react-pdf` (el PDF se genera con `@react-pdf/renderer`, ADR 0009).
+- **Maquetas:** páginas A4 a tamaño real en el navegador (portada + al menos una página de platos y una de categoría corta), con nuestras fotos y la carta real de la BD.
+- **Identidad sin calco:** se puede partir de la web (bandas de la manta, ADR 0016), pero el PDF es un objeto de papel: se diseña para leerse impreso y en el móvil, no se copia la página.
+- **La carta lleva fotos de los platos** (decidido el 2026-11-24): cada foto con su hueco fijo en la maquetación (nunca se montan unas sobre otras) y con la resolución justa para su hueco (miniaturas de ~400 px, fotos grandes de ~800 px, en JPEG) para que el PDF pese poco.
+- **Lo que react-pdf permite:** solo flexbox y posición absoluta (sin CSS grid, sin `clip-path`, sin filtros), SVG propio para los adornos y fuentes locales incrustadas (incluida la manuscrita si se usa). Nada se diseña que no se pueda generar.
+- **Imprimible:** contraste AA, texto mínimo de 8 pt, márgenes seguros de impresión y ningún dato que dependa del color (alérgenos y dieta también con letra o texto). Todo en alemán y español.
+
 ## Stack (decidido — no cambiar sin ADR nuevo)
 
 | Capa          | Tecnología                                                                                                       |
@@ -183,7 +194,7 @@ Desde la raíz del repo:
 | `npm run build`                                    | Build de producción (API con tsup, web con Vite)                                   |
 | `npm run check`                                    | typecheck + lint + formato + tests unitarios                                       |
 | `npm run test:e2e`                                 | Flujos de usuario en navegador (Playwright, escritorio y móvil)                    |
-| `npm run check:all`                                | `check` + build + e2e: **obligatorio en verde antes de cerrar**                    |
+| `npm run check:all`                                | `check` + build + e2e: **obligatorio al cerrar módulo/fase y antes de push o PR**  |
 | `npm run check:publish`                            | Falla mientras queden datos provisionales (obligatorio en verde antes de publicar) |
 | `npm run db:check`                                 | Comprueba la BD local (versión, utf8mb4, mínimo privilegio)                        |
 | `npm run db:migrate`                               | Aplica las migraciones pendientes (`db:migrate:down` deshace una)                  |

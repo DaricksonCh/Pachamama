@@ -4,6 +4,10 @@ type PdfLabels = {
   documentTitle: string;
   menuTitle: string;
   tagline: string;
+  /** Frase manuscrita de la portada. */
+  coverLine: string;
+  /** Prefijo de las letras de alérgenos junto a cada plato. */
+  allergensShort: string;
   diet: Record<Diet, string>;
   allergensTitle: string;
   dietTitle: string;
@@ -22,6 +26,8 @@ export const pdfLabels: Record<Language, PdfLabels> = {
     documentTitle: 'Pachamama – Speisekarte',
     menuTitle: 'Speisekarte',
     tagline: 'Hausgemacht & traditionell',
+    coverLine: 'Rezepte unserer Familie, gekocht in Bremen',
+    allergensShort: 'Allergene',
     diet: { vegan: 'vegan', vegetarian: 'vegetarisch' },
     allergensTitle: 'Allergene',
     dietTitle: 'Kennzeichnung',
@@ -41,6 +47,8 @@ export const pdfLabels: Record<Language, PdfLabels> = {
     documentTitle: 'Pachamama – Carta',
     menuTitle: 'Carta',
     tagline: 'Casero y tradicional',
+    coverLine: 'Recetas de nuestra familia, cocinadas en Bremen',
+    allergensShort: 'Alérgenos',
     diet: { vegan: 'vegano', vegetarian: 'vegetariano' },
     allergensTitle: 'Alérgenos',
     dietTitle: 'Distintivos',
